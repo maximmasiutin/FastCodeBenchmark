@@ -2,6 +2,7 @@ unit FillCharUnit;
 
 interface
 
+{$IFDEF WIN32}
 procedure FillChar_RTL_Pas_1(var Dest; count: Integer; Value: Char);
 procedure FillCharCJGPAS1(var Dest; count: Integer; Value: Char);
 procedure FillCharCJGPas3(var Dest; count: Integer; Value: Char);
@@ -21,12 +22,14 @@ procedure FillChar_PLR_MMX_1_a(var Dest; Count: Integer; Value: Char);
 procedure FillChar_PLR_MMX_1_b(var Dest; Count: Integer; Value: Char);
 procedure FillChar_PLR_MMX_1_c(var Dest; Count: Integer; Value: Char);
 procedure FillChar_PLR_MMX_1_d(var Dest; Count: Integer; Value: Char);
+{$ENDIF}
 
 implementation
 
 uses
  SysUtils;
 
+{$IFDEF WIN32}
 procedure FillChar_RTL_Pas_1(var Dest; count: Integer; Value: Char);
 var
   I: Integer;
@@ -2133,6 +2136,6 @@ initialization
  Filler4;
  Filler5;
  Filler6;
-
+{$ENDIF}
 
 end.

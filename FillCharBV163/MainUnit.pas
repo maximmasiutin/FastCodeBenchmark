@@ -61,7 +61,7 @@ type
     procedure BenchmarkEditClick(Sender: TObject);
     procedure CleanClick(Sender: TObject);
   private
-    FValidationFileName, FBenchmarkFileName, FResultsFileName : string;
+    FValidationFileName, FBenchmarkFileName, FResultsFileName : AnsiString;
     FResultList: TStringList;
     procedure ClearAllEditBoxes;
     procedure BenchmarkTest;
@@ -98,7 +98,135 @@ uses SystemInfoUnit, FastCodeCPUID, FillCharUnit, FillCharJOHUnit, FillCharDKCUn
 {$R *.dfm}
 
 type
- TFillCharProcedure = procedure (var Dest; count: Integer; Value: Char);
+ TFillCharProcedure = procedure (var Dest; Count: NativeInt; Value: AnsiChar);
+
+procedure FC_TokyoBugfixAVXEx(var Dest; Count: NativeInt; Value: AnsiChar);
+begin
+  System.FillChar(Dest, Count, Value);
+end;
+
+procedure FillChar_J_BontesInternal(var Dest; Count: NativeInt; Value: AnsiChar);
+//rcx = dest
+//rdx=count
+//r8b=value
+asm
+              .noframe
+              .align 16
+              movzx r8,r8b           //There's no need to optimize for count <= 3
+              mov rax,$0101010101010101
+              mov r9d,edx
+              imul rax,r8            //fill rax with value.
+              cmp rdx,59             //Use simple code for small blocks.
+              jl  @Below32
+@Above32:     mov r11,rcx
+              mov r8b,7              //code shrink to help alignment.
+              lea r9,[rcx+rdx]       //r9=end of array
+              sub rdx,8
+              rep mov [rcx],rax
+              add rcx,8
+              and r11,r8             //and 7 See if dest is aligned
+              jz @tail
+@NotAligned:  xor rcx,r11            //align dest
+              lea rdx,[rdx+r11]
+@tail:        test r9,r8             //and 7 is tail aligned?
+              jz @alignOK
+@tailwrite:   mov [r9-8],rax         //no, we need to do a tail write
+              and r9,r8              //and 7
+              sub rdx,r9             //dec(count, tailcount)
+@alignOK:     mov r10,rdx
+              and edx,(32+16+8)      //count the partial iterations of the loop
+              mov r8b,64             //code shrink to help alignment.
+              mov r9,rdx
+              jz @Initloop64
+@partialloop: shr r9,1              //every instruction is 4 bytes
+              lea r11,[rip + @partial +(4*7)] //start at the end of the loop
+              sub r11,r9            //step back as needed
+              add rcx,rdx            //add the partial loop count to dest
+              cmp r10,r8             //do we need to do more loops?
+              jmp r11                //do a partial loop
+@Initloop64:  shr r10,6              //any work left?
+              jz @done               //no, return
+              mov rdx,r10
+              shr r10,(19-6)         //use non-temporal move for > 512kb
+              jnz @InitFillHuge
+@Doloop64:    add rcx,r8
+              dec edx
+              mov [rcx-64+00H],rax
+              mov [rcx-64+08H],rax
+              mov [rcx-64+10H],rax
+              mov [rcx-64+18H],rax
+              mov [rcx-64+20H],rax
+              mov [rcx-64+28H],rax
+              mov [rcx-64+30H],rax
+              mov [rcx-64+38H],rax
+              jnz @DoLoop64
+@done:        rep ret
+              //db $66,$66,$0f,$1f,$44,$00,$00 //nop7
+@partial:     mov [rcx-64+08H],rax
+              mov [rcx-64+10H],rax
+              mov [rcx-64+18H],rax
+              mov [rcx-64+20H],rax
+              mov [rcx-64+28H],rax
+              mov [rcx-64+30H],rax
+              mov [rcx-64+38H],rax
+              jge @Initloop64        //are we done with all loops?
+              rep ret
+              db $0F,$1F,$40,$00
+@InitFillHuge:
+@FillHuge:    add rcx,r8
+              dec rdx
+              db $48,$0F,$C3,$41,$C0 // movnti  [rcx-64+00H],rax
+              db $48,$0F,$C3,$41,$C8 // movnti  [rcx-64+08H],rax
+              db $48,$0F,$C3,$41,$D0 // movnti  [rcx-64+10H],rax
+              db $48,$0F,$C3,$41,$D8 // movnti  [rcx-64+18H],rax
+              db $48,$0F,$C3,$41,$E0 // movnti  [rcx-64+20H],rax
+              db $48,$0F,$C3,$41,$E8 // movnti  [rcx-64+28H],rax
+              db $48,$0F,$C3,$41,$F0 // movnti  [rcx-64+30H],rax
+              db $48,$0F,$C3,$41,$F8 // movnti  [rcx-64+38H],rax
+              jnz @FillHuge
+@donefillhuge:mfence
+              rep ret
+              db $0F,$1F,$44,$00,$00  //db $0F,$1F,$40,$00
+@Below32:     and  r9d,not(3)
+              jz @SizeIs3
+@FillTail:    sub   edx,4
+              lea   r10,[rip + @SmallFill + (15*4)]
+              sub   r10,r9
+              jmp   r10
+@SmallFill:   rep mov [rcx+56], eax
+              rep mov [rcx+52], eax
+              rep mov [rcx+48], eax
+              rep mov [rcx+44], eax
+              rep mov [rcx+40], eax
+              rep mov [rcx+36], eax
+              rep mov [rcx+32], eax
+              rep mov [rcx+28], eax
+              rep mov [rcx+24], eax
+              rep mov [rcx+20], eax
+              rep mov [rcx+16], eax
+              rep mov [rcx+12], eax
+              rep mov [rcx+08], eax
+              rep mov [rcx+04], eax
+              mov [rcx],eax
+@Fallthough:  mov [rcx+rdx],eax  //unaligned write to fix up tail
+              rep ret
+
+@SizeIs3:     shl edx,2           //r9 <= 3  r9*4
+              lea r10,[rip + @do3 + (4*3)]
+              sub r10,rdx
+              jmp r10
+@do3:         rep mov [rcx+2],al
+@do2:         mov [rcx],ax
+              ret
+@do1:         mov [rcx],al
+              rep ret
+@do0:         rep ret
+end;
+
+procedure FillChar_J_Bontes(var Dest; Count: NativeInt; Value: AnsiChar);
+begin
+  FillChar_J_BontesInternal(Dest, Count, Value);
+end;
 
 const
  //Selected to achieve even contribution by subbenchmarks on P4 (1000 on P41600A)(should be on Blended?)
@@ -123,10 +251,10 @@ const
 
 var
  FillCharProcedure : TFillCharProcedure;
- SubBench1Array : array[1..44] of Char;
- SubBench2Array : array[1..2014] of Char;
- SubBench3Array : array of Char;
- SubBench4Array : array of Char;
+ SubBench1Array : array[1..44] of AnsiChar;
+ SubBench2Array : array[1..2014] of AnsiChar;
+ SubBench3Array : array of AnsiChar;
+ SubBench4Array : array of AnsiChar;
 
 procedure TMainForm.ClearAllEditBoxes;
 var
@@ -141,7 +269,7 @@ begin
   end;
 end;
 
-function CharPos(Chr : Char; const Str : AnsiString) : Integer;
+function CharPos(Chr : AnsiChar; const Str : AnsiString) : Integer;
 var
  StrLenght, I : Integer;
 
@@ -197,7 +325,7 @@ var
  S1, S2, Bench1String, Bench2String : AnsiString;
  Bench1, Bench2 : Double;
  Swapped : Boolean;
- C1, C2 : Char;
+ C1, C2 : AnsiChar;
 
 begin
  repeat
@@ -238,7 +366,7 @@ var
  I1, I2, LineNo1, LineNo2, X1, X2, TabNo1, TabNo2 : Integer;
  S1, S2, BenchString1, BenchString2, FunctionName1, FunctionName2 : AnsiString;
  Bench1, Bench2, AverageBench, Spread, DeltaBench, MaxSpread : Double;
- C1, C2 : Char;
+ C1, C2 : AnsiChar;
  Tab1Pos1, Tab1Pos2 : Cardinal;
 
 begin
@@ -323,7 +451,7 @@ var
  S1, S2, BenchString1, BenchString2, FunctionName1, FunctionName2,
  ShortFunctionName1, ShortFunctionName2 : AnsiString;
  Bench1, Bench2, AverageBench, Spread, DeltaBench, MaxSpread : Double;
- C1, C2 : Char;
+ C1, C2 : AnsiChar;
  Tab1Pos1, Tab1Pos2 : Cardinal;
 
 begin
@@ -413,8 +541,8 @@ end;
 procedure TMainForm.DevelopButtonClick(Sender: TObject);
 var
  Count : Integer;
- ChrVal : Char;
- XArray : array[0..10] of Char;
+ ChrVal : AnsiChar;
+ XArray : array[0..10] of AnsiChar;
 
 begin
  Count := 11;
@@ -424,9 +552,10 @@ begin
 end;
 
 procedure TMainForm.FunctionSelectionRadioGroupClick(Sender: TObject);
-begin     
+begin
  case FunctionSelectionRadioGroup.ItemIndex+1 of
-  //1 : FillCharProcedure := _FillChar;
+{$IFDEF WIN32}
+//  1 : FillCharProcedure := _FillChar;
   2 : FillCharProcedure := FillChar_RTL_Pas_1;
   3 : FillCharProcedure := FillChar_JOH_PAS_1_a;
   4 : FillCharProcedure := FillChar_JOH_PAS_1_b;
@@ -508,8 +637,10 @@ begin
   80 : FillCharProcedure := FillChar_DKC_Pas_24_b;
   81 : FillCharProcedure := FillChar_DKC_Pas_24_c;
   82 : FillCharProcedure := FillChar_DKC_Pas_24_d;
-
-  //76 : FillCharProcedure := FillCharDKC_SSE2_12_a;
+{$ELSE}
+  2 : FillCharProcedure := FC_TokyoBugfixAVXEx;
+  3 : FillCharProcedure := FillChar_J_Bontes;
+{$ENDIF}
  else
   if FunctionSelectionRadioGroup.ItemIndex <> 0 then//RTL function selected
    raise Exception.Create('Invalid function');
@@ -517,8 +648,14 @@ begin
 end;
 
 procedure TMainForm.FormCreate(Sender: TObject);
-var CpuString : string;
+var CpuString : AnsiString;
 begin
+{$IFDEF WIN64}
+  FunctionSelectionRadioGroup.Items.Clear;
+  FunctionSelectionRadioGroup.Items.Add('FC_TokyoBugfixAVXEx');
+  FunctionSelectionRadioGroup.Items.Add('FillChar_J_Bontes');
+  FunctionSelectionRadioGroup.ItemIndex := 0;
+{$ENDIF}
  ReportRichEdit.Clear;
  ClearAllEditBoxes;
  FunctionSelectionRadioGroupClick(nil);
@@ -598,8 +735,8 @@ end;
 function TMainForm.Validate1 : Boolean;
 var
  Count, I : Integer;
- ChrVal : Char;
- XArray : array of Char;
+ ChrVal : AnsiChar;
+ XArray : array of AnsiChar;
 const
  MAXCOUNT : Integer = 20000;
  BYTESAFTERFILL : Integer = 10;
@@ -652,9 +789,9 @@ end;
 function TMainForm.Validate2 : Boolean;
 var
  pChr : PChar;
- CharArray : array of char;
+ CharArray : array of AnsiChar;
  Count, I : Integer;
- ChrVal : Char;
+ ChrVal : AnsiChar;
 
 begin
  Count := 2;
@@ -678,9 +815,9 @@ end;
 
 function TMainForm.Validate3 : Boolean;
 var
- CharArray : array[0..20] of char;
+ CharArray : array[0..20] of AnsiChar;
  Count, I : Integer;
- ChrVal : Char;
+ ChrVal : AnsiChar;
 
 begin
  Count := -2;
@@ -711,8 +848,8 @@ end;
 function TMainForm.Validate4 : Boolean;
 var
  Count, I : Integer;
- ChrVal : Char;
- XArray : array of Char;
+ ChrVal : AnsiChar;
+ XArray : array of AnsiChar;
 const
  MAXCOUNT : Integer = 2000;
  BYTESAFTERFILL : Integer = 10;
@@ -766,8 +903,8 @@ end;
 function TMainForm.Validate5 : Boolean;
 var
  Count, I : Integer;
- ChrVal : Char;
- XArray : array of Char;
+ ChrVal : AnsiChar;
+ XArray : array of AnsiChar;
 const
  MAXCOUNT : Integer = 2000000;
  BYTESAFTERFILL : Integer = 10;
@@ -827,8 +964,8 @@ end;
 function TMainForm.Validate6 : Boolean;
 var
  Count, I : Integer;
- ChrVal : Char;
- XArray : array of Char;
+ ChrVal : AnsiChar;
+ XArray : array of AnsiChar;
 const
  MAXCOUNT : Integer = 2000;
  BYTESAFTERFILL : Integer = 10;
@@ -882,8 +1019,8 @@ end;
 function TMainForm.Validate7 : Boolean;
 var
  Count, I : Integer;
- ChrVal : Char;
- XArray : array of Char;
+ ChrVal : AnsiChar;
+ XArray : array of AnsiChar;
  Chr1 : Byte;
 const
  MAXCOUNT : Integer = 120;
@@ -895,9 +1032,9 @@ begin
   SetLength(XArray, MAXCOUNT+BYTESAFTERFILL);
   for Chr1 := 0 to 255 do
    begin
-    if Chr(Chr1) = 'X' then//!!!!!!!!!!!!!!!!!
+    if AnsiChar(Chr1) = 'X' then//!!!!!!!!!!!!!!!!!
      Continue;
-    ChrVal := Chr(Chr1);
+    ChrVal := AnsiChar(Chr1);
     for Count := 0 to MAXCOUNT-1 do //!!!!!!!!!!!!!!!
      begin
       FillChar(XArray[0], MAXCOUNT+BYTESAFTERFILL, 'X');
@@ -942,7 +1079,7 @@ end;
 function TMainForm.SubBenchmark1 : Cardinal;
 var
  Count, MaxCount : Integer;
- ChrVal1, ChrVal2, ChrVal3, ChrVal4, ChrVal5, ChrVal6, ChrVal7 : Char;
+ ChrVal1, ChrVal2, ChrVal3, ChrVal4, ChrVal5, ChrVal6, ChrVal7 : AnsiChar;
  RunNo : Cardinal;
  Succes : Boolean;
  lpFrequency, lpPerformanceCount, StartCount, EndCount, NoOfTicks : Int64;
@@ -1001,7 +1138,7 @@ end;
 function TMainForm.SubBenchmark2 : Cardinal;
 var
  Count, MaxCount : Integer;
- ChrVal1, ChrVal2, ChrVal3, ChrVal4, ChrVal5, ChrVal6, ChrVal7 : Char;
+ ChrVal1, ChrVal2, ChrVal3, ChrVal4, ChrVal5, ChrVal6, ChrVal7 : AnsiChar;
  RunNo : Cardinal;
  Succes : Boolean;
  lpFrequency, lpPerformanceCount, StartCount, EndCount, NoOfTicks : Int64;
@@ -1060,7 +1197,7 @@ end;
 function TMainForm.SubBenchmark3 : Cardinal;
 var
  Count, MaxCount : Integer;
- ChrVal1, ChrVal2, ChrVal3, ChrVal4, ChrVal5, ChrVal6, ChrVal7 : Char;
+ ChrVal1, ChrVal2, ChrVal3, ChrVal4, ChrVal5, ChrVal6, ChrVal7 : AnsiChar;
  RunNo : Cardinal;
  Succes : Boolean;
  lpFrequency, lpPerformanceCount, StartCount, EndCount, NoOfTicks : Int64;
@@ -1121,7 +1258,7 @@ end;
 function TMainForm.SubBenchmark4 : Cardinal;
 var
  Count, MaxCount : Integer;
- ChrVal1, ChrVal2, ChrVal3, ChrVal4, ChrVal5, ChrVal6, ChrVal7 : Char;
+ ChrVal1, ChrVal2, ChrVal3, ChrVal4, ChrVal5, ChrVal6, ChrVal7 : AnsiChar;
  RunNo : Cardinal;
  Succes : Boolean;
  lpFrequency, lpPerformanceCount, StartCount, EndCount, NoOfTicks : Int64;
@@ -1184,7 +1321,7 @@ end;
 function TMainForm.SubBenchmarkRTL1 : Cardinal;
 var
  Count, MaxCount : Integer;
- ChrVal1, ChrVal2, ChrVal3, ChrVal4, ChrVal5, ChrVal6, ChrVal7 : Char;
+ ChrVal1, ChrVal2, ChrVal3, ChrVal4, ChrVal5, ChrVal6, ChrVal7 : AnsiChar;
  RunNo : Cardinal;
  Succes : Boolean;
  lpFrequency, lpPerformanceCount, StartCount, EndCount, NoOfTicks : Int64;
@@ -1243,7 +1380,7 @@ end;
 function TMainForm.SubBenchmarkRTL2 : Cardinal;
 var
  Count, MaxCount : Integer;
- ChrVal1, ChrVal2, ChrVal3, ChrVal4, ChrVal5, ChrVal6, ChrVal7 : Char;
+ ChrVal1, ChrVal2, ChrVal3, ChrVal4, ChrVal5, ChrVal6, ChrVal7 : AnsiChar;
  RunNo : Cardinal;
  Succes : Boolean;
  lpFrequency, lpPerformanceCount, StartCount, EndCount, NoOfTicks : Int64;
@@ -1302,7 +1439,7 @@ end;
 function TMainForm.SubBenchmarkRTL3 : Cardinal;
 var
  Count, MaxCount : Integer;
- ChrVal1, ChrVal2, ChrVal3, ChrVal4, ChrVal5, ChrVal6, ChrVal7 : Char;
+ ChrVal1, ChrVal2, ChrVal3, ChrVal4, ChrVal5, ChrVal6, ChrVal7 : AnsiChar;
  RunNo : Cardinal;
  Succes : Boolean;
  lpFrequency, lpPerformanceCount, StartCount, EndCount, NoOfTicks : Int64;
@@ -1363,7 +1500,7 @@ end;
 function TMainForm.SubBenchmarkRTL4 : Cardinal;
 var
  Count, MaxCount : Integer;
- ChrVal1, ChrVal2, ChrVal3, ChrVal4, ChrVal5, ChrVal6, ChrVal7 : Char;
+ ChrVal1, ChrVal2, ChrVal3, ChrVal4, ChrVal5, ChrVal6, ChrVal7 : AnsiChar;
  RunNo : Cardinal;
  Succes : Boolean;
  lpFrequency, lpPerformanceCount, StartCount, EndCount, NoOfTicks : Int64;
@@ -1424,15 +1561,16 @@ end;
 procedure TMainForm.BenchmarkButtonClick(Sender: TObject);
 var
  FunctionName, FunctionAddressString : AnsiString;
- FunctionAddress, SubBench1, SubBench2, SubBench3, SubBench4, Bench : Cardinal;
+ FunctionAddress: NativeUInt;
+ SubBench1, SubBench2, SubBench3, SubBench4, Bench : Cardinal;
 
 begin
 try
  if not SetThreadPriority(GetCurrentThread, THREAD_PRIORITY_ABOVE_NORMAL) then
   raise Exception.Create('SetThreadPriority to THREAD_PRIORITY_ABOVE_NORMAL failed');
  FunctionName := FunctionSelectionRadioGroup.Items[FunctionSelectionRadioGroup.ItemIndex];
- FunctionAddress := Cardinal(@FillCharProcedure);
- FunctionAddressString := IntToHex(FunctionAddress, 8);
+ FunctionAddress := NativeUInt(@FillCharProcedure);
+ FunctionAddressString := IntToHex(FunctionAddress, 16);
 
  if FunctionSelectionRadioGroup.ItemIndex = 0 then//RTL function selected
   begin
@@ -1453,7 +1591,7 @@ try
           + SubBench3 * SUBBENCH3WEIGTH
           + SubBench4 * SUBBENCH4WEIGTH;
  BenchmarkEdit.Text := IntToStr(Bench);
- ReportRichEdit.Lines.Add(FunctionName + #9 + FunctionAddressString[8]
+ ReportRichEdit.Lines.Add(FunctionName + #9 + FunctionAddressString[16]
                                        + #9 + IntToStr(SubBench1)
                                        + #9 + IntToStr(SubBench2)
                                        + #9 + IntToStr(SubBench3)
@@ -1464,8 +1602,8 @@ try
  AlignmentTest;
 except
  FunctionName := FunctionSelectionRadioGroup.Items[FunctionSelectionRadioGroup.ItemIndex];
- FunctionAddress := Cardinal(@FillCharProcedure);
- FunctionAddressString := IntToHex(FunctionAddress, 8);
+ FunctionAddress := NativeUInt(@FillCharProcedure);
+ FunctionAddressString := IntToHex(FunctionAddress, 16);
  ReportRichEdit.Lines.Add(FunctionName + #9 + 'Failed'
                                        + #9 + '99999'
                                        + #9 + '99999'

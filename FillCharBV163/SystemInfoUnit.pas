@@ -96,6 +96,8 @@ function CheckHTEnabled(const CpuCount: TCpuCount): Boolean;
 var
   ApicIds: array of LongWord;
   I: Integer;
+  D: Cardinal;
+  B: Boolean;
   Threads: array of THandle;
   ThreadId: LongWord;
 begin
@@ -114,9 +116,9 @@ begin
       Win32Check(ResumeThread(Threads[I]) <> $FFFFFFFF);
     end;
 
-    Win32Check(
-      (WaitForMultipleObjects(Length(Threads), @Threads[0], True, 1000) - WAIT_OBJECT_0) in
-      [Low(Threads), High(Threads)]);
+    D := WaitForMultipleObjects(Length(Threads), @Threads[0], True, 1000) - WAIT_OBJECT_0;
+    B := (D >= Low(Threads)) and (D <= High(Threads));
+    Win32Check(B);
 
   finally
     for I := Low(Threads) to High(Threads) do
@@ -214,6 +216,24 @@ begin
 end;
 
 procedure CpuId(InfoIndex: LongWord; out Res: TCpuIdRecord);
+{$IFDEF WIN64}
+asm
+  push   rbx
+  push   rsi
+
+  mov    rsi,   Res
+  mov    eax, InfoIndex
+
+  db     $0F, $A2 // cpuid
+  mov    [rsi+TCpuIdRecord.&EAX], eax
+  mov    [rsi+TCpuIdRecord.&EBX], ebx
+  mov    [rsi+TCpuIdRecord.&ECX], ecx
+  mov    [rsi+TCpuIdRecord.&EDX], edx
+
+  pop    rsi
+  pop    rbx
+end;
+{$ELSE}
 asm
   push   ebx
   push   esi
@@ -229,6 +249,7 @@ asm
   pop    esi
   pop    ebx
 end;
+{$ENDIF}
 
 function GetCPUName(const VendorString: string; CPUType, CPUFamily, CPUModel, CPUStepping: Integer; const CPUMHz: Double): string;
 begin
@@ -303,9 +324,14 @@ begin
     end;
 end;
 
-function RdTsc: Int64;
+function RdTsc: Int64; assembler;
 asm
-  db     $0F, $31 // rdtsc
+   rdtsc
+ {$IFDEF WIN64}
+   shl   rdx, 32
+   or    rax, rdx
+   xor   rdx, rdx
+ {$ENDIF}
 end;
 
 function SystemInfoCompiler: string;

@@ -159,6 +159,10 @@ const
   PMYonahEffModel = $E;
   P3LowestEffModel = 7;
 
+{$IFDEF WIN64}
+const
+  IsCPUID_Available = True;
+{$ELSE}
 function IsCPUID_Available: Boolean; register;
 asm
   PUSHFD                 {save EFLAGS to stack}
@@ -174,6 +178,7 @@ asm
   MOV     EAX, True      {yes, CPUID is available}
 @exit:
 end;
+{$ENDIF}
 
 function IsFPU_Available: Boolean;
 var
@@ -195,6 +200,24 @@ asm
 end;
 
 procedure GetCPUID(Param: Cardinal; var Registers: TRegisters);
+{$IFDEF WIN64}
+asm
+  PUSH    RBX                         {save affected registers}
+  PUSH    RDI
+  MOV     RDI, Registers
+  MOV     RAX, RCX
+  XOR     RBX, RBX                    {clear EBX register}
+  XOR     RCX, RCX                    {clear ECX register}
+  XOR     RDX, RDX                    {clear EDX register}
+  DB $0F, $A2                         {CPUID opcode}
+  MOV     TRegisters(EDI).&EAX, EAX   {save EAX register}
+  MOV     TRegisters(EDI).&EBX, EBX   {save EBX register}
+  MOV     TRegisters(EDI).&ECX, ECX   {save ECX register}
+  MOV     TRegisters(EDI).&EDX, EDX   {save EDX register}
+  POP     RDI                         {restore registers}
+  POP     RBX
+end;
+{$ELSE}
 asm
   PUSH    EBX                         {save affected registers}
   PUSH    EDI
@@ -210,6 +233,7 @@ asm
   POP     EDI                         {restore registers}
   POP     EBX
 end;
+{$ENDIF}
 
 procedure GetCPUVendor;
 var
@@ -431,6 +455,7 @@ end;
 
 procedure VerifyOSSupportForXMMRegisters;
 begin
+{$IFDEF WIN32}
   {try a SSE instruction that operates on XMM registers}
   try
     asm
@@ -444,6 +469,7 @@ begin
       Exclude(CPU.InstructionSupport, isSSE3);
     end;
   end;
+{$ENDIF}
 end;
 
 procedure GetCPUInfo;

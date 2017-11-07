@@ -2,6 +2,8 @@ unit FillCharJOHUnit;
 
 interface
 
+{$IFDEF WIN32}
+
 procedure FillChar_JOH_PAS_1_a (var Dest; count: Integer; Value: Char);
 procedure FillChar_JOH_PAS_1_b (var Dest; count: Integer; Value: Char);
 procedure FillChar_JOH_PAS_1_c (var Dest; count: Integer; Value: Char);
@@ -34,11 +36,14 @@ procedure FillChar_JOH_MMX_4_a(var Dest; count: Integer; Value: Char);
 procedure FillChar_JOH_MMX_4_b(var Dest; count: Integer; Value: Char);
 procedure FillChar_JOH_MMX_4_c(var Dest; count: Integer; Value: Char);
 procedure FillChar_JOH_MMX_4_d(var Dest; count: Integer; Value: Char);
+{$ENDIF}
 
 implementation
 
 uses
   SysUtils;
+
+{$IFDEF WIN32}
 
 procedure FillChar_JOH_PAS_1_a(var Dest; count: Integer; Value: Char);
 var {Size = 132 Byte}
@@ -1799,7 +1804,7 @@ asm
   ret {DO NOT REMOVE - This is for Alignment}
 @@Done:
 end; 
-
+{$ENDIF}
 
 end.
 

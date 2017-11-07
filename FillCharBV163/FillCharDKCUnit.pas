@@ -2,6 +2,7 @@ unit FillCharDKCUnit;
 
 interface
 
+{$IFDEF WIN32}
 procedure FillChar_DKC_Pas_24_a(var Dest; count: Integer; Value: Char);
 procedure FillChar_DKC_Pas_24_b(var Dest; count: Integer; Value: Char);
 procedure FillChar_DKC_Pas_24_c(var Dest; count: Integer; Value: Char);
@@ -35,6 +36,7 @@ procedure FillChar_DKC_SSE2_11_b(var Dest; count: Integer; Value: Char);
 procedure FillChar_DKC_SSE2_11_c(var Dest; count: Integer; Value: Char);
 procedure FillChar_DKC_SSE2_11_d(var Dest; count: Integer; Value: Char);
 procedure FillCharDKC_SSE2_12_a(var Dest; count: Integer; Value: Char);
+{$ENDIF}
 
 implementation
 
@@ -43,6 +45,8 @@ implementation
 //Optimized for:     Blended
 //Instructionset(s): IA32
 //Size:
+
+{$IFDEF WIN32}
 
 procedure FillChar_DKC_IA32_20_a(var Dest; count: Integer; Value: Char);
 asm
@@ -16868,5 +16872,7 @@ initialization
  Filler1;
  Filler2;
  Filler3;
+{$ENDIF WIN32}
+
 
 end.
