@@ -1,0 +1,36 @@
+[28.4.2006 20:23:11] Running "MinInt64BV.exe" benchmark version 1.5.0 with compiler settings: "R- Q- O+".
+OS: "Windows XP (NT.5.1.2600) Service Pack 2". CPU :"AMD Athlon(tm) 64 X2 Dual Core Processor 4200+ (AuthenticAMD, type 0, family 00F, model 2B, stepping 1), 2746,8 MHz, 2 CPU cores, 1 physical CPUs / AMD MMX SSE SSE2 SSE3".
+MinShaInt64_2_a	8	5344
+MinShaInt64_2_c	C	5344
+MinShaInt64_2_d	4	5359
+MinShaInt64_2_b	0	5360
+MinDKCAsmIA32_4_a	4	5672
+MinDKCAsmIA32_4_b	8	5687
+MinDKCAsmIA32_4_d	0	5688
+MinDKCAsmIA32_3_a	4	5750
+MinDKCAsmIA32_3_c	C	5782
+MinDKCAsmIA32_4_c	C	5812
+MinDKCIA32Ext_a	0	5844
+MinDKCIA32Ext_b	8	5844
+MinDKCIA32Ext_d	8	5844
+MinDKCIA32Ext_c	0	5859
+MinDKCAsmIA32_3_d	8	5875
+MinInt64JOH_b	0	6078
+MinInt64JOH_d	8	6125
+MinInt64JOH_c	4	6297
+MinDKCAsmIA32_3_b	0	6360
+MinShaInt64_b	0	6515
+MinShaInt64_a	C	6531
+MinShaInt64_d	8	6531
+MinShaInt64_c	4	6547
+MinInt64JOH2_a	8	6594
+MinInt64JOH2_b	C	6594
+MinInt64JOH2_c	0	6594
+MinInt64JOH2_d	4	6765
+MinInt64JOH_a	C	7140
+MinRTL	8	7375
+MinDKCPas_d	C	7390
+MinDKCPas_b	C	7407
+MinDKCPas_a	8	7437
+MinDKCPas_c	8	7453
+

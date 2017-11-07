@@ -1,0 +1,81 @@
+PenaltyForSizeConstant	10
+LowerCase_RTL_IA32_1	153
+LowerCase_RTL_PAS_1_a	63
+LowerCase_RTL_PAS_1_b	63
+LowerCase_RTL_PAS_1_c	63
+LowerCase_RTL_PAS_1_d	63
+LowerCase_DKC_Pas_1_a	98
+LowerCase_DKC_Pas_1_b	98
+LowerCase_DKC_Pas_1_c	98
+LowerCase_DKC_Pas_1_d	98
+LowerCase_DKC_IA32_1_a	473
+LowerCase_DKC_IA32_1_b	473
+LowerCase_DKC_IA32_1_c	473
+LowerCase_DKC_IA32_1_d	473
+LowerCase_Sha_Pas_2_a	126
+LowerCase_Sha_Pas_2_b	126
+LowerCase_Sha_Pas_2_c	126
+LowerCase_Sha_Pas_2_d	126
+LowerCase_JOH_PAS_2_a	440
+LowerCase_JOH_PAS_2_b	440
+LowerCase_JOH_PAS_2_c	440
+LowerCase_JOH_PAS_2_d	440
+LowerCase_JOH_IA32_2_a	392
+LowerCase_JOH_IA32_2_b	392
+LowerCase_JOH_IA32_2_c	392
+LowerCase_JOH_IA32_2_d	392
+LowerCase_JOH_IA32_3_a	325
+LowerCase_JOH_IA32_3_b	325
+LowerCase_JOH_IA32_3_c	325
+LowerCase_JOH_IA32_3_d	325
+LowerCase_JOH_MMX_2_a	414
+LowerCase_JOH_MMX_2_b	414
+LowerCase_JOH_MMX_2_c	414
+LowerCase_JOH_MMX_2_d	414
+LowerCase_JOH_SSE2_2_a	397
+LowerCase_JOH_SSE2_2_b	397
+LowerCase_JOH_SSE2_2_c	397
+LowerCase_JOH_SSE2_2_d	397
+LowerCase_DKC_IA32_4_a	380
+LowerCase_DKC_IA32_4_b	380
+LowerCase_DKC_IA32_4_c	380
+LowerCase_DKC_IA32_4_d	380
+LowerCase_DKC_IA32_13_a	540
+LowerCase_DKC_IA32_13_b	540
+LowerCase_DKC_IA32_13_c	540
+LowerCase_DKC_IA32_13_d	540
+LowerCase_DKC_IA32_14_a	573
+LowerCase_DKC_IA32_14_b	573
+LowerCase_DKC_IA32_14_c	573
+LowerCase_DKC_IA32_14_d	573
+LowerCase_DKC_IA32_18_a	522
+LowerCase_DKC_IA32_18_b	522
+LowerCase_DKC_IA32_18_c	522
+LowerCase_DKC_IA32_18_d	522
+LowerCase_JOH_IA32_4_a	125
+LowerCase_JOH_IA32_4_b	125
+LowerCase_JOH_IA32_4_c	125
+LowerCase_JOH_IA32_4_d	125
+LowerCase_JOH_IA32_5_a	134
+LowerCase_JOH_IA32_5_b	134
+LowerCase_JOH_IA32_5_c	134
+LowerCase_JOH_IA32_5_d	134
+LowerCase_JOH_IA32_6_a	114
+LowerCase_JOH_IA32_6_b	114
+LowerCase_JOH_IA32_6_c	114
+LowerCase_JOH_IA32_6_d	114
+LowerCase_LBG_Pas_1_a	79
+LowerCase_LBG_Pas_1_b	79
+LowerCase_LBG_Pas_1_c	79
+LowerCase_LBG_Pas_1_d	79
+
+//LowerCase_DKC_IA32_1_d	179 + initialize table 38 + table 256 = 473
+//LowerCase_DKC_IA32_4_a	86 + initialize table 38 + table 256 = 380
+//LowerCase_DKC_IA32_13_a	246 + initialize table 38 + table 256 = 540 
+//LowerCase_DKC_IA32_14_a	279 + initialize table 38 + table 256 = 573
+//LowerCase_DKC_IA32_18_a	228 + initialize table 38 + table 256 = 522
+//LowerCase_JOH_SSE2_2_a	141  + table 256 = 397 
+//LowerCase_JOH_MMX_2_a 158 + table 256 = 414
+//LowerCase_JOH_IA32_3_a 69 + table 256 = 325
+//LowerCase_JOH_IA32_2_a 136 + table 256 = 392
+//LowerCase_JOH_PAS_2_a	184 + table 256 = 440

@@ -1,0 +1,28 @@
+[16/10/2006 16:28:11] Running "Int64MulBV.exe" benchmark version 1.4.0 with compiler settings: "R- Q- O+".
+OS: "Windows XP (NT.5.1.2600) Service Pack 2". CPU :"Genuine Intel(R) CPU           T2300  @ 1.66GHz (GenuineIntel, type 0, family 6, model E, stepping 8), 1666.7 MHz, 2 logical CPUs, 1 physical CPUs / Intel MMX SSE SSE2 SSE3".
+Int64Mul_JOH_IA32_4_a	0	53	69	122
+Int64Mul_JOH_IA32_4_b	C	53	69	122
+Int64Mul_JOH_IA32_4_c	8	53	69	122
+Int64Mul_JOH_IA32_4_d	4	53	69	122
+Int64Mul_JOH_IA32_2_a	0	60	82	142
+Int64Mul_JOH_IA32_2_b	4	60	82	142
+Int64Mul_JOH_IA32_2_c	8	60	82	142
+Int64Mul_JOH_IA32_2_d	C	60	82	142
+Int64Mul_JOH_IA32_1_a	0	60	83	143
+Int64Mul_JOH_IA32_1_d	4	60	83	143
+Int64Mul_JOH_IA32_1_b	C	61	83	144
+Int64Mul_JOH_IA32_1_c	8	61	83	144
+Int64Mul_AMD_IA32_1_a	0	62	85	147
+Int64Mul_AMD_IA32_1_b	C	62	85	147
+Int64Mul_AMD_IA32_1_c	8	62	85	147
+Int64Mul_AMD_IA32_1_d	4	62	85	147
+Int64Mul_DKC_IA32_2_a	4	67	87	154
+Int64Mul_DKC_IA32_2_b	8	67	87	154
+Int64Mul_DKC_IA32_2_c	C	67	87	154
+Int64Mul_DKC_IA32_2_d	0	67	87	154
+Int64Mul_RTL_IA32_1	0	73	94	167
+Int64Mul_RTL_IA32_2_a	0	113	147	260
+Int64Mul_RTL_IA32_2_b	C	113	147	260
+Int64Mul_RTL_IA32_2_d	4	113	147	260
+Int64Mul_RTL_IA32_2_c	8	114	149	263
+

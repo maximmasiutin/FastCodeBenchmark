@@ -1,0 +1,36 @@
+[27.4.2006 21:01:02] Running "MinInt64BV.exe" benchmark version 1.5.0 with compiler settings: "R- Q- O+".
+OS: "Windows 2000 (NT.5.0.2195) Service Pack 4". CPU :"Intel(R) Pentium(R) 4 CPU 2.66GHz (GenuineIntel, type 0, family 00F, model 02, stepping 9), 2659,9 MHz / Intel MMX SSE SSE2".
+MinInt64JOH2_b	C	5438
+MinInt64JOH2_d	4	5438
+MinInt64JOH2_c	0	5453
+MinInt64JOH2_a	8	5485
+MinDKCIA32Ext_a	0	5641
+MinDKCIA32Ext_b	8	5641
+MinDKCIA32Ext_d	8	5641
+MinDKCIA32Ext_c	0	5656
+MinInt64JOH_c	4	6531
+MinInt64JOH_a	C	6532
+MinInt64JOH_b	0	6562
+MinDKCAsmIA32_4_d	0	6578
+MinDKCAsmIA32_3_a	4	6594
+MinDKCAsmIA32_4_a	4	6609
+MinDKCAsmIA32_4_c	C	6625
+MinDKCAsmIA32_3_b	0	6640
+MinDKCAsmIA32_3_c	C	6672
+MinDKCAsmIA32_4_b	8	6687
+MinShaInt64_b	0	6687
+MinDKCAsmIA32_3_d	8	6703
+MinShaInt64_a	C	6703
+MinShaInt64_c	4	6703
+MinShaInt64_d	8	6719
+MinInt64JOH_d	8	6781
+MinDKCPas_a	8	7593
+MinRTL	8	7594
+MinDKCPas_c	8	7625
+MinDKCPas_d	C	7625
+MinDKCPas_b	C	7672
+MinShaInt64_2_b	0	8531
+MinShaInt64_2_d	4	8546
+MinShaInt64_2_a	8	8563
+MinShaInt64_2_c	C	8563
+

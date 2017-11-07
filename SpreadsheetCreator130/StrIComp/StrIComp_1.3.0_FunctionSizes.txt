@@ -1,0 +1,63 @@
+PenaltyForSizeConstant	6
+StrIComp_RTL	61
+StrIComp_DKC_Pas_6_a	524
+StrIComp_DKC_Pas_6_b	524
+StrIComp_DKC_Pas_6_c	524
+StrIComp_DKC_Pas_6_d	524
+StrIComp_DKC_IA32_10_a	478
+StrIComp_DKC_IA32_10_b	478
+StrIComp_DKC_IA32_10_c	478
+StrIComp_DKC_IA32_10_d	478
+StrIComp_DKC_IA32_15_a	489
+StrIComp_DKC_IA32_15_b	489
+StrIComp_DKC_IA32_15_c	489
+StrIComp_DKC_IA32_15_d	489
+StrIComp_JOH_PAS_1_a	304
+StrIComp_JOH_PAS_1_b	304
+StrIComp_JOH_PAS_1_c	304
+StrIComp_JOH_PAS_1_d	304
+StrIComp_JOH_IA32_1_a	57
+StrIComp_JOH_IA32_1_b	57
+StrIComp_JOH_IA32_1_c	57
+StrIComp_JOH_IA32_1_d	57
+StrIComp_JOH_IA32_2_a	307
+StrIComp_JOH_IA32_2_b	307
+StrIComp_JOH_IA32_2_c	307
+StrIComp_JOH_IA32_2_d	307
+StrIComp_JOH_IA32_3_a	53
+StrIComp_JOH_IA32_3_b	53
+StrIComp_JOH_IA32_3_c	53
+StrIComp_JOH_IA32_3_d	53
+StrIComp_JOH_IA32_4_a	299
+StrIComp_JOH_IA32_4_b	299
+StrIComp_JOH_IA32_4_c	299
+StrIComp_JOH_IA32_4_d	299
+StrIComp_DFL_Pas_10_a	547
+StrIComp_DFL_Pas_10_b	547
+StrIComp_DFL_Pas_10_c	547
+StrIComp_DFL_Pas_10_d	547
+StrIComp_DFL_Pas_11_a	534
+StrIComp_DFL_Pas_12_a	647
+StrIComp_DFL_Pas_18_a	647
+StrIComp_DFL_Pas_19_a	464
+StrIComp_DFL_Pas_19_b	464
+StrIComp_DFL_Pas_19_c	464
+StrIComp_DFL_Pas_19_d	464
+StrIComp_DKC_IA32_16_a	479
+StrIComp_DKC_IA32_16_b	479
+StrIComp_DKC_IA32_16_c	479
+StrIComp_DKC_IA32_16_d	479
+StrIComp_DKC_IA32_17_a	507
+StrIComp_DKC_IA32_17_b	507
+StrIComp_DKC_IA32_17_c	507
+StrIComp_DKC_IA32_17_d	507
+StrIComp_DKC_IA32_18_a	535
+StrIComp_DKC_IA32_18_b	535
+StrIComp_DKC_IA32_18_c	535
+StrIComp_DKC_IA32_18_d	535
+
+//DKC initlookup 136 + table 256 = 392
+//DFL initlookup 136 + table 256 = 392
+//StrIComp_JOH_IA32_2_a	51 + table 256 = 307
+//StrIComp_JOH_PAS_1_a	48 + table 256 = 304
+//StrIComp_JOH_IA32_4_a	43 + table 256 = 299

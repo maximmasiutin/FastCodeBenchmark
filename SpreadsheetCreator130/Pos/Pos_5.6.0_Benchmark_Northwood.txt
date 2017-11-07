@@ -1,0 +1,22 @@
+[01-10-2006 16:19:26] Running "PosBV.exe" benchmark version 5.6.0 with compiler settings: "R- Q- O+".
+OS: "Windows XP (NT.5.1.2600) Service Pack 2". CPU :"Intel(R) Pentium(R) 4 CPU 2.80GHz (GenuineIntel, type 0, family 00F, model 02, stepping 9), 2806,4 MHz / Intel MMX SSE SSE2".
+Pos_JOH_IA32_6	C	130	114	244
+Pos_JOH_PAS_6	4	144	114	258
+Pos_JOH_IA32_7	0	148	112	261
+Pos_JOH_IA32_5	0	141	123	264
+Pos_Sha_IA32_4	C	138	133	270
+Pos_Sha_IA32_5	C	139	131	270
+Pos_RTL_IA32	4	155	130	284
+Pos_Sha_IA32_3	C	142	145	288
+Pos_JOH_SSE_3	4	159	151	311
+Pos_JOH_SSE2_3	4	167	153	320
+Pos_Sha_Pas_2	C	162	159	322
+Pos_Sha_Pas_3	4	158	166	323
+Pos_JOH_MMX_3	C	166	162	328
+Pos_Sha_Pas_0	C	167	167	334
+Pos_Sha_Pas_1	4	169	166	334
+Pos_JOH_PAS_3	C	186	177	363
+Pos_JOH_PAS_4	8	198	170	369
+Pos_DKC_PAS_65	C	248	225	473
+Pos_RTL_PAS	C	244	414	658
+

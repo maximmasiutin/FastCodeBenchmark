@@ -1,0 +1,22 @@
+[30.9.2006 17:09:17] Running "PosBV.exe" benchmark version 5.6.0 with compiler settings: "R- Q- O+".
+OS: "Windows XP (NT.5.1.2600) Service Pack 2". CPU :"AMD Athlon(tm) 64 X2 Dual Core Processor 4200+ (AuthenticAMD, type 0, family 00F, model 2B, stepping 1), 2211,3 MHz, 2 CPU cores, 1 physical CPUs / AMD MMX SSE SSE2 SSE3".
+Pos_JOH_IA32_6	C	169	119	287
+Pos_JOH_PAS_6	4	189	108	297
+Pos_JOH_IA32_7	0	191	106	297
+Pos_JOH_IA32_5	0	206	106	313
+Pos_Sha_IA32_4	C	156	175	331
+Pos_JOH_SSE2_3	4	184	148	333
+Pos_Sha_IA32_5	C	155	184	339
+Pos_JOH_SSE_3	4	188	162	350
+Pos_JOH_MMX_3	C	178	177	355
+Pos_Sha_IA32_3	C	153	206	359
+Pos_RTL_IA32	4	181	191	372
+Pos_Sha_Pas_3	4	191	253	444
+Pos_Sha_Pas_1	4	198	272	470
+Pos_Sha_Pas_2	C	191	294	484
+Pos_JOH_PAS_3	C	212	273	486
+Pos_JOH_PAS_4	8	216	273	489
+Pos_Sha_Pas_0	C	211	303	514
+Pos_DKC_PAS_65	C	287	291	578
+Pos_RTL_PAS	C	259	744	1003
+

@@ -1,0 +1,27 @@
+[4.9.2006 21:46:25] Running "MaxIntBenchValid.exe" benchmark version 1.8.1 with compiler settings: "R- Q- O+".
+OS: "Windows XP (NT.5.1.2600) Service Pack 2". CPU :"AMD Athlon(tm) 64 X2 Dual Core Processor 4200+ (AuthenticAMD, type 0, family 00F, model 2B, stepping 1), 2206,5 MHz, 2 CPU cores, 1 physical CPUs / AMD MMX SSE SSE2 SSE3".
+Max_LBG_IA32_1_b	0	2312
+Max_Sha_IA32_1_c	0	2437
+Max_LBG_IA32_1_d	4	2500
+Max_LBG_IA32_1_c	C	2531
+Max_LBG_IA32_1_a	8	2579
+Max_Sha_IA32_1_b	C	2593
+Max_Sha_IA32_1_d	4	2625
+Max_Sha_Pas_1_a	C	2656
+Max_Sha_IA32_1_a	8	2672
+Max_Sha_Pas_1_c	4	2672
+Max_Sha_Pas_1_b	0	2750
+Max_Sha_Pas_1_d	8	2781
+Max_RTL_IA32_1_c	C	5000
+Max_RTL_IA32_1_b	4	5047
+Max_RTL_IA32_1_d	8	5141
+Max_RTL_IA32_1_a	0	5156
+Max_DKC_Pas_1_d	C	6140
+Max_DKC_IA32_1_b	C	6141
+Max_DKC_IA32_1_a	4	6156
+Max_DKC_IA32_1_d	0	6156
+Max_DKC_Pas_1_a	0	6171
+Max_DKC_Pas_1_b	8	6172
+Max_DKC_Pas_1_c	4	6172
+Max_DKC_IA32_1_c	8	6187
+

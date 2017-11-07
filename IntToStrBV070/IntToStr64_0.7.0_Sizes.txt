@@ -1,0 +1,25 @@
+PenaltyForSizeConstant	15
+IntToStr64_JOH_IA32_6_a	810
+IntToStr64_JOH_IA32_6_d	810
+IntToStr64_JOH_IA32_6_c	810
+IntToStr64_JOH_IA32_6_b	810
+IntToStr64_AZ_Pas_2_a	1548
+IntToStr64_AZ_Pas_2_c	1548
+IntToStr64_AZ_Pas_2_b	1548
+IntToStr64_AZ_Pas_2_d	1548
+IntToStr64_JOH_PAS_5_c	1059
+IntToStr64_JOH_PAS_5_d	1059
+IntToStr64_JOH_PAS_5_b	1059
+IntToStr64_JOH_PAS_5_a	1059
+IntToStr64_RTL_IA32_1	38
+IntToStr64_AI_PAS_15_c	748
+IntToStr64_AI_PAS_15_d	748
+IntToStr64_AI_PAS_15_b	748
+IntToStr64_AI_PAS_15_a	748
+
+
+//IntToStr64_JOH_IA32_6_a	610 + TwoDigitLookup 200
+//IntToStr64_AZ_Pas_2_a	972 + PowersTimes1_64 144 + PowersTimes2_64 144 + PowersTimes3_64 144 + PowersTimes4_64 144
+//IntToStr64_JOH_PAS_5_c	859 + TwoDigitLookup 200
+//IntToStr64_RTL_IA32_1	38
+//IntToStr64_AI_PAS_15_c	692 + FormatIntBuf 56

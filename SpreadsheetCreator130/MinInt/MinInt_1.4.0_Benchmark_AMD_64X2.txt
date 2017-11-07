@@ -1,0 +1,20 @@
+[25.10.2006 18:05:03] Running "MinIntBenchValid.exe" benchmark version 1.4.0 with compiler settings: "R- Q- O+".
+OS: "Windows XP (NT.5.1.2600) Service Pack 2". CPU :"AMD Athlon(tm) 64 X2 Dual Core Processor 4200+ (AuthenticAMD, type 0, family 00F, model 2B, stepping 1), 2233,9 MHz, 2 CPU cores, 1 physical CPUs / AMD MMX SSE SSE2 SSE3".
+Min_LBG_IA32ext_1_c	C	2047
+Min_LBG_IA32ext_1_a	4	2093
+Min_LBG_IA32ext_1_b	0	2094
+Min_LBG_IA32ext_1_d	8	2140
+Min_Sha_IA32_1_b	4	2281
+Min_Sha_IA32_1_c	8	2282
+Min_Sha_IA32_1_d	C	2313
+Min_Sha_IA32_1_a	0	2328
+Min_Sha_Pas_1_b	4	2407
+Min_Sha_Pas_1_a	0	2422
+Min_Sha_Pas_1_c	8	2422
+Min_Sha_Pas_1_d	C	2469
+MinRTL	0	4828
+Min_DKC_Pas_1_c	0	6359
+Min_DKC_Pas_1_b	4	6391
+Min_DKC_Pas_1_a	8	6406
+Min_DKC_Pas_1_d	C	6532
+

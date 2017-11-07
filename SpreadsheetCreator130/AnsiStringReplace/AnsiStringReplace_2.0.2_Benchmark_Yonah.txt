@@ -1,0 +1,24 @@
+[16/01/2007 19:53:30] Running "AnsiStringReplaceBV.exe" benchmark version 2.0.2 with compiler settings: "R- Q- O+".
+OS: "Windows XP (NT.5.1.2600) Service Pack 2". CPU :"Genuine Intel(R) CPU           T2300  @ 1.66GHz (GenuineIntel, type 0, family 6, model E, stepping 8), 1666.7 MHz, 2 logical CPUs, 1 physical CPUs / Intel MMX SSE SSE2 SSE3".
+StringReplace_JOH_IA32_17	4	175	177	352
+StringReplace_JOH_IA32_18	0	193	184	377
+StringReplace_JOH_IA32_12	8	199	185	384
+StringReplace_JOH_PAS_12	8	209	192	401
+StringReplace_EG_MMX_1	8	231	200	431
+StringReplace_EWC_IA32_2	4	350	352	702
+StringReplace_DKC_IA32_20	0	493	221	714
+StringReplace_DKC_SSE2_22	C	471	244	715
+StringReplace_DKC_SSE2_21	4	472	244	716
+StringReplace_DKC_IA32_19	8	476	244	720
+StringReplace_DKC_IA32_17	8	482	253	735
+StringReplace_DKC_MMX_12	8	482	253	735
+StringReplace_DKC_MMX_13	4	485	253	738
+StringReplace_DKC_MMX_14	0	493	253	746
+StringReplace_DKC_SSE_11	C	508	238	746
+StringReplace_DKC_SSE_12	0	509	237	746
+StringReplace_SHA_IA32_1	8	569	209	778
+StringReplace_DKC_Pas_6	0	513	269	782
+StringReplace_REF_PAS_1	0	1319	737	2056
+StringReplace_HV_IA32_1	C	1022	1381	2403
+StringReplace_RTL_PAS_1	8	2730	2273	5003
+

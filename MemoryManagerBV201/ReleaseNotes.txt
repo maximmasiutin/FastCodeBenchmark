@@ -1,0 +1,12 @@
+FastCode Memory Manager B&V 2.0.1 - 23-Apr-2006
+
+This B&V is similar to the 1.1 series and is intended to be used by MM authors to test thair latest entries while the more significant changes are made for the 2.1 series.
+
+All MMs have been added back to the batch files.  Some of these may stil lock up, so be careful.
+Removed Delphi 6 support from the batch files.
+Added Delphi 2006 suport to the batch files.
+Updated FastMM - 4.64
+Updated DKCMM - 0.32
+Updated BucketMemDKC_ASM
+
+Note that the older versions of the NexusMM trial DCUs are still being used, which do not support Delphi 2006.  These will be updated as soon as new trial DCUs are available.

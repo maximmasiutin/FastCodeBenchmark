@@ -1,0 +1,27 @@
+[04-09-2006 18:58:39] Running "MaxIntBenchValid.exe" benchmark version 1.8.1 with compiler settings: "R- Q- O+".
+OS: "Windows XP (NT.5.1.2600) Service Pack 2". CPU :"Intel(R) Pentium(R) 4 CPU 2.80GHz (GenuineIntel, type 0, family 00F, model 02, stepping 9), 2806,4 MHz / Intel MMX SSE SSE2".
+Max_LBG_IA32_1_b	0	3218
+Max_LBG_IA32_1_a	8	3219
+Max_LBG_IA32_1_d	4	3219
+Max_LBG_IA32_1_c	C	3234
+Max_Sha_IA32_1_c	0	3234
+Max_Sha_IA32_1_d	4	3234
+Max_Sha_IA32_1_a	8	3235
+Max_Sha_IA32_1_b	C	3235
+Max_Sha_Pas_1_b	0	3641
+Max_Sha_Pas_1_c	4	3656
+Max_Sha_Pas_1_a	C	3672
+Max_Sha_Pas_1_d	8	3688
+Max_DKC_Pas_1_c	4	4500
+Max_DKC_IA32_1_b	C	4516
+Max_DKC_IA32_1_a	4	4531
+Max_DKC_IA32_1_d	0	4532
+Max_DKC_IA32_1_c	8	4546
+Max_DKC_Pas_1_b	8	4546
+Max_RTL_IA32_1_c	C	4547
+Max_DKC_Pas_1_d	C	4562
+Max_DKC_Pas_1_a	0	4563
+Max_RTL_IA32_1_d	8	4609
+Max_RTL_IA32_1_a	0	4625
+Max_RTL_IA32_1_b	4	4625
+

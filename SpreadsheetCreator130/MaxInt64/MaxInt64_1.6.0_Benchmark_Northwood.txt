@@ -1,0 +1,31 @@
+[27.4.2006 20:52:47] Running "MaxInt64BV.exe" benchmark version 1.6.0 with compiler settings: "R- Q- O+".
+OS: "Windows 2000 (NT.5.0.2195) Service Pack 4". CPU :"Intel(R) Pentium(R) 4 CPU 2.66GHz (GenuineIntel, type 0, family 00F, model 02, stepping 9), 2659,9 MHz / Intel MMX SSE SSE2".
+MaxShaInt64_2_b	4	6687
+MaxShaInt64_2_c	8	6703
+MaxShaInt64_2_d	C	6703
+MaxShaInt64_2_a	0	6734
+MaxInt64JOH2_d	4	7781
+MaxInt64JOH2_b	C	7828
+MaxInt64JOH2_c	0	7829
+MaxInt64JOH2_a	8	7969
+MaxInt64JOH_b	0	8078
+MaxDKCAsmIA32_a	4	8140
+MaxDKCAsmIA32_d	8	8172
+MaxInt64JOH_d	8	8187
+MaxInt64JOH_a	C	8188
+MaxDKCAsmIA32_c	C	8250
+MaxDKCAsmIA32_b	0	8281
+MaxShaInt64_b	8	8531
+MaxShaInt64_d	8	8531
+MaxShaInt64_a	0	8532
+MaxShaInt64_c	0	8562
+MaxInt64JOH_c	4	8781
+MaxRTL_c	C	8985
+MaxDKCPas_b	C	9047
+MaxRTL_b	8	9062
+MaxRTL_a	8	9063
+MaxDKCPas_d	4	9063
+MaxRTL_d	0	9125
+MaxDKCPas_c	0	9125
+MaxDKCPas_a	8	9140
+

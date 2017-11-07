@@ -1,0 +1,28 @@
+[15.10.2006 10:53:23] Running "Int64MulBV.exe" benchmark version 1.4.0 with compiler settings: "R- Q- O+".
+OS: "Windows XP (NT.5.1.2600) Service Pack 2". CPU :"AMD Athlon(tm) 64 X2 Dual Core Processor 4200+ (AuthenticAMD, type 0, family 00F, model 2B, stepping 1), 2211,3 MHz, 2 CPU cores, 1 physical CPUs / AMD MMX SSE SSE2 SSE3".
+Int64Mul_JOH_IA32_4_a	0	37	46	83
+Int64Mul_JOH_IA32_4_b	C	37	46	83
+Int64Mul_JOH_IA32_4_c	8	37	46	83
+Int64Mul_JOH_IA32_4_d	4	37	46	83
+Int64Mul_DKC_IA32_2_a	4	51	65	116
+Int64Mul_DKC_IA32_2_b	8	51	65	116
+Int64Mul_DKC_IA32_2_c	C	51	65	116
+Int64Mul_DKC_IA32_2_d	0	51	65	116
+Int64Mul_JOH_IA32_2_a	0	49	67	116
+Int64Mul_JOH_IA32_2_b	4	50	67	117
+Int64Mul_JOH_IA32_2_c	8	50	67	117
+Int64Mul_JOH_IA32_2_d	C	50	67	117
+Int64Mul_JOH_IA32_1_b	C	51	68	119
+Int64Mul_JOH_IA32_1_c	8	51	68	119
+Int64Mul_JOH_IA32_1_d	4	51	68	119
+Int64Mul_AMD_IA32_1_c	8	51	68	119
+Int64Mul_JOH_IA32_1_a	0	51	69	120
+Int64Mul_AMD_IA32_1_a	0	51	69	120
+Int64Mul_AMD_IA32_1_b	C	51	69	120
+Int64Mul_AMD_IA32_1_d	4	51	69	120
+Int64Mul_RTL_IA32_1	0	54	69	123
+Int64Mul_RTL_IA32_2_a	0	89	113	202
+Int64Mul_RTL_IA32_2_b	C	89	113	202
+Int64Mul_RTL_IA32_2_c	8	89	113	202
+Int64Mul_RTL_IA32_2_d	4	89	113	202
+

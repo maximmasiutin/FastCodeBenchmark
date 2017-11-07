@@ -1,0 +1,20 @@
+[25/10/2006 16:30:46] Running "MinIntBenchValid.exe" benchmark version 1.4.0 with compiler settings: "R- Q- O+".
+OS: "Windows XP (NT.5.1.2600) Service Pack 2". CPU :"Genuine Intel(R) CPU           T2300  @ 1.66GHz (GenuineIntel, type 0, family 6, model E, stepping 8), 1666.7 MHz, 2 logical CPUs, 1 physical CPUs / Intel MMX SSE SSE2 SSE3".
+Min_LBG_IA32ext_1_b	0	2391
+Min_LBG_IA32ext_1_a	4	2406
+Min_LBG_IA32ext_1_d	8	2406
+Min_LBG_IA32ext_1_c	C	2515
+Min_Sha_IA32_1_d	C	2765
+Min_Sha_IA32_1_a	0	2766
+Min_Sha_IA32_1_b	4	2766
+Min_Sha_IA32_1_c	8	2766
+Min_Sha_Pas_1_c	8	3359
+Min_Sha_Pas_1_d	C	3359
+Min_Sha_Pas_1_a	0	3360
+Min_Sha_Pas_1_b	4	3360
+MinRTL	0	3985
+Min_DKC_Pas_1_b	4	4125
+Min_DKC_Pas_1_a	8	4203
+Min_DKC_Pas_1_d	C	4204
+Min_DKC_Pas_1_c	0	4390
+

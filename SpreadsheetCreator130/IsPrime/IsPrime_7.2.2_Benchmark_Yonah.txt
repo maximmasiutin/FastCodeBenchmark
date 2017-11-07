@@ -1,0 +1,21 @@
+[28/10/2006 16:34:59] Running "IsPrimeBV.exe" benchmark version 7.2.2 with compiler settings: "R- Q- O+".
+OS: "Windows XP (NT.5.1.2600) Service Pack 2". CPU :"Genuine Intel(R) CPU           T2300  @ 1.66GHz (GenuineIntel, type 0, family 6, model E, stepping 8), 1666.7 MHz, 2 logical CPUs, 1 physical CPUs / Intel MMX SSE SSE2 SSE3".
+IsPrime_JOH_IA32_8	247	294	280	821
+IsPrime_HR_IA32_2	267	286	300	853
+IsPrime_HR_IA32_1	342	410	408	1160
+IsPrime_JOH_IA32_6	339	443	432	1214
+IsPrime_DKC_SSE_7	462	553	534	1549
+IsPrime_DKC_SSE_6	484	570	555	1609
+IsPrime_DKC_SSE_5	487	581	567	1635
+IsPrime_DKC_SSE_4	494	603	586	1683
+IsPrime_DKC_SSE_3	497	628	618	1743
+IsPrime_DKC_SSE_2	516	628	617	1761
+IsPrime_DKC_SSE_1	518	630	619	1767
+IsPrime_DKC_IA32_9	524	630	619	1773
+IsPrime_DKC_Pas_26	793	911	897	2601
+IsPrime_DKC_Pas_27	815	912	893	2620
+IsPrime_DKC_Pas_23	901	1154	1140	3195
+IsPrime_DKC_Pas_24	919	1152	1136	3207
+IsPrime_DKC_Pas_25	1082	1248	1237	3567
+IsPrime_JOH_Pas_6	2613	6046	6851	15510
+

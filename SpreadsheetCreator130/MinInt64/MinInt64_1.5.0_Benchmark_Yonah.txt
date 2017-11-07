@@ -1,0 +1,36 @@
+[3/05/2006 10:22:48 AM] Running "MinInt64BV.exe" benchmark version 1.5.0 with compiler settings: "R- Q- O+".
+OS: "Windows XP (NT.5.1.2600) Service Pack 2". CPU :"Genuine Intel(R) CPU           T2300  @ 1.66GHz (GenuineIntel, type 0, family 6, model E, stepping 8), 1662.5 MHz, 2 logical CPUs, 1 physical CPUs / Intel MMX SSE SSE2 SSE3".
+MinInt64JOH2_a	8	6656
+MinInt64JOH2_b	C	6656
+MinInt64JOH2_c	0	6656
+MinInt64JOH2_d	4	6672
+MinDKCIA32Ext_b	8	7156
+MinDKCIA32Ext_d	8	7156
+MinDKCIA32Ext_a	0	7157
+MinDKCIA32Ext_c	0	7157
+MinShaInt64_c	4	7265
+MinShaInt64_b	0	7266
+MinShaInt64_d	8	7266
+MinShaInt64_a	C	7282
+MinInt64JOH_c	4	7547
+MinInt64JOH_d	8	7547
+MinInt64JOH_a	C	7578
+MinInt64JOH_b	0	7750
+MinShaInt64_2_b	0	7859
+MinShaInt64_2_a	8	7875
+MinShaInt64_2_c	C	7891
+MinShaInt64_2_d	4	7907
+MinDKCAsmIA32_3_c	C	8094
+MinDKCAsmIA32_3_d	8	8125
+MinDKCAsmIA32_4_b	8	8187
+MinDKCAsmIA32_4_d	0	8234
+MinDKCAsmIA32_4_c	C	8250
+MinDKCAsmIA32_3_b	0	8297
+MinDKCAsmIA32_4_a	4	8312
+MinDKCAsmIA32_3_a	4	8344
+MinDKCPas_d	C	11032
+MinDKCPas_a	8	11063
+MinDKCPas_c	8	11063
+MinDKCPas_b	C	11093
+MinRTL	8	11328
+

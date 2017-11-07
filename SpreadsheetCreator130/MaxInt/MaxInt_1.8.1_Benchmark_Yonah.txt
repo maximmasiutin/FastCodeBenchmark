@@ -1,0 +1,27 @@
+[04-09-2006 19:20:37] Running "MaxIntBenchValid.exe" benchmark version 1.8.1 with compiler settings: "R- Q- O+".
+OS: "Windows XP (NT.5.1.2600) Service Pack 2". CPU :"Genuine Intel(R) CPU           T2300  @ 1.66GHz (GenuineIntel, type 0, family 6, model E, stepping 8), 1666,7 MHz, 2 logical CPUs, 1 physical CPUs / Intel MMX SSE SSE2 SSE3".
+Max_LBG_IA32_1_b	0	2391
+Max_LBG_IA32_1_d	4	2406
+Max_LBG_IA32_1_a	8	2407
+Max_LBG_IA32_1_c	C	2532
+Max_Sha_IA32_1_d	4	2750
+Max_Sha_IA32_1_a	8	2765
+Max_Sha_IA32_1_b	C	2766
+Max_Sha_IA32_1_c	0	2766
+Max_Sha_Pas_1_c	4	3344
+Max_Sha_Pas_1_d	8	3359
+Max_Sha_Pas_1_a	C	3360
+Max_Sha_Pas_1_b	0	3360
+Max_RTL_IA32_1_a	0	4000
+Max_RTL_IA32_1_d	8	4031
+Max_RTL_IA32_1_b	4	4062
+Max_DKC_IA32_1_d	0	4156
+Max_RTL_IA32_1_c	C	4157
+Max_DKC_Pas_1_c	4	4172
+Max_DKC_Pas_1_a	0	4187
+Max_DKC_IA32_1_c	8	4219
+Max_DKC_Pas_1_b	8	4219
+Max_DKC_IA32_1_b	C	4265
+Max_DKC_Pas_1_d	C	4313
+Max_DKC_IA32_1_a	4	4344
+

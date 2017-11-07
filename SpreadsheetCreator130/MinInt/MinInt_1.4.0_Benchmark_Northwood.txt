@@ -1,0 +1,20 @@
+[25-10-2006 16:19:50] Running "MinIntBenchValid.exe" benchmark version 1.4.0 with compiler settings: "R- Q- O+".
+OS: "Windows XP (NT.5.1.2600) Service Pack 2". CPU :"Intel(R) Pentium(R) 4 CPU 2.80GHz (GenuineIntel, type 0, family 00F, model 02, stepping 9), 2806,4 MHz / Intel MMX SSE SSE2".
+Min_Sha_IA32_1_a	0	3156
+Min_Sha_IA32_1_b	4	3156
+Min_Sha_IA32_1_c	8	3156
+Min_Sha_IA32_1_d	C	3156
+Min_LBG_IA32ext_1_c	C	3172
+Min_LBG_IA32ext_1_b	0	3188
+Min_LBG_IA32ext_1_d	8	3188
+Min_LBG_IA32ext_1_a	4	3344
+Min_Sha_Pas_1_a	0	3593
+Min_Sha_Pas_1_c	8	3594
+Min_Sha_Pas_1_d	C	3594
+Min_Sha_Pas_1_b	4	3719
+Min_DKC_Pas_1_d	C	4469
+Min_DKC_Pas_1_b	4	4484
+Min_DKC_Pas_1_c	0	4484
+MinRTL	0	4563
+Min_DKC_Pas_1_a	8	4563
+

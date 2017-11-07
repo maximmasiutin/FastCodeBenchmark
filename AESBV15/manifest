@@ -1,0 +1,6 @@
+aes_base.pas         AES basic routines
+aes_decr.pas         AES decrypt functions
+aes_encr.pas         AES encrypt functions
+aes_type.pas         AES type definitions
+aesweunit.pas        Interface unit for fastcode (AESBV and other)
+t_aes_se.dpr         Test program for single block encrypt/decrypt

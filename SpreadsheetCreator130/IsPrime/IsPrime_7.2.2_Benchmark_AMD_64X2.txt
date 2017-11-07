@@ -1,0 +1,21 @@
+[27.10.2006 16:09:06] Running "IsPrimeBV.exe" benchmark version 7.2.2 with compiler settings: "R- Q- O+".
+OS: "Windows XP (NT.5.1.2600) Service Pack 2". CPU :"AMD Athlon(tm) 64 X2 Dual Core Processor 4200+ (AuthenticAMD, type 0, family 00F, model 2B, stepping 1), 2211,3 MHz, 2 CPU cores, 1 physical CPUs / AMD MMX SSE SSE2 SSE3".
+IsPrime_JOH_IA32_8	168	178	160	506
+IsPrime_HR_IA32_2	172	176	180	528
+IsPrime_HR_IA32_1	288	341	328	957
+IsPrime_JOH_IA32_6	283	350	334	967
+IsPrime_DKC_SSE_7	418	461	446	1325
+IsPrime_DKC_SSE_6	457	482	463	1402
+IsPrime_DKC_SSE_5	463	482	465	1410
+IsPrime_DKC_SSE_4	472	506	494	1472
+IsPrime_DKC_SSE_3	470	527	511	1508
+IsPrime_DKC_SSE_2	500	528	512	1540
+IsPrime_DKC_SSE_1	504	534	517	1555
+IsPrime_DKC_IA32_9	511	534	519	1564
+IsPrime_DKC_Pas_26	786	852	837	2475
+IsPrime_DKC_Pas_27	819	853	833	2505
+IsPrime_DKC_Pas_23	1002	1140	1118	3260
+IsPrime_DKC_Pas_24	1045	1128	1109	3282
+IsPrime_DKC_Pas_25	1085	1223	1204	3512
+IsPrime_JOH_Pas_6	1598	3280	3706	8584
+

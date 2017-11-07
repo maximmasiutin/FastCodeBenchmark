@@ -1,0 +1,24 @@
+[11.1.2007 9:13:04] Running "AnsiStringReplaceBV.exe" benchmark version 2.0.2 with compiler settings: "R- Q- O+".
+OS: "Windows XP (NT.5.1.2600) Service Pack 2". CPU :"AMD Athlon(tm) 64 X2 Dual Core Processor 4200+ (AuthenticAMD, type 0, family 00F, model 2B, stepping 1), 2211,3 MHz, 2 CPU cores, 1 physical CPUs / AMD MMX SSE SSE2 SSE3".
+StringReplace_JOH_IA32_17	4	167	166	333
+StringReplace_JOH_IA32_18	0	175	166	341
+StringReplace_JOH_IA32_12	8	186	176	362
+StringReplace_JOH_PAS_12	8	190	204	394
+StringReplace_EG_MMX_1	8	219	227	446
+StringReplace_EWC_IA32_2	4	293	326	619
+StringReplace_DKC_IA32_20	0	447	214	661
+StringReplace_DKC_IA32_19	8	438	227	665
+StringReplace_SHA_IA32_1	8	470	197	667
+StringReplace_DKC_SSE2_22	C	441	247	688
+StringReplace_DKC_MMX_12	8	448	251	699
+StringReplace_DKC_SSE2_21	4	449	251	700
+StringReplace_DKC_Pas_6	0	467	234	701
+StringReplace_DKC_IA32_17	8	453	248	701
+StringReplace_DKC_SSE_11	C	463	244	707
+StringReplace_DKC_MMX_13	4	455	255	710
+StringReplace_DKC_SSE_12	0	467	245	712
+StringReplace_DKC_MMX_14	0	460	254	714
+StringReplace_HV_IA32_1	C	845	896	1741
+StringReplace_REF_PAS_1	0	1143	734	1877
+StringReplace_RTL_PAS_1	8	2171	1404	3575
+

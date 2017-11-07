@@ -1,0 +1,14 @@
+This source code is a special edition for the FastCode AES project:
+http://dennishomepage.gugs-cats.dk/AESBVxx.zip, xx=01..06.
+
+Dennis Kjaer Christensen stripped the support for pascal compilers other than
+Delphi 4..7. This is an updated version of the dkc changes, the full source
+code is availables from of http://home.netsurf.de/wolfgang.ehrhardt
+
+The Sep2004 updates include new revision history entries, a note related to
+the restricted compiler set, and a test program for the changed units.
+
+The source can be used to replace the files in AESBV06.zip.
+
+Wolfgang Ehrhardt Sep. 2004
+

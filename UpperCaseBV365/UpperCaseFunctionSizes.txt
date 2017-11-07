@@ -1,0 +1,146 @@
+PenaltyForSizeConstant	10
+UpperCase_RTL_IA32_1	153
+UpperCase_RTL_PAS_a	60
+UpperCase_RTL_PAS_b	60
+UpperCase_RTL_PAS_c	60
+UpperCase_RTL_PAS_d	60
+UpperCase_DKC_Pas_32_a	528
+UpperCase_DKC_Pas_32_b	528
+UpperCase_DKC_Pas_32_c	528
+UpperCase_DKC_Pas_32_d	528
+UpperCase_DKC_IA32_18_a	571
+UpperCase_DKC_IA32_18_b	571
+UpperCase_DKC_IA32_18_c	571
+UpperCase_DKC_IA32_18_d	571
+UpperCase_DKC_SSE2_6_a	571
+UpperCase_DKC_SSE2_6_b	571
+UpperCase_DKC_SSE2_6_c	571
+UpperCase_DKC_SSE2_6_d	571
+UpperCase_DKC_SSE3_1_a	528
+UpperCase_DKC_SSE3_1_b	528
+UpperCase_DKC_SSE3_1_c	528
+UpperCase_DKC_SSE3_1_d	528
+UpperCase_JOH_IA32_1_a	86
+UpperCase_JOH_IA32_1_b	86
+UpperCase_JOH_IA32_1_c	86
+UpperCase_JOH_IA32_1_d	86
+UpperCase_JOH_IA32_2_a	152
+UpperCase_JOH_IA32_2_b	152
+UpperCase_JOH_IA32_2_c	152
+UpperCase_JOH_IA32_2_d	152
+UpperCase_JOH_IA32_0_a	69
+UpperCase_JOH_IA32_0_b	69
+UpperCase_JOH_IA32_0_c	69
+UpperCase_JOH_IA32_0_d	69
+UpperCase_JOH_PAS_1_a	343
+UpperCase_JOH_PAS_1_b	343
+UpperCase_JOH_PAS_1_c	343
+UpperCase_JOH_PAS_1_d	343
+UpperCase_JOH_MMX_1_a	437
+UpperCase_JOH_MMX_1_b	437
+UpperCase_JOH_MMX_1_c	437
+UpperCase_JOH_MMX_1_d	437
+UpperCase_JOH_SSE2_1_a	420
+UpperCase_JOH_SSE2_1_b	420
+UpperCase_JOH_SSE2_1_c	420
+UpperCase_JOH_SSE2_1_d	420
+UpperCase_DKC_IA32_21_a	132
+UpperCase_DKC_IA32_21_b	132
+UpperCase_DKC_IA32_21_c	132
+UpperCase_DKC_IA32_21_d	132
+UpperCase_JOH_SSE_2_a	374
+UpperCase_JOH_SSE_2_b	374
+UpperCase_JOH_SSE_2_c	374
+UpperCase_JOH_SSE_2_d	374
+UpperCase_JOH_SSE2_2_a	317
+UpperCase_JOH_SSE2_2_b	317
+UpperCase_JOH_SSE2_2_c	317
+UpperCase_JOH_SSE2_2_d	317
+UpperCase_JOH_MMX_3_a	368
+UpperCase_JOH_MMX_3_b	368
+UpperCase_JOH_MMX_3_c	368
+UpperCase_JOH_MMX_3_d	368
+UpperCase_JOH_IA32_3_a	125
+UpperCase_JOH_IA32_3_b	125
+UpperCase_JOH_IA32_3_c	125
+UpperCase_JOH_IA32_3_d	125
+UpperCase_DKC_MMX_54_a	674
+UpperCase_DKC_MMX_54_b	674
+UpperCase_DKC_MMX_54_c	674
+UpperCase_DKC_MMX_54_d	674
+UpperCase_DKC_MMX_56_a	694
+UpperCase_DKC_MMX_56_b	694
+UpperCase_DKC_MMX_56_c	694
+UpperCase_DKC_MMX_56_d	694
+UpperCase_DKC_MMX_59_a	590
+UpperCase_DKC_MMX_59_b	590
+UpperCase_DKC_MMX_59_c	590
+UpperCase_DKC_MMX_59_d	590
+UpperCase_DKC_MMX_62_a	684
+UpperCase_DKC_MMX_62_b	684
+UpperCase_DKC_MMX_62_c	684
+UpperCase_DKC_MMX_62_d	684
+UpperCase_DKC_SSE_3_a	659
+UpperCase_DKC_SSE_3_b	659
+UpperCase_DKC_SSE_3_c	659
+UpperCase_DKC_SSE_3_d	659
+UpperCase_DKC_SSE_4_a	690
+UpperCase_DKC_SSE_4_b	690
+UpperCase_DKC_SSE_4_c	690
+UpperCase_DKC_SSE_4_d	690
+UpperCase_DKC_SSE2_7_a	666
+UpperCase_DKC_SSE2_7_b	666
+UpperCase_DKC_SSE2_7_c	666
+UpperCase_DKC_SSE2_7_d	666
+UpperCase_DKC_SSE3_5_a	666
+UpperCase_DKC_SSE3_5_b	666
+UpperCase_DKC_SSE3_5_c	666
+UpperCase_DKC_SSE3_5_d	666
+UpperCase_JOH_IA32_4_a	125
+UpperCase_JOH_IA32_4_b	125
+UpperCase_JOH_IA32_4_c	125
+UpperCase_JOH_IA32_4_d	125
+UpperCase_JOH_IA32_5_a	134
+UpperCase_JOH_IA32_5_b	134
+UpperCase_JOH_IA32_5_c	134
+UpperCase_JOH_IA32_5_d	134
+UpperCase_JOH_IA32_6_a	114
+UpperCase_JOH_IA32_6_b	114
+UpperCase_JOH_IA32_6_c	114
+UpperCase_JOH_IA32_6_d	114
+UpperCase_LBG_Pas_1_a	79
+UpperCase_LBG_Pas_1_b	79
+UpperCase_LBG_Pas_1_c	79
+UpperCase_LBG_Pas_1_d	79
+UpperCase_LBG_Pas_2_a	72
+UpperCase_LBG_Pas_2_b	72
+UpperCase_LBG_Pas_2_c	72
+UpperCase_LBG_Pas_2_d	72
+UpperCase_LBG_Pas_3_a	75
+UpperCase_LBG_Pas_3_b	75
+UpperCase_LBG_Pas_3_c	75
+UpperCase_LBG_Pas_3_d	75
+
+//UpperCase_DKC_Pas_32_a	136 + 136 lookup init + 256 table = 528
+//UpperCase_DKC_IA32_18_a	179 + 136 lookup init + 256 table = 571
+//UpperCase_DKC_MMX_34_a	442 + 136 lookup init + 256 table = 834 
+//UpperCase_DKC_MMX_35_a	439 + 136 lookup init + 256 table = 831
+//UpperCase_DKC_MMX_36_a	409 + 136 lookup init + 256 table = 801
+//UpperCase_DKC_SSE2_6_a	179 + 136 lookup init + 256 table = 571
+//UpperCase_DKC_SSE3_1_a	137 + 136 lookup init + 256 table = 528
+//DKC 48 Size 306 byte + 136 + 256 = 698 bytes
+//DKC 49 Size 310 byte + 136 + 256 = 702 bytes
+//DKC 54 Size = 282 + 256 + 136 = 674 byte
+//DKC 56 Size = 302 + 256 + 136 = 694 byte
+//DKC 59 Size = 297 + 256 + 37 = 590 byte
+//DKC 62 Size = 292 + 256 + 136 = 684 byte
+//DKC SSE_3 Size = 267 + 256 + 136 = 659 byte
+//DKC SSE_4 Size = 298 + 256 + 136 = 690 byte
+//UpperCase_DKC_SSE2_7_a  Size = 274 + 256 + 136 = 666 byte
+//UpperCase_DKC_SSE3_5  Size = 274 + 256 + 136 = 666 byte
+//UpperCase_JOH_PAS_1_a	60 + lookup init 27 + table 256 = 343
+//UpperCase_JOH_IA32_1_a	62 + lookup init 27 + table 256 = 345
+//UpperCase_JOH_MMX_1_a	154 + lookup init 27 + table 256 = 437
+//UpperCase_JOH_SSE2_1_a	137 + lookup init 27 + table 256 = 420
+
+

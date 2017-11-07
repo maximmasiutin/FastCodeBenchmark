@@ -1,0 +1,31 @@
+[3/05/2006 10:15:06 AM] Running "MaxInt64BV.exe" benchmark version 1.6.0 with compiler settings: "R- Q- O+".
+OS: "Windows XP (NT.5.1.2600) Service Pack 2". CPU :"Genuine Intel(R) CPU           T2300  @ 1.66GHz (GenuineIntel, type 0, family 6, model E, stepping 8), 1662.5 MHz, 2 logical CPUs, 1 physical CPUs / Intel MMX SSE SSE2 SSE3".
+MaxShaInt64_2_d	C	7234
+MaxShaInt64_2_b	4	7235
+MaxShaInt64_2_a	0	7265
+MaxShaInt64_2_c	8	7266
+MaxShaInt64_a	0	7891
+MaxShaInt64_b	8	7891
+MaxShaInt64_d	8	7891
+MaxShaInt64_c	0	7907
+MaxInt64JOH_b	0	8750
+MaxInt64JOH2_d	4	8906
+MaxInt64JOH2_c	0	8938
+MaxInt64JOH2_a	8	8984
+MaxInt64JOH_a	C	9032
+MaxInt64JOH2_b	C	9062
+MaxInt64JOH_c	4	9422
+MaxInt64JOH_d	8	9484
+MaxDKCAsmIA32_a	4	10187
+MaxDKCAsmIA32_b	0	10203
+MaxDKCAsmIA32_c	C	10485
+MaxDKCAsmIA32_d	8	10485
+MaxDKCPas_b	C	12359
+MaxRTL_c	C	12625
+MaxDKCPas_c	0	12671
+MaxDKCPas_a	8	12844
+MaxDKCPas_d	4	13047
+MaxRTL_a	8	13156
+MaxRTL_d	0	13156
+MaxRTL_b	8	13250
+

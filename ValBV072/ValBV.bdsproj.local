@@ -1,0 +1,48 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<BorlandProject>
+	<Transactions>
+    <Transaction>2006/06/13 15:58:50.250.pas,D:\Source Code\Delphi\FastCode\FastCodeLib\FastCode.pas=</Transaction>
+    <Transaction>2006/06/13 15:59:17.359.pas,D:\Source Code\Delphi\Common\FastMove.pas=</Transaction>
+    <Transaction>2006/06/13 15:59:17.375.pas,D:\Source Code\Delphi\FastCode\FastCodeLib\FastcodeUpperCase.pas=</Transaction>
+    <Transaction>2006/06/13 15:59:17.375.pas,D:\Source Code\Delphi\FastCode\FastCodeLib\FastCodeStrCopy.pas=</Transaction>
+    <Transaction>2006/06/13 15:59:17.390.pas,D:\Source Code\Delphi\FastCode\FastCodeLib\FastCodeStrComp.pas=</Transaction>
+    <Transaction>2006/06/13 15:59:17.406.pas,D:\Source Code\Delphi\FastCode\FastCodeLib\FastcodeLowerCase.pas=</Transaction>
+    <Transaction>2006/06/13 15:59:17.421.pas,D:\Source Code\Delphi\FastCode\FastCodeLib\FastCodeIntToStr.pas=</Transaction>
+    <Transaction>2006/06/13 15:59:17.437.pas,D:\Source Code\Delphi\FastCode\FastCodeLib\FastCodeFillChar.pas=</Transaction>
+    <Transaction>2006/06/13 15:59:17.437.pas,D:\Source Code\Delphi\Common\FastcodeCPUID.pas=</Transaction>
+    <Transaction>2006/06/13 15:59:17.453.pas,D:\Source Code\Delphi\FastCode\FastCodeLib\FastCodeCompareText.pas=</Transaction>
+    <Transaction>2006/06/13 15:59:17.468.pas,D:\Source Code\Delphi\FastCode\FastCodeLib\FastCodeCompareStr.pas=</Transaction>
+    <Transaction>2006/06/13 15:59:17.484.pas,D:\Source Code\Delphi\FastCode\FastCodeLib\FastCodeCompareMem.pas=</Transaction>
+    <Transaction>2006/06/13 15:59:33.750.pas,D:\Source Code\Delphi\FastCode\FastCodeLib\FastCodePos.pas=</Transaction>
+    <Transaction>2006/06/13 15:59:33.765.pas,D:\Source Code\Delphi\FastCode\FastCodeLib\FastCodePatch.pas=</Transaction>
+    <Transaction>2006/09/29 10:22:23.111.bdsproj,D:\Source Code\Delphi\FastCode\Val\IntToStrBV.bdsproj=D:\Source Code\Delphi\FastCode\Val\ValBV.bdsproj</Transaction>
+    <Transaction>2006/09/29 10:26:28.783.pas,D:\Source Code\Delphi\FastCode\Val\FastcodeChallengeIntToStr32Unit.pas=D:\Source Code\Delphi\FastCode\Val\FastcodeChallengeValLongUnit.pas</Transaction>
+    <Transaction>2006/09/29 10:26:46.705.pas,D:\Source Code\Delphi\FastCode\Val\FastcodeChallengeIntToStr64Unit.pas=D:\Source Code\Delphi\FastCode\Val\FastcodeChallengeValInt64Unit.pas</Transaction>
+    <Transaction>2006/09/29 10:27:39.424.pas,D:\Source Code\Delphi\FastCode\Val\IntToStrRTLUnit.pas=D:\Source Code\Delphi\FastCode\Val\ValRTLUnit.pas</Transaction>
+    <Transaction>2006/09/29 10:46:21.424.pas,D:\Source Code\Delphi\FastCode\Val\IntToStrOucUnit.pas=</Transaction>
+    <Transaction>2006/09/29 10:46:21.439.pas,D:\Source Code\Delphi\FastCode\Val\IntToStrLBGUnit.pas=</Transaction>
+    <Transaction>2006/09/29 10:46:21.439.pas,D:\Source Code\Delphi\FastCode\Val\IntToStrDKCUnit.pas=</Transaction>
+    <Transaction>2006/09/29 10:46:21.455.pas,D:\Source Code\Delphi\FastCode\Val\IntToStrAZUnit.pas=</Transaction>
+    <Transaction>2006/09/29 10:46:21.455.pas,D:\Source Code\Delphi\FastCode\Val\IntToStrAIUnit.pas=</Transaction>
+    <Transaction>2006/09/29 10:46:33.908.pas,D:\Source Code\Delphi\FastCode\Val\IntToStrSZUnit.pas=</Transaction>
+    <Transaction>2006/09/29 10:47:05.799.pas,D:\Source Code\Delphi\FastCode\Val\IntToStrJOHUnit.pas=D:\Source Code\Delphi\FastCode\Val\ValJOHUnit.pas</Transaction>
+    <Transaction>2006/09/30 18:43:35.260.pas,D:\Source Code\Delphi\FastCode\Val\Unit1.pas=D:\Source Code\Delphi\FastCode\Val\FastcodeChallengeValExtUnit.pas</Transaction>
+    <Transaction>2006/10/05 12:18:54.081.pas,D:\Source Code\Delphi\FastCode\Val\Unit1.pas=C:\Temp\Unit1.pas</Transaction>
+    <Transaction>2006/10/05 12:18:54.081.dfm,D:\Source Code\Delphi\FastCode\Val\Unit1.dfm=C:\Temp\Unit1.dfm</Transaction>
+    <Transaction>2006/10/05 12:20:37.784.pas,C:\Temp\Unit1.pas=</Transaction>
+    <Transaction>2006/10/05 12:20:37.784.dfm,C:\Temp\Unit1.dfm=</Transaction>
+    <Transaction>2006/10/28 14:00:47.134.pas,D:\Source Code\Delphi\FastCode\Val\Unit1.pas=D:\Source Code\Delphi\FastCode\Val\ValReplacementCandidate.pas</Transaction>
+    <Transaction>2006/11/01 19:06:57.008.pas,D:\Source Code\Delphi\FastCode\Val\Unit1.pas=D:\Source Code\Delphi\FastCode\Val\ValLBGUnit.pas</Transaction>
+    <Transaction>2006/11/02 00:57:12.601.pas,D:\Source Code\Delphi\FastCode\Val\ValReplacementCandidate.pas=</Transaction>
+    <Transaction>2006/11/02 17:30:11.756.pas,D:\Source Code\Delphi\FastCode\Val\Unit1.pas=D:\Source Code\Delphi\FastCode\Val\ValDKCUnit.pas</Transaction>
+    <Transaction>2006/11/05 13:50:04.433.pas,D:\Source Code\Delphi\FastCode\Val\ValDKCUnit.pas=</Transaction>
+    <Transaction>2006/11/05 15:42:05.808.pas,D:\Source Code\Delphi\FastCode\Val\UtilsUnit.pas=</Transaction>
+    <Transaction>2006/11/07 23:55:22.761.pas,D:\Source Code\Delphi\FastCode\Val\Unit1.pas=D:\Source Code\Delphi\FastCode\Val\ValDKCUnit.pas</Transaction>
+    <Transaction>2006/11/08 08:40:55.699.pas,D:\Source Code\Delphi\FastCode\Val\ValJOHUnit.pas=D:\Source Code\Delphi\FastCode\Val\ValJOH8Unit.pas</Transaction>
+    <Transaction>2006/11/08 08:43:49.511.pas,D:\Source Code\Delphi\FastCode\Val\ValJOHUnit.pas=D:\Source Code\Delphi\FastCode\Val\ValJOH7Unit.pas</Transaction>
+    <Transaction>2006/11/08 08:46:49.496.pas,D:\Source Code\Delphi\FastCode\Val\ValJOH7Unit.pas=</Transaction>
+    <Transaction>2006/11/08 08:47:06.355.pas,D:\Source Code\Delphi\FastCode\Val\ValJOH8Unit.pas=D:\Source Code\Delphi\FastCode\Val\ValJOHUnit.pas</Transaction>
+    <Transaction>2006/11/20 12:20:04.465.pas,D:\Source Code\Delphi\Common\FastcodeCPUID.pas=</Transaction>
+    <Transaction>2006/11/20 12:51:08.152.pas,D:\Source Code\Delphi\FastCode\CharPosIEx\FastcodeCPUID.pas=D:\Source Code\Delphi\FastCode\Val\FastcodeCPUID.pas</Transaction>
+  </Transactions>
+</BorlandProject>

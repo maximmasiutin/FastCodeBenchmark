@@ -1,0 +1,58 @@
+FastCode Memory Manager B&V 1.1.3 - 24-Jan-2005
+
+Added FastMM3 back to the batch files.
+
+-----
+FastCode Memory Manager B&V 1.1.2 - 20-Jan-2005
+
+Included D6 and D7 benchmarks in batch files
+Removed D2006 benchmarks and validations from batch files.  These will be added back in for the 2006 competition.
+Removed Nexus.  It was locking up on benchmarks.
+
+-----
+FastCode Memory Manager B&V 1.1.1 - 11-Jan-2005
+
+Removed Validate29.  This may be added back at a later time.
+Run validations and benchmarks with slightly different compiler settings.  This means that twice as many copies of FastcodeMMChallengeBV are built.
+ - Validations have Range and Overflow checking turned on.
+ - Benchmarks have Range and Overflow checking turned off.
+After every successful write of the XML log file, a backup is made.  This way, if an out of memory error leaves you with a zero byte file, you can recover up to the previous successful test.
+
+-----
+FastCode Memory Manager B&V 1.1.0 - 6-Jan-2005
+
+Added a -RV flag to FastcodeMMChallengeBV to make it easier to run Regular and Extra validations separately from the command line.
+Cleaned up the batch files to make them more flexible and make the output cleaner.
+
+-----
+FastCode Memory Manager B&V 1.0.0 - 4-Jan-2005
+
+Applied fixed BUCKETMM_ASM and added it back to tests
+Added Dennis' BucketMMDKC_ASM - a slightly
+Added the latest DKC_IA32_MM - 0.27.
+Added the latest FastMM - 4.56.
+Modified Validate13
+Added Validate29
+Recording more CPU details in the MMChallenge.xml result file.
+
+-----
+FastCode Memory Manager B&V 0.56 - 12-Dec-2005
+
+Added the latest DKC_IA32_MM - 0.24.
+Added the latest FastMM - 4.52.
+Added new FastcodeCPUID and FastcodeMoveCPUID units from dennis.
+Added new benchmark SingleFPBenchmark2 from Dennis.
+Updated the descriptions of Pierre's benchmarks to include his name.
+Changed the description of the ArrayUpsizeSingleThread benchmark with Dennis' new text.
+Added Delphi 2006 support.  Delphi 2005 is still the base compiler for benchmarks.
+
+-----
+FastCode Memory Manager B&V 0.55
+- 0.55 was started but Some of the ToDo items changed.  It was skipped to help avoid confusion.
+
+-----
+FastCode Memory Manager B&V 0.54 - 28-Oct-2005
+
+Added the latest DKC_IA32_MM - 0.18
+Added the latest FastMM - 4.46
+- Made sure the compiler defines are correct for FastMM and FastMM_16

@@ -1,0 +1,14 @@
+PenaltyForSizeConstant	99
+InverseDCT_Ref_Pas_1_a	2039
+InverseDCT_NH_Pas_2_a	2020
+InverseDCT_LC_Pas_1_a	1421
+InverseDCT_DKC_Pas_6_a	2065
+InverseDCT_DKC_Pas_7_a	2012
+InverseDCT_DKC_Pas_8_a	1865
+InverseDCT_DKC_Pas_9_a	1820
+InverseDCT_DKC_Pas_10_a	1659
+InverseDCT_DKC_Pas_11_a	1541
+InverseDCT_DKC_Pas_12_a	1524
+//InverseDCT_Ref_Pas_1_a 0x7B0+0x22+0x25=1968+34+37=2039
+//InverseDCT_NH_Pas_2_a  0x7B0+0xF+0x25=1968+15+37=2020
+//XX + constants

@@ -1,0 +1,31 @@
+[28.4.2006 20:16:08] Running "MaxInt64BV.exe" benchmark version 1.6.0 with compiler settings: "R- Q- O+".
+OS: "Windows XP (NT.5.1.2600) Service Pack 2". CPU :"AMD Athlon(tm) 64 X2 Dual Core Processor 4200+ (AuthenticAMD, type 0, family 00F, model 2B, stepping 1), 2741,9 MHz, 2 CPU cores, 1 physical CPUs / AMD MMX SSE SSE2 SSE3".
+MaxShaInt64_a	0	5421
+MaxShaInt64_c	0	5421
+MaxShaInt64_d	8	5422
+MaxShaInt64_b	8	5438
+MaxShaInt64_2_a	0	6516
+MaxShaInt64_2_c	8	6516
+MaxShaInt64_2_b	4	6531
+MaxShaInt64_2_d	C	6531
+MaxDKCAsmIA32_c	C	6672
+MaxDKCAsmIA32_a	4	6703
+MaxInt64JOH_b	0	6718
+MaxInt64JOH_d	8	6718
+MaxDKCAsmIA32_d	8	6797
+MaxInt64JOH2_a	8	7281
+MaxInt64JOH2_b	C	7312
+MaxInt64JOH2_c	0	7313
+MaxInt64JOH2_d	4	7407
+MaxInt64JOH_a	C	7578
+MaxDKCAsmIA32_b	0	7718
+MaxRTL_c	C	8015
+MaxRTL_a	8	8031
+MaxRTL_b	8	8032
+MaxDKCPas_b	C	8109
+MaxDKCPas_a	8	8125
+MaxInt64JOH_c	4	8141
+MaxRTL_d	0	9188
+MaxDKCPas_c	0	9672
+MaxDKCPas_d	4	9688
+

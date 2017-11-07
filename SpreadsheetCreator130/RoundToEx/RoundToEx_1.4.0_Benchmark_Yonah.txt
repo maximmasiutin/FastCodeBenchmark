@@ -1,0 +1,18 @@
+[29-12-2007 20:30:23] Running "RoundToEXBV.exe" benchmark version 1.4.0 with compiler settings: "R- Q- O+".
+OS: "Windows XP (NT.5.1.2600) Service Pack 2". CPU :"Genuine Intel(R) CPU           T2300  @ 1.66GHz (GenuineIntel, type 0, family 6, model E, stepping 8), 1666,7 MHz, 2 logical CPUs, 1 physical CPUs / Intel MMX SSE SSE2 SSE3".
+RoundToEX_DKC_IA32_1	63	68	70	201
+RoundToEX_DKC_IA32_2	62	68	71	201
+RoundToEX_DKC_IA32_4	66	70	71	207
+RoundToEX_JOH_IA32_2	67	69	72	208
+RoundToEX_DKC_IA32_3	86	77	71	234
+RoundToEX_JOH_IA32_1	88	96	103	287
+RoundToEX_JOH_IA32_3	84	114	97	295
+RoundToEX_JOH_PAS_2	305	324	339	968
+RoundToEX_DKC_Pas_2	320	342	351	1013
+RoundToEX_DKC_Pas_3	326	344	360	1030
+RoundToEX_DKC_Pas_4	324	352	359	1035
+RoundToEX_JOH_PAS_1	327	353	366	1046
+RoundToEX_JFH_Pas_1	365	403	396	1164
+RoundToEX_DKC_Pas_1	399	425	445	1269
+RoundToEX_Ref	458	486	542	1486
+

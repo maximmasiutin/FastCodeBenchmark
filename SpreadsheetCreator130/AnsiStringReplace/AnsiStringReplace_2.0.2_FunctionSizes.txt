@@ -1,0 +1,39 @@
+PenaltyForSizeConstant	15
+StringReplace_DKC_IA32_17	3719
+StringReplace_DKC_IA32_19	3193
+StringReplace_DKC_IA32_20	2233
+StringReplace_DKC_MMX_12	4035
+StringReplace_DKC_MMX_13	4035
+StringReplace_DKC_MMX_14	4031
+StringReplace_DKC_Pas_6	3263
+StringReplace_DKC_SSE2_21	7523
+StringReplace_DKC_SSE2_22	7521
+StringReplace_DKC_SSE_11	6652
+StringReplace_DKC_SSE_12	6652
+StringReplace_EG_MMX_1	2264
+StringReplace_EWC_IA32_2	2087
+StringReplace_HV_IA32_1	1124
+StringReplace_JOH_IA32_12	1392
+StringReplace_JOH_PAS_12	1448
+StringReplace_REF_PAS_1	345
+StringReplace_RTL_PAS_1	345
+StringReplace_SHA_IA32_1	1906
+StringReplace_JOH_IA32_17	1076
+StringReplace_JOH_IA32_18	888
+
+//StringReplace_HV_IA32_1 $24e + $94 + 2d + $13 + $42 + 256
+//StringReplace_SHA_IA32_1	$672 + 256 = 1906
+//StringReplace_EG_MMX_1 $7d6 + 256 2264
+//StringReplace_EWC_IA32_2 1831 + 256
+//StringReplace_DKC_Pas_6 $647	UpperCaseDKCPas32 $88	PosEZ_DKC_Pas_10 $312	InitializeUpperCaseLookUpTable $88	LookupTable 256
+//StringReplace_DKC_IA32_17 $5ff	LowerCaseDKC_IA32_1 $b3	PosEZ_DKC_Pas_9 $312	MoveForward_DKC_IA32_2 $38	Pos_DKC_Pas_1 $1ad	InitializeUpperCaseLookUpTable $88	LookupTable 256
+//StringReplace_DKC_IA32_19 $5d6	UpperCaseDKC_IA32_18 $b3	PosEZ_DKC_Pas_10 $312	InitializeUpperCaseLookUpTable $88	LookupTable 256
+//StringReplace_DKC_IA32_20 $5d6	UpperCaseDKC_IA32_18 $b3	PosEZ_DKC_Pas_11 $A9	InitializeUpperCaseLookUpTable $88	LookupTable 256
+//StringReplace_DKC_MMX_12 $5c9	LowerCaseDKC_IA32_1 $b3	PosEZ_DKC_Pas_9 $312	MoveForward_DKC_IA32_2 $38	Pos_DKC_MMX_1 $1ba	CharPosDKCMMX1 $165	InitializeUpperCaseLookUpTable $88	LookupTable 256
+//StringReplace_DKC_MMX_13 $5c9	LowerCaseDKC_IA32_1 $b3	PosEZ_DKC_Pas_9 $312	MoveForward_DKC_IA32_2 $38	Pos_DKC_MMX_2 $1b4	CharPosDKCMMX1 $165	InitializeUpperCaseLookUpTable $88	LookupTable 256
+//StringReplace_DKC_MMX_14 $5c9	LowerCaseDKC_IA32_1 $b3	PosEZ_DKC_Pas_9 $312	MoveForward_DKC_MMX_1 $34	Pos_DKC_MMX_2 $1b4	CharPosDKCMMX1 $165	InitializeUpperCaseLookUpTable $88	LookupTable 256
+//StringReplace_DKC_SSE_11 $5c2	UpperCaseDKC_IA32_18 $b3	PosEZ_DKC_Pas_9 $312	MoveForward_DKC_SSE_1 $ac2	Pos_DKC_SSE_5 $1b4	CharPosDKCSSE_1 $121	InitializeUpperCaseLookUpTable $88	LookupTable 256
+//StringReplace_DKC_SSE_12 $5c2	UpperCaseDKC_IA32_18 $b3	PosEZ_DKC_Pas_9 $312	MoveForward_DKC_SSE_1 $ac2	Pos_DKC_SSE_6 $1b4	CharPosDKCSSE_1 $121 	InitializeUpperCaseLookUpTable $88	LookupTable 256
+//StringReplace_DKC_SSE2_21 $5d6	UpperCaseDKC_IA32_18 $b3	PosEZ_DKC_Pas_9 $312	MoveForward_DKC_SSE2_3 $e15	Pos_DKC_SSE_6 $1b4	CharPosDKCSSE_1 $121	InitializeUpperCaseLookUpTable $88	LookupTable 256
+//StringReplace_DKC_SSE2_22 $5d6	UpperCaseDKC_IA32_18 $b3	PosEZ_DKC_Pas_9 $312	MoveForward_DKC_SSE2_3 $e15	Pos_DKC_SSE_7 $1b4	CharPosDKCSSE_2 $119	InitializeUpperCaseLookUpTable $88	LookupTable 256
+

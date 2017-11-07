@@ -1,0 +1,64 @@
+PenaltyForSizeConstant	15
+IntToStr_AI_PAS_14_a	432
+IntToStr_AI_PAS_14_b	432
+IntToStr_AI_PAS_14_c	432
+IntToStr_AI_PAS_14_d	432
+IntToStr_AZ_Pas_1_a	1129
+IntToStr_AZ_Pas_1_b	1129
+IntToStr_AZ_Pas_1_c	1129
+IntToStr_AZ_Pas_1_d	1129
+IntToStr_DKC_IA32_3_a	317
+IntToStr_DKC_IA32_3_b	317
+IntToStr_DKC_IA32_3_c	317
+IntToStr_DKC_IA32_3_d	317
+IntToStr_DKC_Pas_5_a	288
+IntToStr_DKC_Pas_5_b	288
+IntToStr_DKC_Pas_5_c	288
+IntToStr_DKC_Pas_5_d	288
+IntToStr_JOH_IA32_6_a	458
+IntToStr_JOH_IA32_6_b	458
+IntToStr_JOH_IA32_6_c	458
+IntToStr_JOH_IA32_6_d	458
+IntToStr_JOH_PAS_5_a	483
+IntToStr_JOH_PAS_5_b	483
+IntToStr_JOH_PAS_5_c	483
+IntToStr_JOH_PAS_5_d	483
+IntToStr_LBG_IA32_1_a	848
+IntToStr_LBG_IA32_1_b	848
+IntToStr_LBG_IA32_1_c	848
+IntToStr_LBG_IA32_1_d	848
+IntToStr_OUC_IA32_2_a	593
+IntToStr_OUC_IA32_2_b	593
+IntToStr_OUC_IA32_2_c	593
+IntToStr_OUC_IA32_2_d	593
+IntToStr_RTL_IA32_1	29
+IntToStr_SZ_IA32_4_a	407
+IntToStr_SZ_IA32_4_b	407
+IntToStr_SZ_IA32_4_c	407
+IntToStr_SZ_IA32_4_d	407
+IntToStr_SZ_IA32_5_a	392
+IntToStr_SZ_IA32_5_b	392
+IntToStr_SZ_IA32_5_c	392
+IntToStr_SZ_IA32_5_d	392
+IntToStr_SZ_PAS_3_a	533
+IntToStr_SZ_PAS_3_b	533
+IntToStr_SZ_PAS_3_c	533
+IntToStr_SZ_PAS_3_d	533
+IntToStr_SZ_PAS_5_a	532
+IntToStr_SZ_PAS_5_b	532
+IntToStr_SZ_PAS_5_c	532
+IntToStr_SZ_PAS_5_d	532
+
+//IntToStr_JOH_IA32_6_c	258 + TwoDigitLookup 200
+//IntToStr_JOH_PAS_5_d	283 + TwoDigitLookup 200
+//IntToStr_AI_PAS_14_c	392 + PowersOfTen 40
+//IntToStr_OUC_IA32_2_b	273 + DigitsTable 320
+//IntToStr_SZ_IA32_4_a	207 + Digits2 200
+//IntToStr_SZ_IA32_5_c	192 + Digits2 200
+//IntToStr_SZ_PAS_5_a	332 + Digits2 200
+//IntToStr_AZ_Pas_1_a	1129
+//IntToStr_SZ_PAS_3_d	320 + Digits2 200 + Div100_a 13
+//IntToStr_RTL_IA32_1	29
+//IntToStr_LBG_IA32_1_a	616 + TwoDigitLookup 200 + Digits 19 + divU100 13
+//IntToStr_DKC_Pas_5_d	268 + DigitArray 10 + CharArray 10
+//IntToStr_DKC_IA32_3_d	272 + DigitArray 10 + CharArray 10 + DivMod 25

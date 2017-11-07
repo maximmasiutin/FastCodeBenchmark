@@ -1,0 +1,18 @@
+[18-01-2008 13:18:44] Running "RoundToEXBV.exe" benchmark version 1.4.0 with compiler settings: "R- Q- O+".
+OS: "Windows XP (NT.5.1.2600) Service Pack 2". CPU :"AMD Athlon(tm) 64 X2 Dual Core Processor 4600+ (AuthenticAMD, type 0, family 00F, model 2B, stepping 1), -1450,9 MHz, 2 CPU cores, 1 physical CPUs / AMD MMX SSE SSE2 SSE3".
+RoundToEX_JOH_IA32_2	62	66	69	197
+RoundToEX_DKC_IA32_1	63	67	69	199
+RoundToEX_DKC_IA32_2	63	67	69	199
+RoundToEX_DKC_IA32_3	63	67	69	199
+RoundToEX_DKC_IA32_4	63	67	69	199
+RoundToEX_JOH_IA32_1	69	74	79	222
+RoundToEX_JOH_IA32_3	72	82	76	230
+RoundToEX_JOH_PAS_2	231	239	252	722
+RoundToEX_DKC_Pas_2	234	248	259	741
+RoundToEX_DKC_Pas_3	236	252	264	752
+RoundToEX_DKC_Pas_4	236	255	268	759
+RoundToEX_JOH_PAS_1	249	261	271	781
+RoundToEX_JFH_Pas_1	271	308	286	865
+RoundToEX_DKC_Pas_1	291	306	320	917
+RoundToEX_Ref	322	333	381	1036
+
