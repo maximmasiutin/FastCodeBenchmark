@@ -17,7 +17,12 @@ type
 
 implementation
 
-uses SysUtils;
+uses
+  SysUtils;
+
+const
+  IterationCount = 5;
+
 
 type
 
@@ -71,10 +76,8 @@ var
  ResultArray6 : array of TRegtangularComplexD;
  BenchArraySize : Integer;
 const
- MINBENCHARRAYSIZE : Integer = 9500;
- MAXBENCHARRAYSIZE : Integer = 10000;
- NOOFRUNS : Integer = 2;
-
+ MINBENCHARRAYSIZE = 9500;
+ MAXBENCHARRAYSIZE = 10000;
 begin
  for BenchArraySize := MINBENCHARRAYSIZE to MAXBENCHARRAYSIZE do
   begin
@@ -127,7 +130,7 @@ begin
      Src2Array6[I1].RealPart := 1;
      Src2Array6[I1].ImaginaryPart := 1;
     end;
-   for I2 := 0 to NOOFRUNS do
+   for I2 := 1 to IterationCount do
     begin
      for I5 := 0 to BenchArraySize-1 do
       begin
@@ -174,9 +177,10 @@ begin
   DoubleFPThread3 := TDoubleFPThread3.Create(True);
   DoubleFPThread3.FreeOnTerminate := False;
   DoubleFPThread3.FBenchmark := Self;
-  DoubleFPThread3.Resume;
+  DoubleFPThread3.Start;
   DoubleFPThread3.WaitFor;
   DoubleFPThread3.Free;
+  DoubleFPThread3 := nil;
 end;
 
 end.

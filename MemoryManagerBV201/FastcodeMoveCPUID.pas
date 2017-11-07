@@ -6575,50 +6575,50 @@ begin
       2 : PWord(@Dest)^ := PWord(S)^;
       3 : if D > S then
             begin
-              PByte(Integer(@Dest)+2)^ := PByte(S+2)^;
+              PByte(NativeUInt(@Dest)+2)^ := PByte(S+2)^;
               PWord(@Dest)^ := PWord(S)^;
             end
           else
             begin
               PWord(@Dest)^ := PWord(S)^;
-              PByte(Integer(@Dest)+2)^ := PByte(S+2)^;
+              PByte(NativeUInt(@Dest)+2)^ := PByte(S+2)^;
             end;
-      4 : PInteger(@Dest)^ := PInteger(S)^
+      4 : PNativeUInt(@Dest)^ := PNativeUInt(S)^
       else Exit; {Count <= 0}
     end
   else
     if D > S then
       begin
-        Temp := PInteger(S)^;
-        I := Integer(@Dest);
+        Temp := PNativeUInt(S)^;
+        I := NativeUInt(@Dest);
         C := Count - 4;
-        L := PInteger(Integer(@Dest) + C);
+        L := PNativeUInt(NativeUInt(@Dest) + C);
         Inc(S, C);
         repeat
-          L^ := PInteger(S)^;
+          L^ := PNativeUInt(S)^;
           if Count <= 8 then
             Break;
           Dec(Count, 4);
           Dec(S, 4);
           Dec(L);
         until False;
-        PInteger(I)^ := Temp;
+        PNativeUInt(I)^ := Temp;
       end
     else
       begin
         C := Count - 4;
-        Temp := PInteger(S + Cardinal(C))^;
-        I := Integer(@Dest) + C;
+        Temp := PNativeUInt(S + Cardinal(C))^;
+        I := NativeUInt(@Dest) + C;
         L := @Dest;
         repeat
-          L^ := PInteger(S)^;
+          L^ := PNativeUInt(S)^;
           if Count <= 8 then
             Break;
           Dec(Count, 4);
           Inc(S, 4);
           Inc(L);
         until False;
-        PInteger(I)^ := Temp;
+        PNativeUInt(I)^ := Temp;
       end;
 end; {MoveJOH_PAS}
 

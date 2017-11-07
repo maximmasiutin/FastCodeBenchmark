@@ -25,9 +25,9 @@ type
      discovered, possibly during create}
     FCanRunBenchmark: Boolean;
     {The peak address space usage measured}
-    FPeakAddressSpaceUsage: Cardinal;
+    FPeakAddressSpaceUsage: NativeUInt;
     {Gets the memory overhead of the benchmark that should be subtracted}
-    function GetBenchmarkOverhead: Cardinal; virtual;
+    function GetBenchmarkOverhead: NativeUInt; virtual;
   public
     constructor CreateBenchmark; virtual;
     {The tests - should return true if implemented}
@@ -53,8 +53,12 @@ type
     class function RunByDefault: boolean; virtual;
     {Benchmark Category}
     class function GetCategory: TBenchmarkCategory; virtual;
+
+    class function IsThreadedSpecial: Boolean; virtual;
+
+
     {The peak usage measured since the last reset}
-    property PeakAddressSpaceUsage: Cardinal read FPeakAddressSpaceUsage;
+    property PeakAddressSpaceUsage: NativeUInt read FPeakAddressSpaceUsage;
     {Indicates whether the benchmark can be run - or if a problem was
      discovered, possibly during create}
     property CanRunBenchmark: Boolean read FCanRunBenchmark;
@@ -84,7 +88,8 @@ procedure ComputeBenchmarkGlobalWeights;
 
 implementation
 
-uses FragmentationTestUnit, ReallocMemBenchmark, DownsizeTestUnit,
+uses
+  FragmentationTestUnit, ReallocMemBenchmark, DownsizeTestUnit,
   SmallUpsizeBenchmark, AddressSpaceCreepBenchmark,
   ArrayUpsizeSingleThread, BlockSizeSpreadBenchmark,
   LargeBlockSpreadBenchmark, NexusDBBenchmarkUnit,
@@ -100,14 +105,12 @@ uses FragmentationTestUnit, ReallocMemBenchmark, DownsizeTestUnit,
   MultiThreadedAllocAndFree, MultiThreadedReallocate,
   SingleThreadedAllocAndFree, SingleThreadedReallocate,
   SortIntArrayBenchmark2Unit, SortExtendedArrayBenchmark2Unit,
-  SingleThreadedAllocMem;
+  SingleThreadedAllocMem, SingleThreadedTinyReloc;
 
 { TFastcodeMMBenchmark }
 
 procedure TFastcodeMMBenchmark.RunBenchmark;
 begin
-  {We want reproducible results, so keep the same sequence of random numbers}
-  RandSeed := 0;
   {Reset the peak usage statistic}
   ResetUsageStatistics;
 end;
@@ -130,14 +133,16 @@ end;
 
 procedure TFastcodeMMBenchmark.UpdateUsageStatistics;
 var
-  LCurrentUsage: Cardinal;
+  LCurrentUsage, LBenchmarkOverhead: NativeUInt;
 begin
   {Get the usage less the usage at program startup (before the MM was started).
    The assumption here is that any static lookup tables used by the MM will be
    small.}
-  LCurrentUsage := GetAddressSpaceUsed - GetBenchmarkOverhead;
+  LCurrentUsage := GetAddressSpaceUsed;
+  LBenchmarkOverhead := GetBenchmarkOverhead;
+  if LBenchmarkOverhead >= LCurrentUsage then LCurrentUsage := 0 else LCurrentUsage := LCurrentUsage - LBenchmarkOverhead;
   {Update the peak usage}
-  if integer(LCurrentUsage) > integer(FPeakAddressSpaceUsage) then
+  if LCurrentUsage > FPeakAddressSpaceUsage then
     FPeakAddressSpaceUsage := LCurrentUsage;
 end;
 
@@ -156,12 +161,17 @@ begin
   Result := 0.5;
 end;
 
+class function TFastcodeMMBenchmark.IsThreadedSpecial: Boolean;
+begin
+  Result := False;
+end;
+
 class function TFastcodeMMBenchmark.GetBenchmarkWeight: Double;
 begin
   Result := 1;
 end;
 
-function TFastcodeMMBenchmark.GetBenchmarkOverhead: Cardinal;
+function TFastcodeMMBenchmark.GetBenchmarkOverhead: NativeUInt;
 begin
   {Return the address space usage on startup}
   Result := InitialAddressSpaceUsed;
@@ -182,17 +192,21 @@ procedure DefineBenchmarks;
 begin
   // first all single-thread benchmarks that execute in the application's main thread...
   AddBenchMark(TFragmentationTest);
-  AddBenchMark(TReallocBench);
+  AddBenchMark(TReallocBenchTiny);
+  AddBenchMark(TReallocBenchMedium);
+  AddBenchMark(TReallocBenchLarge);
   AddBenchMark(TDownsizeTest);
   AddBenchMark(TSmallUpsizeBench);
-  AddBenchMark(TSmallDownsizeBench);
+  AddBenchMark(TTinyDownsizeBench);
+  AddBenchMark(TVerySmallDownsizeBench);
   AddBenchMark(TBlockSizeSpreadBench);
   AddBenchMark(TRawPerformanceSingleThread);
   AddBenchMark(TAddressSpaceCreepBench);
   AddBenchMark(TLargeBlockSpreadBench);
   AddBenchMark(TArrayUpsizeSingleThread);
   AddBenchMark(TAddressSpaceCreepBenchLarge);
-  AddBenchMark(TSingleThreadReallocateBenchmark);
+  AddBenchMark(TSingleThreadReallocateVariousBlocksBenchmark);
+  AddBenchMark(TSingleThreadedTinyRelocBenchmark);
   AddBenchMark(TSingleThreadAllocateAndFreeBenchmark);
   AddBenchMark(TReservationsSystemBenchmark);
   AddBenchMark(TXMLParserBenchmark);
@@ -207,22 +221,56 @@ begin
   AddBenchMark(TMoveThreads2);
   AddBenchMark(TFillCharThreads);
   AddBenchMark(TSortIntArrayThreads);
-  AddBenchMark(TSortExtendedArrayThreads);
+  AddBenchMark(TStandardSortExtendedArrayThreads);
+  AddBenchMark(TQuickSortExtendedArrayThreads);
   AddBenchMark(TMemFreeThreads1);
   AddBenchMark(TMemFreeThreads2);
   AddBenchMark(TLinkedListBench);
-  AddBenchMark(TMultiThreadAllocateAndFreeBenchmark);
-  AddBenchMark(TMultiThreadReallocateBenchmark);
+  AddBenchMark(TMultiThreadAllocateAndFreeBenchmark2);
+  AddBenchMark(TMultiThreadAllocateAndFreeBenchmark4);
+  AddBenchMark(TMultiThreadAllocateAndFreeBenchmark8);
+  AddBenchMark(TMultiThreadAllocateAndFreeBenchmark12);
+  AddBenchMark(TMultiThreadAllocateAndFreeBenchmark16);
+  AddBenchMark(TMultiThreadAllocateAndFreeBenchmark31);
+  AddBenchMark(TMultiThreadAllocateAndFreeBenchmark64);
+  AddBenchMark(TMultiThreadReallocateBenchmark2);
+  AddBenchMark(TMultiThreadReallocateBenchmark4);
+  AddBenchMark(TMultiThreadReallocateBenchmark8);
+  AddBenchMark(TMultiThreadReallocateBenchmark12);
+  AddBenchMark(TMultiThreadReallocateBenchmark16);
+  AddBenchMark(TMultiThreadReallocateBenchmark31);
+  AddBenchMark(TMultiThreadReallocateBenchmark64);
   AddBenchMark(TQuickSortIntArrayThreads);
   AddBenchMark(TQuickSortExtendedArrayThreads);
   AddBenchMark(TNexusBenchmark1Thread);
   AddBenchMark(TNexusBenchmark2Threads);
   AddBenchMark(TNexusBenchmark4Threads);
   AddBenchMark(TNexusBenchmark8Threads);
+  AddBenchMark(TNexusBenchmark12Threads);
+  AddBenchMark(TNexusBenchmark16Threads);
+  AddBenchMark(TNexusBenchmark31Threads);
+  AddBenchMark(TNexusBenchmark64Threads);
+{$IFDEF NEXUS_UP_TO_512}
+  AddBenchMark(TNexusBenchmark128Threads);
+  AddBenchMark(TNexusBenchmark256Threads);
+  AddBenchMark(TNexusBenchmark512Threads);
+{$ENDIF}
   AddBenchMark(TWildThreads);
-  AddBenchMark(TRawPerformanceMultiThread);
+  AddBenchMark(TRawPerformanceMultiThread2);
+  AddBenchMark(TRawPerformanceMultiThread4);
+  AddBenchMark(TRawPerformanceMultiThread8);
+  AddBenchMark(TRawPerformanceMultiThread12);
+  AddBenchMark(TRawPerformanceMultiThread16);
+  AddBenchMark(TRawPerformanceMultiThread31);
+  AddBenchMark(TRawPerformanceMultiThread64);
   AddBenchMark(TManyThreadsTest);
-  AddBenchMark(TStringThreadTest);
+  AddBenchMark(TStringThreadTest2);
+  AddBenchMark(TStringThreadTest4);
+  AddBenchMark(TStringThreadTest8);
+  AddBenchMark(TStringThreadTest12);
+  AddBenchMark(TStringThreadTest16);
+  AddBenchMark(TStringThreadTest31);
+  AddBenchMark(TStringThreadTest64);
   AddBenchMark(TeLinkBenchmark);
   AddBenchMark(TeLinkComServerBenchmark);
   AddBenchMark(TWebbrokerReplayBenchmark);

@@ -3,11 +3,11 @@ unit AddressSpaceCreepBenchmark;
 interface
 
 uses
-  BenchmarkClassUnit, Math;
+  BenchmarkClassUnit;
 
 const
   {The number of pointers}
-  NumPointers = 1000000;
+  NumPointers = 3000000;
   {The maximum block size}
   MaxBlockSize = 256;
 
@@ -15,7 +15,7 @@ type
 
   TAddressSpaceCreepBench = class(TFastcodeMMBenchmark)
   protected
-    FPointers: array[0..NumPointers - 1] of PChar;
+    FPointers: array[0..NumPointers - 1] of PAnsiChar;
   public
     constructor CreateBenchmark; override;
     destructor Destroy; override;
@@ -26,6 +26,9 @@ type
   end;
 
 implementation
+
+const
+  IterationsCount = 108;
 
 { TSmallResizeBench }
 
@@ -57,43 +60,59 @@ begin
 end;
 
 procedure TAddressSpaceCreepBench.RunBenchmark;
+const
+  Prime = 3;
 var
   i, j, LSize: integer;
+  NextValue: Int64;
 begin
   {Call the inherited handler}
   inherited;
  {Allocate the pointers}
+  NextValue := Prime;
   for i := 0 to high(FPointers) do
   begin
     {Get an initial size}
-    LSize := 1 + random(MaxBlockSize);
+    LSize := 1 + (MaxBlockSize+NextValue) mod MaxBlockSize;
+    Inc(NextValue, Prime);
     {Allocate the pointer}
     GetMem(FPointers[i], LSize);
     {Touch the memory}
-    FPointers[i][0] := char(byte(i));
-    FPointers[i][LSize - 1] := char(byte(i));
+    FPointers[i][0] := AnsiChar(byte(i));
+    if LSize > 2 then
+    begin
+      FPointers[i][LSize - 1] := AnsiChar(byte(i));
+    end;
   end;
   {Free and get new pointers in a loop}
-  for j := 1 to 50 do
+  for j := 1 to IterationsCount do
   begin
     for i := 0 to high(FPointers) do
     begin
       {Free the pointer}
       FreeMem(FPointers[i]);
+      FPointers[i] := nil;
       {Get the new size}
-      LSize := 1 + random(MaxBlockSize);
+      LSize := 1 + (MaxBlockSize+NextValue) mod MaxBlockSize;
+      Inc(NextValue, Prime);
       {Allocate the pointer}
       GetMem(FPointers[i], LSize);
       {Touch the memory}
-      FPointers[i][0] := char(byte(i));
-      FPointers[i][LSize - 1] := char(byte(i));
+      FPointers[i][0] := AnsiChar(byte(i));
+      if LSize > 2 then
+      begin
+        FPointers[i][LSize - 1] := AnsiChar(byte(i));
+      end;
     end;
   end;
   {What we end with should be close to the peak usage}
   UpdateUsageStatistics;
   {Free the pointers}
   for i := 0 to high(FPointers) do
-    FreeMem(FPointers[i], 1);
+  begin
+    FreeMem(FPointers[i]);
+    FPointers[i] := nil;
+  end;
 end;
 
 end.

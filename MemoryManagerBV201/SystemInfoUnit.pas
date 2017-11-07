@@ -4,15 +4,50 @@ interface
 
 {$INCLUDE Defines.inc}
 
+{$ifdef FPC}
+  {$mode delphi}
+  {$asmmode intel}
+{$endif}
+
+
+uses  Windows;
+
+type
+ TVersion = record
+  Major: integer;
+  Minor: integer;
+  Release: integer;
+  Build: integer;
+ end;
+
+ PVS_FIXEDFILEINFO = ^VS_FIXEDFILEINFO;
+
 function SystemInfoCompiler: string;
 function SystemInfoCPU: string;
-function SystemInfoCPUAsXML: string;
+{$IFDEF WIN32}
+function SystemInfoCPUDetails: string;
+{$ENDIF}
 function SystemInfoWindows: string;
+function SystemInfoCompilerSettings: string;
+
+function GetModuleVersionDFL(ModuleFileName: string; var Ver: TVersion; Product: Boolean = False): string;
+function GetFormattedVersion: string;
+
+function HasMMX : Boolean;
+function HasSSE : Boolean;
+function HasSSE2 : Boolean;
+function HasSSE3 : Boolean;
 
 implementation
 
 uses
-  SysUtils, Windows;
+  {$ifndef fpc}
+  System.AnsiStrings,
+  {$endif}
+  FastCodeCPUID, SysUtils;
+
+resourcestring
+  TEXT_NO_VERSIONINFO = 'No version info';
 
 type
   TCpuIdRecord = record
@@ -35,7 +70,7 @@ function CheckHTEnabledThread(Param: Pointer): DWORD; stdcall; forward;
 function CountCPUsAMD: TCpuCount; forward;
 function CountCPUsIntel: TCpuCount; forward;
 procedure CpuId(InfoIndex: LongWord; out Res: TCpuIdRecord); forward;
-function GetCPUName(const VendorString: string; CPUType, CPUFamily, CPUModel, CPUStepping: Integer; const CPUMHz: Double): string; forward;
+function GetCPUName(const VendorString: AnsiString; CPUType, CPUFamily, CPUModel, CPUStepping: Integer; const CPUMHz: Double): AnsiString; forward;
 function RdTsc: Int64; forward;
 
 function CalculateFrequencyCPU: Double;
@@ -72,8 +107,12 @@ function CheckHTEnabled(const CpuCount: TCpuCount): Boolean;
 var
   ApicIds: array of LongWord;
   I: Integer;
+  D, LT, HT: Cardinal;
+  B: Boolean;
   Threads: array of THandle;
   ThreadId: LongWord;
+  P: PWOHandleArray;
+  PP: Pointer;
 begin
   SetLength(ApicIds, CpuCount.Log);
   SetLength(Threads, CpuCount.Log);
@@ -90,9 +129,15 @@ begin
       Win32Check(ResumeThread(Threads[I]) <> $FFFFFFFF);
     end;
 
-    Win32Check(
-      (WaitForMultipleObjects(Length(Threads), @Threads[0], True, 1000) - WAIT_OBJECT_0) in
-      [Low(Threads), High(Threads)]);
+    PP := @(Threads[0]);
+    P := PP;
+    D := WaitForMultipleObjects(Length(Threads), P, True, 1000) - WAIT_OBJECT_0;
+    LT := Low(Threads);
+    HT := High(Threads);
+{$WARN COMPARISON_TRUE OFF}
+    B := (D >= LT) and (D <= HT);
+{$WARN COMPARISON_TRUE ON}
+    Win32Check(B);
 
   finally
     for I := Low(Threads) to High(Threads) do
@@ -190,6 +235,24 @@ begin
 end;
 
 procedure CpuId(InfoIndex: LongWord; out Res: TCpuIdRecord);
+{$IFDEF WIN64}
+asm
+  push   rbx
+  push   rsi
+
+  mov    rsi,   Res
+  mov    eax, InfoIndex
+
+  db     $0F, $A2 // cpuid
+  mov    [rsi+TCpuIdRecord.&EAX], eax
+  mov    [rsi+TCpuIdRecord.&EBX], ebx
+  mov    [rsi+TCpuIdRecord.&ECX], ecx
+  mov    [rsi+TCpuIdRecord.&EDX], edx
+
+  pop    rsi
+  pop    rbx
+end;
+{$ELSE}
 asm
   push   ebx
   push   esi
@@ -205,8 +268,9 @@ asm
   pop    esi
   pop    ebx
 end;
+{$ENDIF}
 
-function GetCPUName(const VendorString: string; CPUType, CPUFamily, CPUModel, CPUStepping: Integer; const CPUMHz: Double): string;
+function GetCPUName(const VendorString: AnsiString; CPUType, CPUFamily, CPUModel, CPUStepping: Integer; const CPUMHz: Double): AnsiString;
 begin
   Result := '';
   if VendorString = 'GenuineIntel' then
@@ -279,9 +343,14 @@ begin
     end;
 end;
 
-function RdTsc: Int64;
+function RdTsc: Int64; assembler;
 asm
-  db     $0F, $31 // rdtsc
+   rdtsc
+ {$IFDEF WIN64}
+   shl   rdx, 32
+   or    rax, rdx
+   xor   rdx, rdx
+ {$ENDIF}
 end;
 
 function SystemInfoCompiler: string;
@@ -297,6 +366,86 @@ begin
     {$IFDEF Ver160}+'8'{$ENDIF}
     {$IFDEF Ver170}+'2005'{$ENDIF}
     {$IFDEF Ver180}+'2006'{$ENDIF};
+    {$IFDEF Ver190}+'2007'{$ENDIF};
+end;
+
+function SystemInfoCompilerSettings: string;
+begin
+ {$ifopt R-}
+  Result := 'R-';
+ {$else}
+  Result := 'R+';
+ {$endif}
+
+ {$ifopt Q-}
+  Result := Result + ' Q-';
+ {$else}
+  Result := Result + ' Q+';
+ {$endif}
+
+ {$ifopt O-}
+  Result := Result + ' O-';
+ {$else}
+  Result := Result + ' O+';
+ {$endif}
+end;
+
+function GetFormattedVersion: string;
+var
+  ver: TVersion;
+begin
+  GetModuleVersionDFL(GetModuleName(HInstance), ver);
+  Result := Format('%d.%d.%d', [ver.Major, ver.Minor, ver.Release])
+end;
+
+function GetModuleVersionDFL(ModuleFileName: string; var Ver: TVersion; Product: Boolean = False): string;
+var
+ VersionBufferLength: Integer;
+ PVersionBuffer     : Pointer;
+ Dummy              : Dword;
+ PFixedFileInfo     : PVS_FIXEDFILEINFO;
+ ModuleVersionLength: Dword;
+ VerW1, VerW2       : DWord;
+begin
+  Ver.Major := 0;
+  Ver.Minor := 0;
+  Ver.Release := 0;
+  Ver.Build := 0;
+  VersionBufferLength:= GetFileVersionInfoSize(PChar(ModuleFileName),Dummy);
+  PVersionBuffer:= AllocMem(VersionBufferLength);
+  if (PVersionBuffer <> nil) then
+   begin
+    if (GetFileVersionInfo(PChar(ModuleFileName), VersionBufferLength,VersionBufferLength, PVersionBuffer)) then
+     begin
+      if (VerQueryValue(PVersionBuffer, '\', Pointer(PFixedFileInfo),ModuleVersionLength)) then
+       begin
+        if Product then
+         begin
+          VerW1 := PFixedFileInfo^.dwProductVersionMS;
+          VerW2 := PFixedFileInfo^.dwProductVersionLS;
+         end
+        else
+         begin
+          VerW1 := PFixedFileInfo^.dwFileVersionMS;
+          VerW2 := PFixedFileInfo^.dwFileVersionLS;
+         end;
+        Ver.Major :=   ((VerW1) and $FFFF0000) shr 16;
+        Ver.Minor :=   ((VerW1) and $0000FFFF);
+        Ver.Release := ((VerW2) and $FFFF0000) shr 16;
+        Ver.Build :=   ((VerW2) and $0000FFFF);
+        Result := Format('%d.%d.%d.%d', [Ver.Major, Ver.Minor, Ver.Release,Ver.Build]);
+       end;
+     end
+    else
+     begin
+      Result:= TEXT_NO_VERSIONINFO;
+     end;
+    FreeMem(PVersionBuffer);
+   end
+  else
+   begin
+    Result:= TEXT_NO_VERSIONINFO;
+   end;
 end;
 
 function SystemInfoCPU: string;
@@ -305,7 +454,7 @@ var
   CPUMHz: Double;
   CPUFamily, CPUModel, CPUStepping, CPUType, InfoCount: LongWord;
   CPUCount: TCpuCount;
-  CPUCountStr, CPUName: string;
+  AnsiStr, CPUCountStr, CPUName: AnsiString;
   BrandString: array[0..47] of AnsiChar;
   VendorString: array[0..12] of AnsiChar;
 begin
@@ -356,7 +505,7 @@ begin
     end;
   end;
 
-   if VendorString = 'AuthenticAMD' then
+  if VendorString = 'AuthenticAMD' then
     CPUCount := CountCPUsAMD
   else
     CPUCount := CountCPUsIntel;
@@ -365,92 +514,20 @@ begin
   if CPUCount.Log > 1 then
   begin
     if CPUCount.LogPerCore > 1 then
-      CPUCountStr := CPUCountStr + Format(', %d logical CPUs', [CPUCount.Log]);
-    if CPUCount.CorePerPhys > 1 then
-      CPUCountStr := CPUCountStr + Format(', %d CPU cores', [CPUCount.Log div CPUCount.LogPerCore]);
-    CPUCountStr := CPUCountStr + Format(', %d physical CPUs', [CPUCount.Log div (CPUCount.LogPerCore * CPUCount.CorePerPhys)]);
-  end;
-
-  Result := Format('%s, %.1f MHz%s', [Result, CPUMHz, CPUCountStr]);
-end;
-
-function SystemInfoCPUAsXML: string;
-var
-  CIR: TCpuIdRecord;
-  CPUMHz: Double;
-  CPUFamily, CPUModel, CPUStepping, CPUType, InfoCount: LongWord;
-  CPUCount: TCpuCount;
-  CPUCountStr, CPUName: string;
-  BrandString: array[0..47] of AnsiChar;
-  VendorString: array[0..12] of AnsiChar;
-  CPUCountAsString: string;
-begin
-  CpuId(0, CIR);
-  InfoCount := CIR.EAX;
-  Move(CIR.EBX, VendorString[0], SizeOf(CIR.EBX));
-  Move(CIR.EDX, VendorString[4], SizeOf(CIR.EDX));
-  Move(CIR.ECX, VendorString[8], SizeOf(CIR.ECX));
-  VendorString[12] := #0;
-
-  CPUMHz := CalculateFrequencyCPU / 1000000;
-  if InfoCount >= 1 then
-  begin
-    CpuId(1, CIR);
-    CPUType := (CIR.EAX shr 12) and $3;
-    CPUFamily := (CIR.EAX shr 8) and $F;
-    CPUModel := (CIR.EAX shr 4) and $F;
-    CPUStepping := CIR.EAX and $F;
-    if CPUFamily = $F then
     begin
-      CPUFamily := CPUFamily + (CIR.EAX shr 16) and $FF0;
-      CPUModel := CPUModel + (CIR.EAX shr 12) and $F0;
-      Result := Format('%s, type %.1x, family %.3x, model %.2x, stepping %.1x',
-        [VendorString, CPUType, CPUFamily, CPUModel, CPUStepping, CPUMHz]);
-    end
-    else
-      Result := Format('%s, type %.1x, family %.1x, model %.1x, stepping %.1x',
-        [VendorString, CPUType, CPUFamily, CPUModel, CPUStepping, CPUMHz]);
-
-    // Does this work on Pentium III and earlier? Intel says need to check
-    // CIR.EAX and $80000000, but that doesn't seem to work.
-    CpuId($80000000, CIR);
-    if CIR.EAX >= $80000004 then
-    begin
-      CpuId($80000002, CIR);
-      Move(CIR, BrandString[0], SizeOf(CIR));
-      CpuId($80000003, CIR);
-      Move(CIR, BrandString[16], SizeOf(CIR));
-      CpuId($80000004, CIR);
-      Move(CIR, BrandString[32], SizeOf(CIR));
-      Result := Format('%s (%s)', [TrimLeft(BrandString), Result]);
-    end
-    else
-    begin
-      CPUName := GetCPUName(VendorString, CPUType, CPUFamily, CPUModel, CPUStepping, CPUMHz);
-      if CPUName <> '' then
-        Result := Format('%s (%s)', [CPUName, Result]);
+      AnsiStr := ', %d logical CPUs';
+      CPUCountStr := CPUCountStr + {$ifndef FPC}System.AnsiStrings.{$endif}Format(AnsiStr, [CPUCount.Log]);
     end;
-  end;
-
-   if VendorString = 'AuthenticAMD' then
-    CPUCount := CountCPUsAMD
-  else
-    CPUCount := CountCPUsIntel;
-
-  CPUCountStr := '';
-  if CPUCount.Log > 1 then
-  begin
-    if CPUCount.LogPerCore > 1 then
-      CPUCountStr := CPUCountStr + Format(', %d logical CPUs', [CPUCount.Log]);
     if CPUCount.CorePerPhys > 1 then
-      CPUCountStr := CPUCountStr + Format(', %d CPU cores', [CPUCount.Log div CPUCount.LogPerCore]);
-    CPUCountStr := CPUCountStr + Format(', %d physical CPUs', [CPUCount.Log div (CPUCount.LogPerCore * CPUCount.CorePerPhys)]);
+    begin
+      AnsiStr := ', %d CPU cores';
+      CPUCountStr := CPUCountStr + {$ifndef FPC}System.AnsiStrings.{$endif}Format(AnsiStr, [CPUCount.Log div CPUCount.LogPerCore]);
+    end;
+    AnsiStr := ', %d physical CPUs';
+    CPUCountStr := CPUCountStr + {$ifndef FPC}System.AnsiStrings.{$endif}Format(AnsiStr, [CPUCount.Log div (CPUCount.LogPerCore * CPUCount.CorePerPhys)]);
   end;
 
   Result := Format('%s, %.1f MHz%s', [Result, CPUMHz, CPUCountStr]);
-  CPUCountAsString := Format('%d, %d, %d', [CPUCount.Log, CPUCount.LogPerCore, CPUCount.CorePerPhys]);
-  Result := Format('<cpu infocount="%d" type="%d" family="%d" model="%d" stepping="%d" mhz="%.4f" vendor="%s" brand="%s" cpucount="%s">%s</cpu>',
-    [InfoCount, CPUType, CPUFamily, CPUModel, CPUStepping, CPUMHz, VendorString, BrandString, CPUCountAsString, Result]);
 end;
 
 function SystemInfoWindows: string;
@@ -488,5 +565,37 @@ begin
     Format('%d.%d.%d', [VI.dwMajorVersion, VI.dwMinorVersion, VI.dwBuildNumber])+') '+
     VI.szCSDVersion;
 end;
+
+{$IFDEF WIN32}
+function SystemInfoCPUDetails: string;
+begin
+ Result := VendorStr[CPU.Vendor];
+ if (isMMX in CPU.InstructionSupport) then Result := Result + ' MMX';
+ if (isSSE in CPU.InstructionSupport) then Result := Result + ' SSE';
+ if (isSSE2 in CPU.InstructionSupport) then Result := Result + ' SSE2';
+ if (isSSE3 in CPU.InstructionSupport) then Result := Result + ' SSE3';
+end;
+{$ENDIF}
+
+function HasMMX : Boolean;
+begin
+ Result := (isMMX in CPU.InstructionSupport);
+end;
+
+function HasSSE : Boolean;
+begin
+ Result := (isSSE in CPU.InstructionSupport);
+end;
+
+function HasSSE2 : Boolean;
+begin
+ Result := (isSSE2 in CPU.InstructionSupport);
+end;
+
+function HasSSE3 : Boolean;
+begin
+ Result := (isSSE3 in CPU.InstructionSupport);
+end;
+
 
 end.

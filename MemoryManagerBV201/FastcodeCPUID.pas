@@ -1,6 +1,6 @@
 unit FastcodeCPUID;
 
-(***** BEGIN LICENSE BLOCK *****
+{***** BEGIN LICENSE BLOCK *****
  Version: MPL 1.1
 
  The contents of this file are subject to the Mozilla Public License Version 1.1
@@ -19,11 +19,27 @@ unit FastcodeCPUID;
  All Rights Reserved.
 
  Contributor(s): Dennis Passmore <Dennis_Passmore@ ultimatesoftware.com>,
-                 Dennis Christensen <marianndkc@home3.gvdnet.dk>.
+                 Dennis Christensen <marianndkc@home3.gvdnet.dk>,
+                 Jouni Turunen <jouni.turunen@NOSPAM.xenex.fi>.
 
-***** END LICENSE BLOCK *****)
+***** END LICENSE BLOCK *****
+
+Version  Changes
+-------  ------
+ 3.0.2   27 Apr 2006 : AMD X2 text changed from 'AMD_64_SSE3' to 'AMD_64X2'
+ 3.0.1   18 Apr 2006 : Bug in Yohan fctPMY target fixed, was incorrectly set to fctPMD
+ 3.0.0   27 Feb 2006 : Added new 2006 computed targets. Added Yonah and Presler
+                       Removed Prescott, Banias, AMD XP                    (JT)
+
+}
 
 interface
+
+{$ifdef FPC}
+  {$mode delphi}
+  {$asmmode intel}
+{$endif}
+
 
 type
   TVendor = (cvUnknown, cvAMD, cvCentaur, cvCyrix, cvIntel,
@@ -57,6 +73,7 @@ type
     Signature: Cardinal;
     EffFamily: Byte; {ExtendedFamily + Family}
     EffModel: Byte; {(ExtendedModel shl 4) + Model}
+    EffModelBasic: Byte; {Just Model (not ExtendedModel shl 4) + Model)}
     CodeL1CacheSize, {KB or micro-ops for Pentium 4}
       DataL1CacheSize, {KB}
       L2CacheSize, {KB}
@@ -66,14 +83,16 @@ type
 
   TFastCodeTarget =
     (fctRTLReplacement, {not specific to any CPU}
-    fctBlended, {not specific to any CPU, requires FPU, MMX and CMOV}
-    ftPMB, {Banias}
-    ftPMD, {Dothan}
-    ftP4N, {Northwood}
-    ftP4P, {Prescott}
-    ftAmdXp, {XP with SSE support}
-    ftAmd64, {AMD 64}
-    ftAmd64_SSE3); {Opteron/Athlon FX/Athlon 64 with SSE3}
+    fctBlendedIA32,     {not specific to any CPU, requires FPU and CMOV}
+    fctBlendedMMX,      {not specific to any CPU, requires FPU, MMX and CMOV  "Old fctBlended target"}
+    fctBlendedSSE,      {not specific to any CPU, requires FPU, MMX, CMOV and SSE}
+    fctBlendedSSE2,     {not specific to any CPU, requires FPU, MMX, CMOV, SSE, SSE2}
+    fctPMD, {Dothan}
+    fctPMY, {Yonah}
+    fctP4N, {Northwood}
+    fctP4R, {Presler}
+    fctAmd64, {AMD 64}
+    fctAmd64_SSE3); {X2/Opteron/Athlon FX/Athlon 64 with SSE3}
   {Note: when changing TFastCodeTarget, also change FastCodeTargetStr array
          below}
 
@@ -89,8 +108,8 @@ const
 
   FastCodeTargetStr:
   array[Low(TFastCodeTarget)..High(TFastCodeTarget)] of ShortString =
-    ('RTLReplacement', 'Blended', 'PM_Banias', 'PM_Dothan', 'P4_Northwood', 'P4_Prescott', 'AMD_XP',
-    'AMD_64', 'AMD_64_SSE3');
+    ('RTLReplacement', 'Blended_IA32', 'Blended_MMX', 'Blended_SSE',
+     'Blended_SSE2', 'Dothan', 'Yonah', 'Northwood', 'Presler', 'AMD_64', 'AMD_64X2');
 
 var
   CPU: TCPU;
@@ -143,8 +162,13 @@ const
   C3EzraEffModel = 8;
   PMBaniasEffModel = 9;
   PMDothanEffModel = $D;
+  PMYonahEffModel = $E;
   P3LowestEffModel = 7;
 
+{$IFDEF WIN64}
+const
+  IsCPUID_Available = True;
+{$ELSE}
 function IsCPUID_Available: Boolean; register;
 asm
   PUSHFD                 {save EFLAGS to stack}
@@ -160,6 +184,7 @@ asm
   MOV     EAX, True      {yes, CPUID is available}
 @exit:
 end;
+{$ENDIF}
 
 function IsFPU_Available: Boolean;
 var
@@ -181,6 +206,24 @@ asm
 end;
 
 procedure GetCPUID(Param: Cardinal; var Registers: TRegisters);
+{$IFDEF WIN64}
+asm
+  PUSH    RBX                         {save affected registers}
+  PUSH    RDI
+  MOV     RDI, Registers
+  MOV     RAX, RCX
+  XOR     RBX, RBX                    {clear EBX register}
+  XOR     RCX, RCX                    {clear ECX register}
+  XOR     RDX, RDX                    {clear EDX register}
+  DB $0F, $A2                         {CPUID opcode}
+  MOV     TRegisters(EDI).&EAX, EAX   {save EAX register}
+  MOV     TRegisters(EDI).&EBX, EBX   {save EBX register}
+  MOV     TRegisters(EDI).&ECX, ECX   {save ECX register}
+  MOV     TRegisters(EDI).&EDX, EDX   {save EDX register}
+  POP     RDI                         {restore registers}
+  POP     RBX
+end;
+{$ELSE}
 asm
   PUSH    EBX                         {save affected registers}
   PUSH    EDI
@@ -196,6 +239,7 @@ asm
   POP     EDI                         {restore registers}
   POP     EBX
 end;
+{$ENDIF}
 
 procedure GetCPUVendor;
 var
@@ -239,6 +283,7 @@ begin
   {extract effective processor family and model}
   CPU.EffFamily := CPU.Signature and $00000F00 shr 8;
   CPU.EffModel := CPU.Signature and $000000F0 shr 4;
+  CPU.EffModelBasic := CPU.EffModel;
   if CPU.EffFamily = $F then
   begin
     CPU.EffFamily := CPU.EffFamily + (CPU.Signature and $0FF00000 shr 20);
@@ -416,6 +461,7 @@ end;
 
 procedure VerifyOSSupportForXMMRegisters;
 begin
+{$IFDEF WIN32}
   {try a SSE instruction that operates on XMM registers}
   try
     asm
@@ -429,6 +475,7 @@ begin
       Exclude(CPU.InstructionSupport, isSSE3);
     end;
   end;
+{$ENDIF}
 end;
 
 procedure GetCPUInfo;
@@ -489,37 +536,40 @@ end;
 procedure GetFastCodeTarget;
 {precondition: GetCPUInfo must have been called}
 begin
-  {as default, select blended target if there is at least FPU, MMX, and CMOV
-   instruction support, otherwise select RTL Replacement target}
-  if [isFPU, isMMX, isCMOV] <= CPU.InstructionSupport then
-    FastCodeTarget := fctBlended
-  else
-    FastCodeTarget := fctRTLReplacement;
+  FastCodeTarget := fctRTLReplacement;
+
+  if (isSSE2 in CPU.InstructionSupport) then
+    FastCodeTarget := fctBlendedSSE2 else
+  if (isSSE in CPU.InstructionSupport) then
+    FastCodeTarget := fctBlendedSSE else
+  if (isSSE in CPU.InstructionSupport) then
+    FastCodeTarget := fctBlendedSSE else
+  if ([isFPU, isMMX, isCMOV] <= CPU.InstructionSupport) then
+    FastCodeTarget := fctBlendedMMX else
+  if ([isFPU, isCMOV] <= CPU.InstructionSupport) then
+    FastCodeTarget := fctBlendedIA32;
 
   case CPU.Vendor of
     cvIntel:
       case CPU.EffFamily of
         6: {Intel P6, P2, P3, PM}
            case CPU.EffModel of
-            PMBaniasEffModel : FastCodeTarget := ftPMB; // Banias
-            PMDothanEffModel : FastCodeTarget := ftPMD; // Dothan
+            PMDothanEffModel : FastCodeTarget := fctPMD; // Dothan
+            PMYonahEffModel  : FastCodeTarget := fctPMY; // Yonah
            end;
         $F: {Intel P4}
            case CPU.EffModel of
-            0,1,2 : FastCodeTarget := ftP4N; // Northwood
-            3,4   : FastCodeTarget := ftP4P; // Prescott
+            0,1,2 : FastCodeTarget := fctP4N; // Northwood
+            6     : FastCodeTarget := fctP4R; // Presler
            end;
       end;
     cvAMD:
       case CPU.EffFamily of
-        6: {AMD K7}
-          if isSSE in CPU.InstructionSupport then // Earlier models without SSE use will use fctBlended
-            FastCodeTarget := ftAmdXp;
         $F: {AMD K8}
-          if isSSE3 in CPU.InstructionSupport then
-            FastCodeTarget := ftAmd64_SSE3
-          else
-            FastCodeTarget := ftAmd64;
+           if ((CPU.EffModelBasic=$B) or (CPU.EffModelBasic=$3)) and (isSSE3 in CPU.InstructionSupport) then
+            FastCodeTarget := fctAmd64_SSE3 //AMD X2 dual core CPU
+           else
+            FastCodeTarget := fctAmd64;
       end;
   end;
 end;

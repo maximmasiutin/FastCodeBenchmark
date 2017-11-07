@@ -1478,7 +1478,7 @@ begin
       FreeMemorySpace := NewSpace;
 
       //Point the Memory Space to its own segment of the allocated memory.
-      MemorySpaces[NewSpace].pSpace := Pointer(Integer(MemSeg) + (MEM_SPACE_SIZE * iSpace));
+      MemorySpaces[NewSpace].pSpace := Pointer(NativeUInt(MemSeg) + (MEM_SPACE_SIZE * iSpace));
     end;
 
   Result := True;

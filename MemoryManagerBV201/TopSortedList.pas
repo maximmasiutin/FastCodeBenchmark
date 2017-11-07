@@ -14,7 +14,7 @@ TopCopyMemory;
 
 type
   TIndexedObject = packed record
-    Index: Integer;
+    Index: NativeUInt;
     Obj: Pointer;
   end;
   TIndexedObjectsArray = array[0..MaxInt div (SizeOf(TIndexedObject)) - 1] of TIndexedObject;
@@ -71,8 +71,8 @@ type
     procedure GetValue(const Index: Integer; out Value: Cardinal; out AssociatedObject: Pointer); overload;
     procedure GetValue(const Index: Integer; out Value: Pointer; out AssociatedObject: Pointer); overload;
     //
-    function GetCardinal(const Index: Integer): Cardinal;
-    function GetInteger(const Index: Integer): Integer;
+    function GetCardinal(const Index: Integer): NativeUInt;
+    function GetNativeUInt(const Index: Integer): NativeInt;
     function GetPointer(const Index: Integer): Pointer;
     //
     property Count: Integer read FListCount;
@@ -94,7 +94,7 @@ uses TopInstall;
 
 function TTopSortedList.Add(const Value: Cardinal; const AssociatedObject: Pointer): Integer;
 begin
-  Result := Add(Integer(Value), AssociatedObject);
+  Result := Add(NativeUInt(Value), AssociatedObject);
 end;
 
 function TTopSortedList.Add(const Value: Integer; const AssociatedObject: Pointer): Integer;
@@ -162,7 +162,7 @@ end;
 
 function TTopSortedList.Add(const Value: Pointer; const AssociatedObject: Pointer): Integer;
 begin
-  Result := Add(Integer(Value), AssociatedObject);
+  Result := Add(NativeUInt(Value), AssociatedObject);
 end;
 
 procedure TTopSortedList.CheckCapacity;
@@ -203,12 +203,12 @@ end;
 
 procedure TTopSortedList.Delete(const Value: Cardinal);
 begin
-  Delete(Integer(Value));
+  Delete(NativeUInt(Value));
 end;
 
 procedure TTopSortedList.Delete(const Value: Pointer);
 begin
-  Delete(Integer(Value));
+  Delete(NativeUInt(Value));
 end;
 
 procedure TTopSortedList.DeleteByIndex(const Index: Integer);
@@ -236,22 +236,22 @@ end;
 
 function TTopSortedList.Exists(const Value: Pointer): Boolean;
 begin
-  Result := Exists(Integer(Value));
+  Result := Exists(NativeUInt(Value));
 end;
 
 function TTopSortedList.Exists(const Value: Cardinal): Boolean;
 begin
-  Result := Exists(Integer(Value));
+  Result := Exists(NativeUInt(Value));
 end;
 
 function TTopSortedList.Find(const Value: Cardinal; out Index: Integer; out AssociatedObject: Pointer): Boolean;
 begin
-  Result := Find(Integer(Value), Index, AssociatedObject);
+  Result := Find(NativeUInt(Value), Index, AssociatedObject);
 end;
 
 function TTopSortedList.Find(const Value: Pointer; out Index: Integer; out AssociatedObject: Pointer): Boolean;
 begin
-  Result := Find(Integer(Value), Index, AssociatedObject);
+  Result := Find(NativeUInt(Value), Index, AssociatedObject);
 end;
 
 function TTopSortedList.Find(const Value: Integer; out Index: Integer; out AssociatedObject: Pointer): Boolean;
@@ -320,19 +320,19 @@ begin
     AssociatedObject := FList[Index].Obj;
 end;
 
-function TTopSortedList.GetInteger(const Index: Integer): Integer;
+function TTopSortedList.GetNativeUInt(const Index: Integer): NativeInt;
 begin
   Result := FList[Index].Index;
 end;
 
-function TTopSortedList.GetCardinal(const Index: Integer): Cardinal;
+function TTopSortedList.GetCardinal(const Index: Integer): NativeUInt;
 begin
-  Result := Cardinal(GetInteger(Index));
+  Result := NativeUInt(GetNativeUInt(Index));
 end;
 
 function TTopSortedList.GetPointer(const Index: Integer): Pointer;
 begin
-  Result := Pointer(GetInteger(Index));
+  Result := Pointer(GetNativeUInt(Index));
 end;
 
 function TTopSortedList.Find(const Value: Integer; out AssociatedObject: Pointer): Boolean;
@@ -345,13 +345,13 @@ end;
 function TTopSortedList.Find(const Value: Cardinal;
   out AssociatedObject: Pointer): Boolean;
 begin
-  Result := Find(Integer(Value), AssociatedObject);
+  Result := Find(NativeUInt(Value), AssociatedObject);
 end;
 
 function TTopSortedList.Find(const Value: Pointer;
   out AssociatedObject: Pointer): Boolean;
 begin
-  Result := Find(Integer(Value), AssociatedObject);
+  Result := Find(NativeUInt(Value), AssociatedObject);
 end;
 
 procedure TTopSortedList.SetValue(const Index, Value: Integer;
@@ -376,12 +376,12 @@ end;
 
 procedure TTopSortedList.SetValue(const Index: Integer; const Value: Cardinal; const AssociatedObject: Pointer);
 begin
-  SetValue(Index, Integer(Value), AssociatedObject);
+  SetValue(Index, NativeUInt(Value), AssociatedObject);
 end;
 
 procedure TTopSortedList.SetValue(const Index: Integer; const Value, AssociatedObject: Pointer);
 begin
-  SetValue(Index, Integer(Value), AssociatedObject);
+  SetValue(Index, NativeUInt(Value), AssociatedObject);
 end;
 
 function TTopSortedList.Find(const Value: Integer; out Index: Integer): Boolean;
@@ -395,14 +395,14 @@ function TTopSortedList.Find(const Value: Pointer; out Index: Integer): Boolean;
 var
   Dummy: Pointer;
 begin
-  Result := Find(Integer(Value), Index, Dummy);
+  Result := Find(NativeUInt(Value), Index, Dummy);
 end;
 
 function TTopSortedList.Find(const Value: Cardinal; out Index: Integer): Boolean;
 var
   Dummy: Pointer;
 begin
-  Result := Find(Integer(Value), Index, Dummy);
+  Result := Find(NativeUInt(Value), Index, Dummy);
 end;
 
 procedure TTopSortedList.GetValue(const Index: Integer; out Value: Integer; out AssociatedObject: Pointer);

@@ -1,5 +1,7 @@
 {A single-threaded benchmark that reallocates and uses memory blocks.}
 
+//79
+
 unit SingleThreadedReallocate;
 
 interface
@@ -8,7 +10,7 @@ uses Windows, BenchmarkClassUnit, Classes, Math;
 
 type
 
-  TSingleThreadReallocateBenchmark = class(TFastcodeMMBenchmark)
+  TSingleThreadReallocateVariousBlocksBenchmark = class(TFastcodeMMBenchmark)
   public
     procedure RunBenchmark; override;
     class function GetBenchmarkName: string; override;
@@ -19,44 +21,55 @@ type
 
 implementation
 
+const
+  IterationsCount = 140;
+
+
 { TSingleThreadReallocateBenchmark }
 
-class function TSingleThreadReallocateBenchmark.GetBenchmarkDescription: string;
+class function TSingleThreadReallocateVariousBlocksBenchmark.GetBenchmarkDescription: string;
 begin
   Result := 'A single-threaded benchmark that allocates and reallocates memory '
     + 'blocks. The usage of different block sizes approximates real-world usage '
     + 'as seen in various replays. Allocated memory is actually "used", i.e. '
-    + 'written to and read.  '
+    + 'written to and read.  Rough breakdown: 50% of pointers are <=64 bytes, 95% < 1K, 99% < 4K, rest < 256K'
     + 'Benchmark submitted by Pierre le Riche.';
 end;
 
-class function TSingleThreadReallocateBenchmark.GetBenchmarkName: string;
+class function TSingleThreadReallocateVariousBlocksBenchmark.GetBenchmarkName: string;
 begin
   Result := 'Single-threaded reallocate and use';
 end;
 
-class function TSingleThreadReallocateBenchmark.GetCategory: TBenchmarkCategory;
+class function TSingleThreadReallocateVariousBlocksBenchmark.GetCategory: TBenchmarkCategory;
 begin
   Result := bmSingleThreadRealloc;
 end;
 
-class function TSingleThreadReallocateBenchmark.GetSpeedWeight: Double;
+class function TSingleThreadReallocateVariousBlocksBenchmark.GetSpeedWeight: Double;
 begin
   Result := 0.6;
 end;
 
-procedure TSingleThreadReallocateBenchmark.RunBenchmark;
+procedure TSingleThreadReallocateVariousBlocksBenchmark.RunBenchmark;
 const
-  RepeatCount = 100;
-  PointerCount = 75000;
+  Prime = 29;
+  PointerCount = 450000;
+type
+  PPointers = ^TPointers;
+  TPointers = array[0..PointerCount - 1] of Pointer;
+
 var
-  i, j, k: Integer;
-  LPointers: array[0..PointerCount - 1] of Pointer;
+  i, j: Integer;
+  k: NativeUint;
+  CurValue: Int64;
+  LPointers: PPointers;
   LMax, LSize, LSum: Integer;
 begin
   inherited;
   {We want predictable results}
-  RandSeed := 0;
+  New(LPointers);
+  CurValue := Prime;
   {Allocate the initial pointers}
   for i := 0 to PointerCount - 1 do
   begin
@@ -72,12 +85,13 @@ begin
         else
           LMax := 256 * 1024;
     {Get the size, minimum 1}
-    LSize := Random(LMax) + 1;
+    LSize := (CurValue mod LMax) + 1;
+    Inc(CurValue, Prime);
     {Get the pointer}
-    GetMem(LPointers[i], LSize);
+    GetMem(LPointers^[i], LSize);
   end;
   {Reallocate in a loop}
-  for j := 1 to RepeatCount do
+  for j := 1 to IterationsCount do
   begin
     {Update usage statistics}
     UpdateUsageStatistics;
@@ -95,13 +109,15 @@ begin
           else
             LMax := 256 * 1024;
       {Get the size, minimum 1}
-      LSize := Random(LMax) + 1;
+      LSize := (CurValue mod LMax) + 1;
+      Inc(CurValue, Prime);
+
       {Reallocate the pointer}
-      ReallocMem(LPointers[i], LSize);
+      ReallocMem(LPointers^[i], LSize);
       {Write the memory}
       for k := 0 to (LSize - 1) div 32 do
       begin
-        PByte(Integer(LPointers[i]) + k * 32)^ := byte(i);
+        PByte(NativeUInt(LPointers^[i]) + k * 32)^ := byte(i);
       end;
       {Read the memory}
       LSum := 0;
@@ -109,7 +125,7 @@ begin
       begin
         for k := 0 to (LSize - 16) div 32 do
         begin
-          Inc(LSum, PShortInt(Integer(LPointers[i]) + k * 32 + 15)^);
+          Inc(LSum, PShortInt(NativeUInt(LPointers^[i]) + k * 32 + 15)^);
         end;
       end;
       {"Use" the sum to suppress the compiler warning}
@@ -118,7 +134,11 @@ begin
   end;
   {Free all the objects}
   for i := 0 to PointerCount - 1 do
-    FreeMem(LPointers[i]);
+  begin
+    FreeMem(LPointers^[i]);
+    LPointers^[i] := nil;
+  end;
+  Dispose(LPointers);
 end;
 
 end.

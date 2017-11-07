@@ -280,7 +280,7 @@ begin
   FFullBlocks := 0;
   FInitialAppBlocks := lAppBlocks;
   FOSBlockList := TOSBlockList.Create(False);
-  FStartAt := Random(cMaxBlockLists);
+  FStartAt := fffRandom(cMaxBlockLists);
 end;
 
 destructor TSizeManager.Destroy;
@@ -630,7 +630,7 @@ begin
   //
   // Clear all SizeManagers of Excess Stuff
   // Start this loop random in each thread so we are not blocking each other when many threads finish simultaneously
-  R := Random(cMaxManagers + 1);
+  R := fffRandom(cMaxManagers + 1);
   // All Managers from R to FSManagers
   for I := R to cMaxManagers do
     FSManagerList[I].Clear;
@@ -1141,7 +1141,7 @@ end;
 { TOSBlockList }
 function TOSBlockList.Get(Index: Integer): TOSBlock;
 begin
-  Result := Pointer(GetInteger(Index));
+  Result := Pointer(GetNativeUInt(Index));
 end;
 
 procedure TOSBlockList.Put(Index: Integer; const Value: TOSBlock);
@@ -1291,7 +1291,7 @@ end;
 
 function TSizeManagerList.Get(Index: Integer): TSizeManagerBase;
 begin
-  Result := Pointer(GetInteger(Index));
+  Result := Pointer(GetNativeUInt(Index));
 end;
 
 procedure TSizeManagerList.Put(Index: Integer; const Value: TSizeManagerBase);

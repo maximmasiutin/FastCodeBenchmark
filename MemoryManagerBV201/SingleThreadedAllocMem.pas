@@ -49,6 +49,7 @@ end;
 
 procedure TSingleThreadAllocMemBenchmark.RunBenchmark;
 const
+  Prime = 17;
   RepeatCount = 100;
   PointerCount = 1000;
   MaxBlockSize = 300000;
@@ -57,13 +58,14 @@ type
   PByteArray = ^TByteArray;
 var
   i, j, k: Integer;
+  CurValue: Int64;
   LPointers: array[0..PointerCount - 1] of Pointer;
   LSize: Integer;
   LCheck: Byte;
 begin
   inherited;
   {We want predictable results}
-  RandSeed := 0;
+  CurValue := Prime;
   FillChar(LPointers, SizeOf(LPointers), 0);
   {FreeMem and AllocMem in a loop}
   for j := 1 to RepeatCount do
@@ -75,7 +77,8 @@ begin
       {Free the pointer}
       FreeMem(LPointers[i]);
       {Get the size, minimum 1}
-      LSize := Random(MaxBlockSize) + 1;
+      LSize := (CurValue mod MaxBlockSize) + 1;
+      Inc(CurValue, Prime);
       {Get the pointer}
       LPointers[i] := AllocMem(LSize);
       {Read the memory}
@@ -83,9 +86,9 @@ begin
       for k := 0 to LSize - 1 do
       begin
         {Check the memory}
-        LCheck := LCheck or PByteArray(LPointers[i])[k];
+        LCheck := LCheck or PByteArray(LPointers[i])^[k];
         {Modify it}
-        PByteArray(LPointers[i])[k] := byte(k);
+        PByteArray(LPointers[i])^[k] := byte(k);
       end;
       {Is the check valid?}
       if LCheck <> 0 then

@@ -17,7 +17,22 @@ type
 
 implementation
 
-uses SysUtils, MoveJOHUnit9;
+uses
+{$IFDEF WIN32}
+  MoveJOHUnit9,
+{$ENDIF}
+  SysUtils;
+
+const
+  IterationsCount = 25;
+
+
+{$IFNDEF WIN32}
+procedure MoveJOH_SSE_9(const Source; var Dest; Count : Integer); inline;
+begin
+  Move(Source, Dest, Count);
+end;
+{$endif}
 
 type
 
@@ -49,14 +64,14 @@ var
  DestArray8 : array of Byte;
  BenchArraySize : Integer;
 const
- NOOFRUNS : Integer = 2;
- MINBENCHARRAYSIZE : Integer = 2000;//16K
- MAXBENCHARRAYSIZE : Integer = 2000000;//1M
- STEPSIZE : Integer = 2;
- NOOFMOVESPERRUN : Integer = 250;
+ NOOFRUNS = IterationsCount;
+ MINBENCHARRAYSIZE = 2000;
+ MAXBENCHARRAYSIZE = 2000000;
+ STEPSIZE = 2;
+ NOOFMOVESPERRUN = 250;
 
 begin
- for I1 := 0 to NOOFRUNS - 1do
+ for I1 := 1 to NOOFRUNS do
   begin
    BenchArraySize := MINBENCHARRAYSIZE;
    while BenchArraySize <= MAXBENCHARRAYSIZE do
@@ -128,7 +143,6 @@ end;
 procedure TMoveThreads2.RunBenchmark;
 var
   MoveThread2 : TMoveThread2;
-
 begin
   inherited;
   MoveThread2 := TMoveThread2.Create(True);
@@ -137,6 +151,7 @@ begin
   MoveThread2.Resume;
   MoveThread2.WaitFor;
   MoveThread2.Free;
+  MoveThread2 := nil;
 end;
 
 end.

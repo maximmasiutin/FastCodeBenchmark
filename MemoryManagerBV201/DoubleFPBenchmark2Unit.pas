@@ -17,7 +17,11 @@ type
 
 implementation
 
-uses SysUtils;
+uses
+  SysUtils;
+
+const
+ IterationCount = 5;
 
 type
 
@@ -70,9 +74,8 @@ var
  ResultArray6 : array of TRegtangularComplexD;
  BenchArraySize : Integer;
 const
- MINBENCHARRAYSIZE : Integer = 9500;
- MAXBENCHARRAYSIZE : Integer = 10000;
- NOOFRUNS : Integer = 2;
+ MINBENCHARRAYSIZE = 9500;
+ MAXBENCHARRAYSIZE = 10000;
 
 begin
  for BenchArraySize := MINBENCHARRAYSIZE to MAXBENCHARRAYSIZE do
@@ -106,19 +109,19 @@ begin
     end;
    //Run on one set of arrays at a time
    //Only 6 memory blocks active at a time
-   for J1 := 0 to NOOFRUNS do
+   for J1 := 1 to IterationCount do
     for I3 := 0 to BenchArraySize-1 do
      begin
       TestFunction(ResultArray1[I3], Src1Array1[I3], Src2Array1[I3]);
       TestFunction(ResultArray2[I3], Src1Array2[I3], Src2Array2[I3]);
      end;
-   for J2 := 0 to NOOFRUNS do
+   for J2 := 1 to IterationCount do
     for I4 := 0 to BenchArraySize-1 do
      begin
       TestFunction(ResultArray3[I4], Src1Array3[I4], Src2Array3[I4]);
       TestFunction(ResultArray4[I4], Src1Array4[I4], Src2Array4[I4]);
      end;
-   for J5 := 0 to NOOFRUNS do
+   for J5 := 1 to IterationCount do
     for I5 := 0 to BenchArraySize-1 do
      begin
       TestFunction(ResultArray5[I5], Src1Array5[I5], Src2Array5[I5]);
@@ -159,9 +162,10 @@ begin
   DoubleFPThread2 := TDoubleFPThread2.Create(True);
   DoubleFPThread2.FreeOnTerminate := False;
   DoubleFPThread2.FBenchmark := Self;
-  DoubleFPThread2.Resume;
+  DoubleFPThread2.Start;
   DoubleFPThread2.WaitFor;
   DoubleFPThread2.Free;
+  DoubleFPThread2 := nil;
 end;
 
 end.

@@ -346,7 +346,7 @@ var
   OldProtect,Protect:DWord;
 begin
   EndThreadAddr:=Pointer(@EndThread);
-  NewCode.Distance:=Integer(@NewEndThread)-(Integer(@EndThread)+5);
+  NewCode.Distance:=NativeUInt(@NewEndThread)-(NativeUInt(@EndThread)+5);
   VirtualProtect(EndThreadAddr,5,PAGE_READWRITE,OldProtect);
   OldCode:=EndThreadAddr^;
   EndThreadAddr^:=NewCode;
@@ -360,7 +360,7 @@ var
   OldProtect,Protect:DWord;
 begin
   EndThreadAddr:=Pointer(@EndThread);
-  NewCode.Distance:=Integer(@NewEndThread)-(Integer(@EndThread)+5);
+  NewCode.Distance:=NativeUInt(@NewEndThread)-(NativeUInt(@EndThread)+5);
   VirtualProtect(EndThreadAddr,5,PAGE_READWRITE,OldProtect);
   EndThreadAddr^:=OldCode;
   VirtualProtect(EndThreadAddr,5,OldProtect,Protect);

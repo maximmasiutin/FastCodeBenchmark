@@ -10,9 +10,9 @@ implementation
 
 {.$define ALIGN16}
 {$define USEFASTMOVE}
-{$define ALIGN16RANDOMIZEPOINTER}
+{$define ALIGN16ARBITRARYPOINTER}
 {.$define PASCAL}
-{$ifdef ALIGN16RANDOMIZEPOINTER}
+{$ifdef ALIGN16ARBITRARYPOINTER}
  {$undef ALIGN16}
 {$endif}
 
@@ -66,21 +66,20 @@ const
  OVERALLOCPERCENTAGEBIGUPSIZE : Double = 1.5;
  OVERALLOCPERCENTAGEBIGDOWNSIZE : Double = 1/1.5;
  ALIGNSPACE : Integer = 15; //For 16 byte alignment
- RANDOMIZESPACE : Integer = 4096;
+ ARBITRARYSPACE : Integer = 4096;
  MINALLOCARRAYSIZE : Cardinal = 1000;
 
 var
- RandomCount : Cardinal = 0;
- RandomCountMax : Cardinal;
+ ArbitraryCount : Cardinal = 0;
+ ArbitraryCountMax : Cardinal;
 
-function CalculateRandomizeOffset : Cardinal;{$ifdef ver170}inline; {$endif} {$ifdef ver180}inline; {$endif}
+function CalculateARBITRARYOffset : Cardinal;{$ifdef ver170}inline; {$endif} {$ifdef ver180}inline; {$endif}
 begin
- //Result := 16*Random(RANDOMIZESPACE div 16);
- Inc(RandomCount,11);
- if RandomCount > RandomCountMax then
-  RandomCount := 0;
- Result := 16*RandomCount;
- Assert(Result <= Cardinal(RANDOMIZESPACE));
+ Inc(ArbitraryCount,11);
+ if ArbitraryCount > ArbitraryCountMax then
+  ArbitraryCount := 0;
+ Result := 16*ArbitraryCount;
+ Assert(Result <= Cardinal(ARBITRARYSPACE));
 end;
 
 procedure InitializeAllocArray(StartIndex, StopIndex : Cardinal);
@@ -845,8 +844,8 @@ var
  {$ifdef ALIGN16}
  MisAlign : Cardinal;
  {$endif}
- {$ifdef ALIGN16RANDOMIZEPOINTER}
- MisAlign, RandomOffset : Cardinal;
+ {$ifdef ALIGN16ARBITRARYPOINTER}
+ MisAlign, ArbitraryOffset : Cardinal;
  {$endif}
 
 begin
@@ -858,7 +857,7 @@ begin
    {$ifdef ALIGN16}
    InternalSize := Round(ExternalSize * OVERALLOCFACTORSMALL) + SMALLOVERALLOCEXTRA + ALIGNSPACE;
    {$else}
-   {$ifdef ALIGN16RANDOMIZEPOINTER}
+   {$ifdef ALIGN16ARBITRARYPOINTER}
    InternalSize := Round(ExternalSize * OVERALLOCFACTORSMALL) + SMALLOVERALLOCEXTRA + ALIGNSPACE;
    {$else}
    InternalSize := Round(ExternalSize * OVERALLOCFACTORSMALL) + SMALLOVERALLOCEXTRA;
@@ -871,7 +870,7 @@ begin
      MisAlign := Cardinal(InternalPtr) and 15;
      ExternalPtr := Pointer(Cardinal(InternalPtr) + MisAlign);
      {$else}
-     {$ifdef ALIGN16RANDOMIZEPOINTER}
+     {$ifdef ALIGN16ARBITRARYPOINTER}
      MisAlign := Cardinal(InternalPtr) and 15;
      ExternalPtr := Pointer(Cardinal(InternalPtr) + MisAlign);
      {$else}
@@ -900,8 +899,8 @@ begin
    {$ifdef ALIGN16}
    InternalSize := Round(ExternalSize * OVERALLOCFACTORBIG) + ALIGNSPACE;
    {$else}
-   {$ifdef ALIGN16RANDOMIZEPOINTER}
-   InternalSize := Round(ExternalSize * OVERALLOCFACTORBIG) + RANDOMIZESPACE;
+   {$ifdef ALIGN16ARBITRARYPOINTER}
+   InternalSize := Round(ExternalSize * OVERALLOCFACTORBIG) + ARBITRARYSPACE;
    {$else}
    InternalSize := Round(ExternalSize * OVERALLOCFACTORBIG);
    {$endif}
@@ -915,14 +914,14 @@ begin
      {$else}
      ExternalPtr := Pointer(Cardinal(InternalPtr));
      {$endif}
-     {$ifdef ALIGN16RANDOMIZEPOINTER}
+     {$ifdef ALIGN16ARBITRARYPOINTER}
      MisAlign := Cardinal(InternalPtr) and 15;
-     //RandomOffset := CalculateRandomizeOffset;
-     Inc(RandomCount,11);
-     if RandomCount > RandomCountMax then
-      RandomCount := 0;
-     RandomOffset := 16*RandomCount;
-     ExternalPtr := Pointer(Cardinal(ExternalPtr) + MisAlign + RandomOffset);
+     //ArbitraryOffset := CalculateARBITRARYOffset;
+     Inc(ArbitraryCount,11);
+     if ArbitraryCount > ArbitraryCountMax then
+      ArbitraryCount := 0;
+     ArbitraryOffset := 16*ArbitraryCount;
+     ExternalPtr := Pointer(Cardinal(ExternalPtr) + MisAlign + ArbitraryOffset);
      {$endif}
      if AddToAllocTypeArray(ExternalPtr, InternalPtr, False, InternalSize, ExternalSize, AllocArraySize) then
       begin
@@ -1002,8 +1001,8 @@ var
  {$ifdef ALIGN16}
  MisAlign, OldMisAlign, AlignDifference : Cardinal;
  {$endif}
- {$ifdef ALIGN16RANDOMIZEPOINTER}
- MisAlign, OldMisAlign, RandomOffset, AlignDifference : Cardinal;
+ {$ifdef ALIGN16ARBITRARYPOINTER}
+ MisAlign, OldMisAlign, ArbitraryOffset, AlignDifference : Cardinal;
  {$endif}
 
 begin
@@ -1023,7 +1022,7 @@ begin
      {$ifdef ALIGN16}
      if (NewExternalSize > (OldInternalSize - ALIGNSPACE)) then //Upsize
      {$else}
-     {$ifdef ALIGN16RANDOMIZEPOINTER}
+     {$ifdef ALIGN16ARBITRARYPOINTER}
      if (NewExternalSize > (OldInternalSize - ALIGNSPACE)) then //Upsize
      {$else}
      if (NewExternalSize > OldInternalSize) then //Upsize
@@ -1034,7 +1033,7 @@ begin
        {$ifdef ALIGN16}
        NewInternalSize := Round(NewExternalSize * OVERALLOCFACTORSMALLUPSIZE) + SMALLOVERALLOCEXTRA + ALIGNSPACE;
        {$else}
-       {$ifdef ALIGN16RANDOMIZEPOINTER}
+       {$ifdef ALIGN16ARBITRARYPOINTER}
        NewInternalSize := Round(NewExternalSize * OVERALLOCFACTORSMALLUPSIZE) + SMALLOVERALLOCEXTRA + ALIGNSPACE;
        {$else}
        NewInternalSize := Round(NewExternalSize * OVERALLOCFACTORSMALLUPSIZE) + SMALLOVERALLOCEXTRA;
@@ -1046,7 +1045,7 @@ begin
        OldMisAlign := Cardinal(OldExternalPtr) - Cardinal(OldInternalPtr);//Will not align, but HeapRealloc moved data and we need to point at the new block no matter how it is aligned.
        NewExternalPtr := Pointer(Cardinal(NewInternalPtr) + OldMisAlign);
        {$else}
-       {$ifdef ALIGN16RANDOMIZEPOINTER}
+       {$ifdef ALIGN16ARBITRARYPOINTER}
        OldMisAlign := Cardinal(OldExternalPtr) - Cardinal(OldInternalPtr);//Will not align, but HeapRealloc moved data and we need to point at the new block no matter how it is aligned.
        NewExternalPtr := Pointer(Cardinal(NewInternalPtr) + OldMisAlign);
        {$else}
@@ -1065,7 +1064,7 @@ begin
      {$ifdef ALIGN16}
      else if (NewExternalSize < Round(OldInternalSize * OVERALLOCFACTORSMALLDOWNSIZE) - SMALLOVERALLOCEXTRA - ALIGNSPACE) then
      {$else}
-     {$ifdef ALIGN16RANDOMIZEPOINTER}
+     {$ifdef ALIGN16ARBITRARYPOINTER}
      else if (NewExternalSize < Round(OldInternalSize * OVERALLOCFACTORSMALLDOWNSIZE) - SMALLOVERALLOCEXTRA - ALIGNSPACE) then
      {$else}
      else if (NewExternalSize < Round(OldInternalSize * OVERALLOCFACTORSMALLDOWNSIZE) - SMALLOVERALLOCEXTRA) then
@@ -1077,7 +1076,7 @@ begin
        {$ifdef ALIGN16}
        NewInternalSize := Round(NewExternalSize * OVERALLOCFACTORSMALLUPSIZE) + SMALLOVERALLOCEXTRA + ALIGNSPACE;
        {$else}
-       {$ifdef ALIGN16RANDOMIZEPOINTER}
+       {$ifdef ALIGN16ARBITRARYPOINTER}
        NewInternalSize := Round(NewExternalSize * OVERALLOCFACTORSMALLUPSIZE) + SMALLOVERALLOCEXTRA + ALIGNSPACE;
        {$else}
        NewInternalSize := Round(NewExternalSize * OVERALLOCFACTORSMALLUPSIZE) + SMALLOVERALLOCEXTRA;
@@ -1089,7 +1088,7 @@ begin
        AlignDifference := Cardinal(OldExternalPtr) - Cardinal(OldInternalPtr);
        NewExternalPtr := Pointer(Cardinal(NewInternalPtr) + AlignDifference);
        {$else}
-       {$ifdef ALIGN16RANDOMIZEPOINTER}
+       {$ifdef ALIGN16ARBITRARYPOINTER}
        AlignDifference := Cardinal(OldExternalPtr) - Cardinal(OldInternalPtr);
        NewExternalPtr := Pointer(Cardinal(NewInternalPtr) + AlignDifference);
        {$else}
@@ -1121,8 +1120,8 @@ begin
      {$ifdef ALIGN16}
      NewInternalSize := Round(NewExternalSize * OVERALLOCPERCENTAGEBIGUPSIZE) + ALIGNSPACE;
      {$else}
-     {$ifdef ALIGN16RANDOMIZEPOINTER}
-     NewInternalSize := Round(NewExternalSize * OVERALLOCPERCENTAGEBIGUPSIZE) + ALIGNSPACE + RANDOMIZESPACE;
+     {$ifdef ALIGN16ARBITRARYPOINTER}
+     NewInternalSize := Round(NewExternalSize * OVERALLOCPERCENTAGEBIGUPSIZE) + ALIGNSPACE + ARBITRARYSPACE;
      {$else}
      NewInternalSize := Round(NewExternalSize * OVERALLOCPERCENTAGEBIGUPSIZE);
      {$endif}
@@ -1135,14 +1134,14 @@ begin
        MisAlign := Cardinal(NewInternalPtr) and 15;
        NewExternalPtr := Pointer(Cardinal(NewInternalPtr) + MisAlign);
        {$else}
-       {$ifdef ALIGN16RANDOMIZEPOINTER}
+       {$ifdef ALIGN16ARBITRARYPOINTER}
        MisAlign := Cardinal(NewInternalPtr) and 15;
-       //RandomOffset := CalculateRandomizeOffset;
-       Inc(RandomCount,11);
-       if RandomCount > RandomCountMax then
-        RandomCount := 0;
-       RandomOffset := 16*RandomCount;
-       NewExternalPtr := Pointer(Cardinal(NewInternalPtr) + MisAlign + RandomOffset);
+       //ArbitraryOffset := CalculateARBITRARYOffset;
+       Inc(ArbitraryCount,11);
+       if ArbitraryCount > ArbitraryCountMax then
+        ArbitraryCount := 0;
+       ArbitraryOffset := 16*ArbitraryCount;
+       NewExternalPtr := Pointer(Cardinal(NewInternalPtr) + MisAlign + ArbitraryOffset);
        {$else}
        NewExternalPtr := Pointer(Cardinal(NewInternalPtr));
        {$endif}
@@ -1177,8 +1176,8 @@ begin
      {$ifdef ALIGN16}
      if NewExternalSize > OldInternalSize - ALIGNSPACE then
      {$else}
-     {$ifdef ALIGN16RANDOMIZEPOINTER}
-     if NewExternalSize > OldInternalSize - ALIGNSPACE - RANDOMIZESPACE then
+     {$ifdef ALIGN16ARBITRARYPOINTER}
+     if NewExternalSize > OldInternalSize - ALIGNSPACE - ARBITRARYSPACE then
      {$else}
      if NewExternalSize > OldInternalSize then
      {$endif}
@@ -1188,8 +1187,8 @@ begin
        {$ifdef ALIGN16}
        NewInternalSize := Round(NewExternalSize * OVERALLOCPERCENTAGEBIGUPSIZE) + ALIGNSPACE;
        {$else}
-       {$ifdef ALIGN16RANDOMIZEPOINTER}
-       NewInternalSize := Round(NewExternalSize * OVERALLOCPERCENTAGEBIGUPSIZE) + ALIGNSPACE + RANDOMIZESPACE;
+       {$ifdef ALIGN16ARBITRARYPOINTER}
+       NewInternalSize := Round(NewExternalSize * OVERALLOCPERCENTAGEBIGUPSIZE) + ALIGNSPACE + ARBITRARYSPACE;
        {$else}
        NewInternalSize := Round(NewExternalSize * OVERALLOCPERCENTAGEBIGUPSIZE);
        {$endif}
@@ -1199,8 +1198,8 @@ begin
      {$ifdef ALIGN16}
      else if (NewExternalSize < Round(OldInternalSize * OVERALLOCPERCENTAGEBIGDOWNSIZE) - ALIGNSPACE) then //Downsize
      {$else}
-     {$ifdef ALIGN16RANDOMIZEPOINTER}
-     else if (NewExternalSize < Round(OldInternalSize * OVERALLOCPERCENTAGEBIGDOWNSIZE) - ALIGNSPACE - RANDOMIZESPACE) then //Downsize
+     {$ifdef ALIGN16ARBITRARYPOINTER}
+     else if (NewExternalSize < Round(OldInternalSize * OVERALLOCPERCENTAGEBIGDOWNSIZE) - ALIGNSPACE - ARBITRARYSPACE) then //Downsize
      {$else}
      else if (NewExternalSize < Round(OldInternalSize * OVERALLOCPERCENTAGEBIGDOWNSIZE)) then //Downsize
      {$endif}
@@ -1210,8 +1209,8 @@ begin
        {$ifdef ALIGN16}
        NewInternalSize := Round(NewExternalSize * OVERALLOCPERCENTAGEBIGUPSIZE) + ALIGNSPACE;
        {$else}
-       {$ifdef ALIGN16RANDOMIZEPOINTER}
-       NewInternalSize := Round(NewExternalSize * OVERALLOCPERCENTAGEBIGUPSIZE) + ALIGNSPACE + RANDOMIZESPACE;
+       {$ifdef ALIGN16ARBITRARYPOINTER}
+       NewInternalSize := Round(NewExternalSize * OVERALLOCPERCENTAGEBIGUPSIZE) + ALIGNSPACE + ARBITRARYSPACE;
        {$else}
        NewInternalSize := Round(NewExternalSize * OVERALLOCPERCENTAGEBIGUPSIZE);
        {$endif}
@@ -1241,14 +1240,14 @@ begin
          MisAlign := Cardinal(NewInternalPtr) and 15;
          NewExternalPtr := Pointer(Cardinal(NewInternalPtr) + MisAlign);
          {$else}
-         {$ifdef ALIGN16RANDOMIZEPOINTER}
+         {$ifdef ALIGN16ARBITRARYPOINTER}
          MisAlign := Cardinal(NewInternalPtr) and 15;
-         //RandomOffset := CalculateRandomizeOffset;
-         Inc(RandomCount,11);
-         if RandomCount > RandomCountMax then
-          RandomCount := 0;
-         RandomOffset := 16*RandomCount;
-         NewExternalPtr := Pointer(Cardinal(NewInternalPtr) + MisAlign + RandomOffset);
+         //ArbitraryOffset := CalculateARBITRARYOffset;
+         Inc(ArbitraryCount,11);
+         if ArbitraryCount > ArbitraryCountMax then
+          ArbitraryCount := 0;
+         ArbitraryOffset := 16*ArbitraryCount;
+         NewExternalPtr := Pointer(Cardinal(NewInternalPtr) + MisAlign + ArbitraryOffset);
          {$else}
          NewExternalPtr := Pointer(Cardinal(NewInternalPtr));
          {$endif}
@@ -1282,14 +1281,14 @@ begin
          MisAlign := Cardinal(NewInternalPtr) and 15;
          NewExternalPtr := Pointer(Cardinal(NewInternalPtr) + MisAlign);
          {$else}
-         {$ifdef ALIGN16RANDOMIZEPOINTER}
+         {$ifdef ALIGN16ARBITRARYPOINTER}
          MisAlign := Cardinal(NewInternalPtr) and 15;
-         //RandomOffset := CalculateRandomizeOffset;
-         Inc(RandomCount,11);
-         if RandomCount > RandomCountMax then
-          RandomCount := 0;
-         RandomOffset := 16*RandomCount;
-         NewExternalPtr := Pointer(Cardinal(NewInternalPtr) + MisAlign + RandomOffset);
+         //ArbitraryOffset := CalculateARBITRARYOffset;
+         Inc(ArbitraryCount,11);
+         if ArbitraryCount > ArbitraryCountMax then
+          ArbitraryCount := 0;
+         ArbitraryOffset := 16*ArbitraryCount;
+         NewExternalPtr := Pointer(Cardinal(NewInternalPtr) + MisAlign + ArbitraryOffset);
          {$else}
          NewExternalPtr := NewInternalPtr;
          {$endif}
@@ -1386,7 +1385,7 @@ end;
 initialization
 
  InitMemoryManager;
- RandomCountMax := RANDOMIZESPACE div 16;
+ ArbitraryCountMax := ARBITRARYSPACE div 16;
 
 finalization
 

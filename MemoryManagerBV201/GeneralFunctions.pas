@@ -6,6 +6,11 @@ unit GeneralFunctions;
 
 interface
 
+{$ifdef FPC}
+  {$mode delphi}
+  {$asmmode intel}
+{$endif}
+
 uses
  Windows, SysUtils, Classes;
 
@@ -82,11 +87,14 @@ type
  TCPUID	= array[1..4] of Longint;
  TVendor = array [0..11] of char;
 
+{$IFDEF WIN32}
  function GetCPUID : TCPUID; assembler; register;
  function IsCPUID_Available : Boolean; register;
  function GetCPUVendor : TVendor; assembler; register;
- function GetCPUFeaturesInfo(FeatureSetIndex : Integer) : Boolean;
  function ExecuteCPUID : TCPUIDResult; assembler;
+{$ENDIF}
+ function GetCPUFeaturesInfo(FeatureSetIndex : Integer) : Boolean;
+
  function GetFormattedVersion: string;
  function GetModuleVersionDFL(ModuleFileName: string; var Ver: TVersion; Product: Boolean = False): string;
  function DetectCPUType(Family, Model: Integer): String;
@@ -133,6 +141,7 @@ const
  EFS_3DNOW = 31;
  EFS_EX3DNOW = 30;
 
+{$IFDEF WIN32}
 function GetCPUID : TCPUID; assembler; register;
 asm
   push    ebx         {Save affected register}
@@ -196,7 +205,9 @@ asm
   pop     edi					{Restore registers}
   pop     ebx
 end;
+{$ENDIF}
 
+{$IFDEF WIN32}
 function GetCPUFeaturesInfo(FeatureSetIndex : Integer) : Boolean;
 begin
  if (FeatureSetIndex >= 0) and (FeatureSetIndex <21) then
@@ -241,7 +252,51 @@ begin
   end;
  end;
 end;
+{$ELSE}
+function GetCPUFeaturesInfo(FeatureSetIndex : Integer) : Boolean;
+var
+  EDX: Cardinal;
+begin
+{$IFnDEF FPC}
+ EDX := CPUIDTable[1].EDX;
+{$ELSE}
+ EDX := 0;
+{$ENDIF}
+ case FeatureSetIndex of
+   0 : Result := ((EDX and (1 shl SFS_SIMD)) <> 0); // SIMD
+   1 : Result := ((EDX and (1 shl SFS_XSR)) <> 0); // XSR
+   2 : Result := ((EDX and (1 shl SFS_MMX)) <> 0); // MMX
+   3 : Result := ((EDX and (1 shl SFS_SERIAL)) <> 0); // SERIAL
+   4 : Result := ((EDX and (1 shl SFS_PSE36)) <> 0); // PSE36
+   5 : Result := ((EDX and (1 shl SFS_PAT)) <> 0); // PAT
+   6 : Result := ((EDX and (1 shl SFS_CMOV)) <> 0); // CMOV
+   7 : Result := ((EDX and (1 shl SFS_MCA)) <> 0); // MCA
+   8 : Result := ((EDX and (1 shl SFS_PGE)) <> 0); // PGE
+   9 : Result := ((EDX and (1 shl SFS_MTRR)) <> 0); // MTRR
+  10 : Result := ((EDX and (1 shl SFS_SEP)) <> 0); // SEP
+  11 : Result := ((EDX and (1 shl SFS_APIC)) <> 0); // APIC
+  12 : Result := ((EDX and (1 shl SFS_CX8)) <> 0); // CX8
+  13 : Result := ((EDX and (1 shl SFS_MCE)) <> 0); // MCE
+  14 : Result := ((EDX and (1 shl SFS_PAE)) <> 0); // PAE
+  15 : Result := ((EDX and (1 shl SFS_MSR)) <> 0); // MSR
+  16 : Result := ((EDX and (1 shl SFS_TSC)) <> 0); // TSC
+  17 : Result := ((EDX and (1 shl SFS_PSE)) <> 0); // PSE
+  18 : Result := ((EDX and (1 shl SFS_DE)) <> 0); // DE
+  19 : Result := ((EDX and (1 shl SFS_VME)) <> 0);// VME
+  20 : Result := ((EDX and (1 shl SFS_FPU)) <> 0); // FPU
+  21 : Result := ((EDX and (1 shl EFS_EXMMXA)) <> 0) or ((CPUID.EDX and (1 shl EFS_EXMMXC)) <> 0); // EX_MMX
+  22 : Result := ((EDX and (1 shl EFS_EX3DNOW)) <> 0); // EX_3DNOW
+  23 : Result := ((EDX and (1 shl EFS_3DNOW)) <> 0); // _3DNOW
+ else
+  begin
+   Result := False;
+//   MessageBox(MainForm.Handle,'Index out of bounds',nil,MB_OK)
+  end;
+ end;
+end;
+{$ENDIF}
 
+{$IFDEF WIN32}
 function ExecuteCPUID : TCPUIDResult; assembler;
 asm
   push    ebx
@@ -259,6 +314,7 @@ asm
   pop     edi
   pop     ebx
 end;
+{$ENDIF}
 
 function GetFormattedVersion: string;
 var
@@ -331,7 +387,7 @@ var
  Athlon64Array : array[0..5] of Integer; // Family : 15
  CPUDetected : Boolean;
  I : Integer;
- Vendor: String;
+ Vendor: AnsiString;
 
 begin
  P2Array[0] := 5; //0101
@@ -350,6 +406,7 @@ begin
  AthlonArray[0] := 4; // 0100
  Athlon64Array[0] := 4; // 0100
  CPUDetected := False;
+{$IFDEF WIN32}
  Vendor := GetCPUVendor;
  begin
   if Vendor = 'GenuineIntel' then
@@ -465,14 +522,25 @@ begin
    Result := 'Not detected';
    Exit;
   end;
+{$ENDIF}
 end;
 
 function GetCPUFrequencyMHz : Cardinal;
 
-  function RDTSC : Int64;
-  asm
-   rdtsc
+  function RDTSC : Int64; assembler;
+  asm      
+     rdtsc
+   {$IFDEF WIN64}
+     shl   rdx, 32
+     or    rax, rdx
+     xor   rdx, rdx
+   {$ENDIF}
   end;
+
+
+
+
+
 
 var
  RDTSCCountStart, RDTSCCountEnd, RDTSCTicks, lpFrequency, lpPerformanceCount,

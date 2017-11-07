@@ -24,11 +24,11 @@ function GetMMName: string;
 function GetVMState: TVMState;
 {Gets the number of bytes of virtual memory either reserved or committed by this
  process}
-function GetAddressSpaceUsed: Cardinal;
+function GetAddressSpaceUsed: NativeUInt;
 
 var
   {The address space that was in use when the application started}
-  InitialAddressSpaceUsed: Cardinal;
+  InitialAddressSpaceUsed: NativeUInt;
 
 implementation
 
@@ -71,16 +71,20 @@ begin
   {$IFDEF VER190}Result := 'Highlander';{$ENDIF}
 end;
 
-function GetCPUTicks: Int64;
-asm
-  rdtsc;
-end;
+{$ifdef FPC}
+  {$asmmode intel}
+{$endif}
 
-// Alternate implementation for Delphi5 compatibility
-// function GetCPUTicks: Int64;
-// asm
-//  db $0F; db $31;  //rdtsc
-//end;
+
+function GetCPUTicks: Int64; assembler;
+asm
+   rdtsc
+ {$IFDEF WIN64}
+   shl   rdx, 32
+   or    rax, rdx
+   xor   rdx, rdx
+ {$ENDIF}
+end;
 
 function GetMMName: string;
 begin
@@ -133,6 +137,7 @@ begin
   for LChunkIndex := 0 to 32767 do
   begin
     {Get the state of each 64K chunk}
+    FillChar(LMBI, SizeOf(LMBI), 0);
     VirtualQuery(Pointer(LChunkIndex shl 16), LMBI, SizeOf(LMBI));
     if LMBI.State = MEM_FREE then
     begin
@@ -148,7 +153,7 @@ end;
 
 {Gets the number of bytes of virtual memory either reserved or committed by this
  process in K}
-function GetAddressSpaceUsed: Cardinal;
+function GetAddressSpaceUsed: NativeUInt;
 var
   LMemoryStatus: TMemoryStatus;
 begin

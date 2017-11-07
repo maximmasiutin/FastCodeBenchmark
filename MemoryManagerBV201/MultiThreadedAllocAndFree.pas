@@ -9,31 +9,67 @@ uses Windows, BenchmarkClassUnit, Classes, Math;
 
 type
 
-  TMultiThreadAllocateAndFreeBenchmark = class(TFastcodeMMBenchmark)
+  TMultiThreadAllocateAndFreeBenchmarkAbstract = class(TFastcodeMMBenchmark)
   public
     procedure RunBenchmark; override;
     class function GetBenchmarkName: string; override;
     class function GetBenchmarkDescription: string; override;
     class function GetCategory: TBenchmarkCategory; override;
     class function GetSpeedWeight: Double; override;
+    class function IsThreadedSpecial: Boolean; override;
+    class function GetNumThreads: Integer; virtual; abstract;
   end;
+
+  TMultiThreadAllocateAndFreeBenchmark2 = class(TMultiThreadAllocateAndFreeBenchmarkAbstract)
+    class function GetNumThreads: Integer; override;
+  end;
+
+  TMultiThreadAllocateAndFreeBenchmark4 = class(TMultiThreadAllocateAndFreeBenchmarkAbstract)
+    class function GetNumThreads: Integer; override;
+  end;
+
+  TMultiThreadAllocateAndFreeBenchmark8 = class(TMultiThreadAllocateAndFreeBenchmarkAbstract)
+    class function GetNumThreads: Integer; override;
+  end;
+
+  TMultiThreadAllocateAndFreeBenchmark12 = class(TMultiThreadAllocateAndFreeBenchmarkAbstract)
+    class function GetNumThreads: Integer; override;
+  end;
+
+  TMultiThreadAllocateAndFreeBenchmark16 = class(TMultiThreadAllocateAndFreeBenchmarkAbstract)
+    class function GetNumThreads: Integer; override;
+  end;
+
+  TMultiThreadAllocateAndFreeBenchmark31 = class(TMultiThreadAllocateAndFreeBenchmarkAbstract)
+    class function GetNumThreads: Integer; override;
+  end;
+
+  TMultiThreadAllocateAndFreeBenchmark64 = class(TMultiThreadAllocateAndFreeBenchmarkAbstract)
+    class function GetNumThreads: Integer; override;
+  end;
+
 
 implementation
 
-uses SysUtils;
+uses
+  SysUtils,
+  PrimeNumbers;
 
 type
   TCreateAndFreeThread = class(TThread)
   public
+    FCurValue: Int64;
+    FPrime: Integer;
+    FRepeatCount: Integer;
     procedure Execute; override;
   end;
 
 procedure TCreateAndFreeThread.Execute;
 const
-  RepeatCount = 500;
   PointerCount = 2500;
 var
-  i, j, k: Integer;
+  i, j: Integer;
+  k: NativeUInt;
   LPointers: array[0..PointerCount - 1] of Pointer;
   LMax, LSize, LSum: Integer;
 begin
@@ -52,12 +88,13 @@ begin
         else
           LMax := 256 * 1024;
     {Get the size, minimum 1}
-    LSize := Random(LMax) + 1;
+    Inc(FCurValue, FPrime);
+    LSize := (FCurValue mod LMax) + 1;
     {Get the pointer}
     GetMem(LPointers[i], LSize);
   end;
   {Free and allocate in a loop}
-  for j := 1 to RepeatCount do
+  for j := 1 to FRepeatCount do
   begin
     for i := 0 to PointerCount - 1 do
     begin
@@ -75,13 +112,14 @@ begin
           else
             LMax := 256 * 1024;
       {Get the size, minimum 1}
-      LSize := Random(LMax) + 1;
+      Inc(FCurValue, FPrime);
+      LSize := (FCurValue mod LMax) + 1;
       {Get the pointer}
       GetMem(LPointers[i], LSize);
       {Write the memory}
       for k := 0 to (LSize - 1) div 32 do
       begin
-        PByte(Integer(LPointers[i]) + k * 32)^ := byte(i);
+        PByte(NativeUInt(LPointers[i]) + k * 32)^ := byte(i);
       end;
       {Read the memory}
       LSum := 0;
@@ -89,7 +127,7 @@ begin
       begin
         for k := 0 to (LSize - 16) div 32 do
         begin
-          Inc(LSum, PShortInt(Integer(LPointers[i]) + k * 32 + 15)^);
+          Inc(LSum, PShortInt(NativeUInt(LPointers[i]) + k * 32 + 15)^);
         end;
       end;
       {"Use" the sum to suppress the compiler warning}
@@ -105,52 +143,66 @@ end;
 
 { TMultiThreadAllocateAndFreeBenchmark }
 
-class function TMultiThreadAllocateAndFreeBenchmark.GetBenchmarkDescription: string;
+class function TMultiThreadAllocateAndFreeBenchmarkAbstract.GetBenchmarkDescription: string;
 begin
-  Result := 'A multi-threaded benchmark that allocates and frees memory blocks. '
+  Result := 'A '+IntToStr(GetNumThreads)+'-threaded benchmark that allocates and frees memory blocks. '
     + 'The usage of different block sizes approximates real-world usage as seen '
     + 'in various replays. Allocated memory is actually "used", i.e. written to '
     + 'and read.  '
     + 'Benchmark submitted by Pierre le Riche.';
 end;
 
-class function TMultiThreadAllocateAndFreeBenchmark.GetBenchmarkName: string;
+class function TMultiThreadAllocateAndFreeBenchmarkAbstract.GetBenchmarkName: string;
 begin
-  Result := 'Multi-threaded allocate, use and free';
+  Result := 'Multi-threaded ('+IntToStr(GetNumThreads)+') allocate, use and free';
 end;
 
-class function TMultiThreadAllocateAndFreeBenchmark.GetCategory: TBenchmarkCategory;
+class function TMultiThreadAllocateAndFreeBenchmarkAbstract.GetCategory: TBenchmarkCategory;
 begin
   Result := bmMultiThreadAllocAndFree;
 end;
 
-class function TMultiThreadAllocateAndFreeBenchmark.GetSpeedWeight: Double;
+class function TMultiThreadAllocateAndFreeBenchmarkAbstract.IsThreadedSpecial: Boolean;
+begin
+  Result := True;
+end;
+
+class function TMultiThreadAllocateAndFreeBenchmarkAbstract.GetSpeedWeight: Double;
 begin
   Result := 0.6;
 end;
 
-procedure TMultiThreadAllocateAndFreeBenchmark.RunBenchmark;
+procedure TMultiThreadAllocateAndFreeBenchmarkAbstract.RunBenchmark;
+const
+  CRepeatCountTotal = 90000;
 var
-  n: Integer;
+  PrimeIndex, n: Integer;
   LCreateAndFree: TCreateAndFreeThread;
+  LNumThreads: Integer;
   threads: TList;
   LFinished: Boolean;
 begin
   inherited;
-
-  RandSeed:=0;
+  LNumThreads := GetNumThreads;
+  PrimeIndex := Low(VeryGoodPrimes);
   threads:=TList.Create;
   {create threads}
-  for n := 1 to 10 do begin
-    LCreateAndFree:=TCreateAndFreeThread.Create(True);
-    LCreateAndFree.FreeOnTerminate:=False;
+  for n := 1 to LNumThreads do
+  begin
+    LCreateAndFree := TCreateAndFreeThread.Create(True);
+    LCreateAndFree.Priority := tpLower;
+    LCreateAndFree.FPrime := VeryGoodPrimes[PrimeIndex];
+    LCreateAndFree.FRepeatCount := CRepeatCountTotal div LNumThreads;
+    Inc(PrimeIndex); if PrimeIndex > High(VeryGoodPrimes) then PrimeIndex := Low(VeryGoodPrimes);
+    LCreateAndFree.FreeOnTerminate := False;
     threads.Add(LCreateAndFree);
   end;
   {start all threads at the same time}
   SetThreadPriority(GetCurrentThread, THREAD_PRIORITY_ABOVE_NORMAL);
-  for n:=0 to threads.Count-1 do begin
-    LCreateAndFree:=TCreateAndFreeThread(threads.Items[n]);
-    LCreateAndFree.Resume;
+  for n:=0 to threads.Count-1 do
+  begin
+    LCreateAndFree := TCreateAndFreeThread(threads.Items[n]);
+    LCreateAndFree.Start;
   end;
   SetThreadPriority(GetCurrentThread, THREAD_PRIORITY_NORMAL);
   {wait for completion of the threads}
@@ -164,16 +216,73 @@ begin
     end;
     {Update usage statistics}
     UpdateUsageStatistics;
-    {Sleep}
+{$IFDEF WIN32}
+    {Don't sleep on Win64 to influence the results}
     sleep(10);
+{$ENDIF}
   until LFinished;
   {Free the threads}
   for n := 0 to threads.Count - 1 do
   begin
     LCreateAndFree := TCreateAndFreeThread(threads.Items[n]);
+    LCreateAndFree.Terminate;
+  end;
+  for n := 0 to threads.Count - 1 do
+  begin
+    LCreateAndFree := TCreateAndFreeThread(threads.Items[n]);
+    LCreateAndFree.WaitFor;
+  end;
+  for n := 0 to threads.Count - 1 do
+  begin
+    LCreateAndFree := TCreateAndFreeThread(threads.Items[n]);
     LCreateAndFree.Free;
   end;
+  threads.Clear;
   threads.Free;
+  threads := nil;
 end;
+
+class function TMultiThreadAllocateAndFreeBenchmark2.GetNumThreads: Integer;
+begin
+  Result := 2;
+end;
+
+
+
+class function TMultiThreadAllocateAndFreeBenchmark4.GetNumThreads: Integer;
+begin
+  Result := 4;
+end;
+
+class function TMultiThreadAllocateAndFreeBenchmark8.GetNumThreads: Integer;
+begin
+  Result := 8;
+end;
+
+class function TMultiThreadAllocateAndFreeBenchmark12.GetNumThreads: Integer;
+begin
+  Result := 12;
+end;
+
+
+
+class function TMultiThreadAllocateAndFreeBenchmark16.GetNumThreads: Integer;
+begin
+  Result := 16;
+end;
+
+
+class function TMultiThreadAllocateAndFreeBenchmark31.GetNumThreads: Integer;
+begin
+  Result := 31;
+end;
+
+class function TMultiThreadAllocateAndFreeBenchmark64.GetNumThreads: Integer;
+begin
+  Result := 64;
+end;
+
+
+
 
 end.

@@ -29,7 +29,7 @@ type
     {The log file name, can be specified by descendant}
     FUsageLogFileName: string;
     {Gets the memory overhead of the benchmark that should be subtracted}
-    function GetBenchmarkOverhead: Cardinal; override;
+    function GetBenchmarkOverhead: NativeUInt; override;
     procedure RunReplay;
   public
     constructor CreateBenchmark; override;
@@ -142,31 +142,34 @@ type
     FBenchmark: TFastcodeMMBenchmark;
     procedure ExecuteReplay;
   public
-    constructor Create(Suspended: Boolean; ABenchmark: TFastcodeMMBenchmark; RepeatCount: integer);
+    constructor Create(ASuspended: Boolean; ABenchmark: TFastcodeMMBenchmark; RepeatCount: integer);
     procedure Execute; override;
     property Operations: string read FOperations write FOperations;
   end;
+
+const
+  INVALID_SET_FILE_POINTER = DWORD(-1);
 
 {Reads a file in its entirety and returns the contents as a string. Returns a
  blank string on error.}
 function LoadFile(const AFileName: string): string;
 var
-  LFileInfo: OFSTRUCT;
-  LHandle: HFILE;
-  LFileSize: integer;
+//  LFileInfo: OFSTRUCT;
+  LHandle: THandle;
+  LFileSize: Cardinal;
   LBytesRead: Cardinal;
 begin
   {Default to empty string (file not found)}
   Result := '';
   {Try to open the file}
-  LHandle := OpenFile(PChar(AFileName), LFileInfo, OF_READ);
+  LHandle := CreateFile(PChar(AFileName),  GENERIC_READ, FILE_SHARE_READ, nil, OPEN_EXISTING, 0, 0);
   if LHandle <> HFILE_ERROR then
   begin
     try
       {Find the FileSize}
       LFileSize := SetFilePointer(LHandle, 0, nil, FILE_END);
       {Read the file}
-      if LFileSize > 0 then
+      if (LFileSize > 0) and (LFileSize <> INVALID_SET_FILE_POINTER) then
       begin
         {Allocate the buffer}
         SetLength(Result, LFileSize);
@@ -174,9 +177,10 @@ begin
         if SetFilePointer(LHandle, 0, nil, FILE_BEGIN) = 0 then
         begin
           {Read the file}
+          LBytesRead := 0;
           Windows.ReadFile(LHandle, Result[1], LFileSize, LBytesRead, nil);
           {Was all the data read?}
-          if LBytesRead <> Cardinal(LFileSize) then
+          if LBytesRead <> LFileSize then
             Result := '';
         end;
       end;
@@ -243,6 +247,7 @@ procedure TReplayBenchmark.RunReplay;
 var
   LPOperation: PMMOperation;
   LInd, LOperationCount, LOffset: integer;
+  UintOfs: NativeUint;
 begin
   {Get a pointer to the first operation}
   LPOperation := pointer(FOperations);
@@ -252,33 +257,39 @@ begin
   for LInd := 0 to LOperationCount - 1 do
   begin
     {Perform the operation}
-    if LPOperation.NewPointerNumber >= 0 then
+    if LPOperation^.NewPointerNumber >= 0 then
     begin
-      if LPOperation.OldPointerNumber <> LPOperation.NewPointerNumber then
+      if LPOperation^.OldPointerNumber <> LPOperation^.NewPointerNumber then
       begin
         {GetMem}
-        GetMem(FPointers[LPOperation.NewPointerNumber], LPOperation.RequestedSize);
+        GetMem(FPointers[LPOperation^.NewPointerNumber], LPOperation^.RequestedSize);
       end
       else
       begin
         {ReallocMem}
-        ReallocMem(FPointers[LPOperation.OldPointerNumber], LPOperation.RequestedSize);
+        ReallocMem(FPointers[LPOperation^.OldPointerNumber], LPOperation^.RequestedSize);
       end;
       {Touch every 4K page}
       LOffset := 0;
-      while LOffset < LPOperation.RequestedSize do
+      while LOffset < LPOperation^.RequestedSize do
       begin
-        PByte(Integer(FPointers[LPOperation.NewPointerNumber]) + LOffset)^ := 1;
+        UintOfs := LOffset;
+        PByte(NativeUInt(FPointers[LPOperation^.NewPointerNumber]) + UintOfs)^ := 1;
         Inc(LOffset, 4096);
       end;
       {Touch the last byte}
-      PByte(integer(FPointers[LPOperation.NewPointerNumber]) + LPOperation.RequestedSize - 1)^ := 1;
+      if LPOperation^.RequestedSize > 2 then
+      begin
+        UintOfs := LPOperation^.RequestedSize;
+        Dec(UintOfs);
+        PByte(NativeUInt(FPointers[LPOperation^.NewPointerNumber]) + UintOfs)^ := 1;
+      end;
     end
     else
     begin
       {FreeMem}
-      FreeMem(FPointers[LPOperation.OldPointerNumber]);
-      FPointers[LPOperation.OldPointerNumber] := nil;
+      FreeMem(FPointers[LPOperation^.OldPointerNumber]);
+      FPointers[LPOperation^.OldPointerNumber] := nil;
     end;
     {Next operation}
     Inc(LPOperation);
@@ -317,7 +328,7 @@ begin
 end;
 
 
-function TReplayBenchmark.GetBenchmarkOverhead: Cardinal;
+function TReplayBenchmark.GetBenchmarkOverhead: NativeUInt;
 begin
   {Take into account the size of the replay file}
   Result := InitialAddressSpaceUsed + (length(FOperations) + length(FPointers) * 4) shr 10;
@@ -325,9 +336,9 @@ end;
 
 { TReplayThread }
 
-constructor TReplayThread.Create(Suspended: Boolean; ABenchmark: TFastcodeMMBenchmark; RepeatCount: integer);
+constructor TReplayThread.Create(ASuspended: Boolean; ABenchmark: TFastcodeMMBenchmark; RepeatCount: integer);
 begin
-  inherited Create(Suspended);
+  inherited Create(ASuspended);
   FreeOnTerminate := False;
   Priority := tpNormal;
   FBenchmark := ABenchmark;
@@ -348,6 +359,7 @@ var
   LPOperation: PMMOperation;
   LInd, LOperationCount, LOffset: integer;
   FPointers: array of pointer;
+  UintOfs: NativeUInt;
 begin
   {Set the list of pointers}
   SetLength(FPointers, length(FOperations) div SizeOf(TMMOperation));
@@ -359,33 +371,39 @@ begin
   for LInd := 0 to LOperationCount - 1 do
   begin
     {Perform the operation}
-    if LPOperation.NewPointerNumber >= 0 then
+    if LPOperation^.NewPointerNumber >= 0 then
     begin
-      if LPOperation.OldPointerNumber <> LPOperation.NewPointerNumber then
+      if LPOperation^.OldPointerNumber <> LPOperation^.NewPointerNumber then
       begin
         {GetMem}
-        GetMem(FPointers[LPOperation.NewPointerNumber], LPOperation.RequestedSize);
+        GetMem(FPointers[LPOperation^.NewPointerNumber], LPOperation^.RequestedSize);
       end
       else
       begin
         {ReallocMem}
-        ReallocMem(FPointers[LPOperation.OldPointerNumber], LPOperation.RequestedSize);
+        ReallocMem(FPointers[LPOperation^.OldPointerNumber], LPOperation^.RequestedSize);
       end;
       {Touch every 4K page}
       LOffset := 0;
-      while LOffset < LPOperation.RequestedSize do
+      while LOffset < LPOperation^.RequestedSize do
       begin
-        PByte(Integer(FPointers[LPOperation.NewPointerNumber]) + LOffset)^ := 1;
+        UintOfs := LOffset;
+        PByte(NativeUInt(FPointers[LPOperation^.NewPointerNumber]) + UintOfs)^ := 1;
         Inc(LOffset, 4096);
       end;
       {Touch the last byte}
-      PByte(integer(FPointers[LPOperation.NewPointerNumber]) + LPOperation.RequestedSize - 1)^ := 1;
+      if LPOperation^.RequestedSize > 2 then
+      begin
+        UintOfs := LPOperation^.RequestedSize;
+        Dec(UintOfs);
+        PByte(NativeUInt(FPointers[LPOperation^.NewPointerNumber]) + UintOfs)^ := 1;
+      end;
     end
     else
     begin
       {FreeMem}
-      FreeMem(FPointers[LPOperation.OldPointerNumber]);
-      FPointers[LPOperation.OldPointerNumber] := nil;
+      FreeMem(FPointers[LPOperation^.OldPointerNumber]);
+      FPointers[LPOperation^.OldPointerNumber] := nil;
     end;
     {Next operation}
     Inc(LPOperation);
@@ -421,7 +439,7 @@ var
   i, rc, slot : Integer;
   WT : TReplayThread;
   ThreadArray : array[0..63] of TReplayThread;
-  HandleArray : array[0..63] of THandle;
+  HandleArray : TWOHandleArray;
 begin
   inherited;
   
@@ -436,7 +454,9 @@ begin
   end;
   {start threads...}
   for i := 0 to RunningThreads - 1 do
-    ThreadArray[i].Resume;
+  begin
+    ThreadArray[i].Start;
+  end;
   {loop to replace terminated threads}
   for i := RunningThreads + 1 to ThreadCount do
   begin
@@ -452,7 +472,7 @@ begin
     WT.Operations := FOperations;
     HandleArray[slot] := WT.Handle;
     ThreadArray[slot] := WT;
-    WT.Resume;
+    WT.Start;
   end;
   rc := WaitForMultipleObjects(RunningThreads, @HandleArray, True, INFINITE);
   for i := 0 to RunningThreads - 1 do

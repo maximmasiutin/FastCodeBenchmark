@@ -161,7 +161,7 @@ begin
   FSizeManager := SizeManager;
   FOSBlockPointer := nil;
   FAppBlockSize := AppBlockSize;
-  FPoolListID := Random(cMaxBlockLists);
+  FPoolListID := fffRandom(cMaxBlockLists);
   //
   FUniqueMode := Uniquemode;
   //
@@ -228,7 +228,7 @@ begin
     DebugError('All Data in this OS block is already free, application is probably doing double free of same pointer');
 {$ENDIF}
   // Bepalen waar dit blok in de lijst zit
-  I := Integer(Cardinal(Loc) - Cardinal(FOSBlockPointer)) div (FAppBlockSize);
+  I := NativeUInt(NativeUInt(Loc) - NativeUInt(FOSBlockPointer)) div (FAppBlockSize);
 {$IFDEF TOPDEBUG}
   if not ((I >= 0) and (I < FAppblocks)) then
     DebugError('Pointer to free does not lie in correct range');
@@ -370,7 +370,7 @@ function TOSBlock.AddFreedByOtherThreadListBlock(const Loc: Pointer): Boolean;
 var Index: Integer;
 begin
   // TM should be locked
-  Index := Integer(Cardinal(Loc) - Cardinal(FOSBlockPointer)) div (FAppBlockSize);
+  Index := NativeUInt(NativeUInt(Loc) - NativeUInt(FOSBlockPointer)) div (FAppBlockSize);
   // We do not know whether the block is used and cannot peek because the thread is running
   // Only error we detect is if too many blocks have been freed
   Result := FFreedByOtherThreadBlocks < cMaxAppBlocks;

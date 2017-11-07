@@ -11,14 +11,47 @@ uses
   Windows, BenchmarkClassUnit, Classes, Math;
 
 type
-  TRawPerformanceMultiThread = class(TFastcodeMMBenchmark)
+  TRawPerformanceMultiThreadAbstract = class(TFastcodeMMBenchmark)
   private
   public
     procedure RunBenchmark; override;
     class function GetBenchmarkName: string; override;
     class function GetBenchmarkDescription: string; override;
     class function GetCategory: TBenchmarkCategory; override;
+    class function IsThreadedSpecial: Boolean; override;
+    class function NumThreads: Integer; virtual; abstract;
+ end;
+
+  TRawPerformanceMultiThread2 = class(TRawPerformanceMultiThreadAbstract)
+    class function NumThreads: Integer; override;
   end;
+
+  TRawPerformanceMultiThread4 = class(TRawPerformanceMultiThreadAbstract)
+    class function NumThreads: Integer; override;
+  end;
+
+  TRawPerformanceMultiThread8 = class(TRawPerformanceMultiThreadAbstract)
+    class function NumThreads: Integer; override;
+  end;
+
+  TRawPerformanceMultiThread12 = class(TRawPerformanceMultiThreadAbstract)
+    class function NumThreads: Integer; override;
+  end;
+
+  TRawPerformanceMultiThread16 = class(TRawPerformanceMultiThreadAbstract)
+    class function NumThreads: Integer; override;
+  end;
+
+  TRawPerformanceMultiThread31 = class(TRawPerformanceMultiThreadAbstract)
+    class function NumThreads: Integer; override;
+  end;
+
+  TRawPerformanceMultiThread64 = class(TRawPerformanceMultiThreadAbstract)
+    class function NumThreads: Integer; override;
+  end;
+
+
+
 
 implementation
 
@@ -28,23 +61,22 @@ uses
 type
   TRawPerformanceThread = class(TThread)
   public
+    ThreadCount: Integer;
     FBenchmark: TFastcodeMMBenchmark;
     procedure Execute; override;
   end;
-
-const
-  THREADCOUNT = 8;
 
 procedure TRawPerformanceThread.Execute;
 const
   POINTERS = 2039;  // take prime just below 2048  (scaled down 8x from single-thread)
   MAXCHUNK = 1024;  // take power of 2
-  REPEATCOUNT = 4;
+  REPEATCOUNT = 140;
 var
-  i, j, n, Size, LIndex: Cardinal;
+  ToJ, i, j, n, Size, LIndex: Cardinal;
   s: array [0..POINTERS - 1] of string;
 begin
-  for j := 1 to REPEATCOUNT do
+  ToJ := (REPEATCOUNT div ThreadCount)+1;
+  for j := 1 to ToJ do
   begin
     n := Low(s);
     for i := 1 to 1 * 1024 * 1024 do begin
@@ -75,45 +107,111 @@ begin
   end;
 end;
 
-{ TRawPerformanceMultiThread }
+{ TRawPerformanceMultiThreadAbstract }
 
-class function TRawPerformanceMultiThread.GetBenchmarkDescription: string;
+class function TRawPerformanceMultiThreadAbstract.GetBenchmarkDescription: string;
 begin
   Result := 'A benchmark to measure raw performance and fragmentation resistance. ' +
     'Allocates large number of small strings (< 1 kB) and small number of larger ' +
-    '(< 32 kB) to very large (< 256 kB) strings. 8-thread version.';
+    '(< 32 kB) to very large (< 256 kB) strings. '+IntToStr(NumThreads)+'-thread version.';
 end;
 
-class function TRawPerformanceMultiThread.GetBenchmarkName: string;
+class function TRawPerformanceMultiThreadAbstract.GetBenchmarkName: string;
 begin
-  Result := 'Raw Performance 8 threads';
+  Result := 'Raw Performance '+IntToStr(NumThreads)+' threads';
 end;
 
-class function TRawPerformanceMultiThread.GetCategory: TBenchmarkCategory;
+class function TRawPerformanceMultiThreadAbstract.GetCategory: TBenchmarkCategory;
 begin
   Result := bmMultiThreadAllocAndFree;
 end;
 
-procedure TRawPerformanceMultiThread.RunBenchmark;
+class function TRawPerformanceMultiThreadAbstract.IsThreadedSpecial: Boolean;
+begin
+  Result := True;
+end;
+
+procedure TRawPerformanceMultiThreadAbstract.RunBenchmark;
 var
-  Threads: array [0..THREADCOUNT - 1] of TRawPerformanceThread;
+  THREADCOUNT: Integer;
+  Threads: array of TRawPerformanceThread;
   i: integer;
 begin
   inherited;
-  for i := 0 to THREADCOUNT - 1 do begin
+  THREADCOUNT := NumThreads;
+  SetLength(Threads, THREADCOUNT);
+  for i := 0 to THREADCOUNT - 1 do
+  begin
     Threads[i] := TRawPerformanceThread.Create(True);
     Threads[i].FreeOnTerminate := False;
     Threads[i].FBenchmark := Self;
+    Threads[i].ThreadCount := THREADCOUNT;
+    Threads[i].Priority := tpLower;
   end;
-  Sleep(0);
-  SetThreadPriority(GetCurrentThread, THREAD_PRIORITY_ABOVE_NORMAL);
   for i := 0 to THREADCOUNT - 1 do
-    Threads[i].Resume;
-  SetThreadPriority(GetCurrentThread, THREAD_PRIORITY_NORMAL);
-  for i := 0 to THREADCOUNT - 1 do begin
-    Threads[i].WaitFor;
-    Threads[i].Free;
+  begin
+    Threads[i].Start;
   end;
+  for i := 0 to THREADCOUNT - 1 do
+  begin
+    Threads[i].WaitFor;
+  end;
+  for i := 0 to THREADCOUNT - 1 do
+  begin
+    Threads[i].Free;
+    Threads[i] := nil;
+  end;
+  SetLength(Threads, 0);
+  Finalize(Threads);
+end;
+
+{ TRawPerformanceMultiThread8 }
+
+class function TRawPerformanceMultiThread8.NumThreads: Integer;
+begin
+  Result := 8;
+end;
+
+{ TRawPerformanceMultiThread64 }
+
+class function TRawPerformanceMultiThread64.NumThreads: Integer;
+begin
+  Result := 64;
+end;
+
+{ TRawPerformanceMultiThread2 }
+
+class function TRawPerformanceMultiThread2.NumThreads: Integer;
+begin
+  Result := 2;
+end;
+
+{ TRawPerformanceMultiThread4 }
+
+class function TRawPerformanceMultiThread4.NumThreads: Integer;
+begin
+  Result := 4;
+end;
+
+{ TRawPerformanceMultiThread12 }
+
+class function TRawPerformanceMultiThread12.NumThreads: Integer;
+begin
+  Result := 12;
+end;
+
+{ TRawPerformanceMultiThread16 }
+
+class function TRawPerformanceMultiThread16.NumThreads: Integer;
+begin
+  Result := 16;
+end;
+
+{ TRawPerformanceMultiThread31 }
+
+class function TRawPerformanceMultiThread31.NumThreads: Integer;
+begin
+  Result := 31;
 end;
 
 end.

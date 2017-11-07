@@ -7,7 +7,7 @@ uses
 
 const
   {The number of pointers}
-  NumPointers = 10000;
+  NumPointers = 100000;
   {The maximum block size}
   MaxBlockSize = 70000;
 
@@ -15,7 +15,7 @@ type
 
   TAddressSpaceCreepBenchLarge = class(TFastcodeMMBenchmark)
   protected
-    FPointers: array[0..NumPointers - 1] of PChar;
+    FPointers: array[0..NumPointers - 1] of PAnsiChar;
   public
     constructor CreateBenchmark; override;
     destructor Destroy; override;
@@ -57,21 +57,26 @@ begin
 end;
 
 procedure TAddressSpaceCreepBenchLarge.RunBenchmark;
+const
+  Prime = 43;
 var
   i, j, LSize, LOffset: integer;
+  NextValue: Int64;
 begin
   {Call the inherited handler}
   inherited;
+  NextValue := Prime;
  {Allocate the pointers}
   for i := 0 to high(FPointers) do
   begin
     {Get an initial size}
-    LSize := 1 + random(MaxBlockSize);
+    LSize := 1 + (MaxBlockSize+NextValue) mod MaxBlockSize;
+    Inc(NextValue, Prime); // a prime number
     {Allocate the pointer}
     GetMem(FPointers[i], LSize);
     {Touch the memory}
-    FPointers[i][0] := char(byte(i));
-    FPointers[i][LSize - 1] := char(byte(i));
+    FPointers[i][0] := AnsiChar(byte(i));
+    FPointers[i][LSize - 1] := AnsiChar(byte(i));
   end;
   {Free and get new pointers in a loop}
   for j := 1 to 400 do
@@ -81,18 +86,19 @@ begin
       {Free the pointer}
       FreeMem(FPointers[i]);
       {Get the new size}
-      LSize := 1 + random(MaxBlockSize);
+      LSize := 1 + (MaxBlockSize+NextValue) mod MaxBlockSize;
+      Inc(NextValue, Prime); // a prime number
       {Allocate the pointer}
       GetMem(FPointers[i], LSize);
       {Touch every page of the allocated memory}
       LOffset := 0;
       while LOffset < LSize do
       begin
-        FPointers[i][LOffset] := char(byte(LOffset));
+        FPointers[i][LOffset] := AnsiChar(byte(LOffset));
         Inc(LOffset, 4096);
       end;
       {Touch the last byte}
-      FPointers[i][LSize - 1] := char(byte(i));
+      FPointers[i][LSize - 1] := AnsiChar(byte(i));
     end;
   end;
   {What we end with should be close to the peak usage}

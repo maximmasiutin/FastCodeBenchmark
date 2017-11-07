@@ -149,7 +149,7 @@ begin
   {Decrement the pointer}
   Dec(PByte(APointer), 4);
   {Log the operation}
-  LogOperation(PInteger(APointer)^, 0, -1);
+  LogOperation(PNativeUInt(APointer)^, 0, -1);
   {Call the old freemem}
   Result := OldMemoryManager.FreeMem(APointer);
   {Unlock the logger}
@@ -165,11 +165,11 @@ begin
   {Decrement the pointer}
   Dec(PByte(APointer), 4);
   {Get the old pointer number}
-  LOldPointerNumber := PInteger(APointer)^;
+  LOldPointerNumber := PNativeUInt(APointer)^;
   {Call the old reallocmem}
   Result := OldMemoryManager.ReallocMem(APointer, ASize + 4);
   {Store the pointer number before the memory block}
-  PInteger(Result)^ := LOldPointerNumber;
+  PNativeUInt(Result)^ := LOldPointerNumber;
   {Advance the pointer}
   Inc(PByte(Result), 4);
   {Log the operation}
@@ -200,7 +200,7 @@ begin
       WS_POPUP, 0, 0, 0, 0,
       0, 0, LCurrentProcessID, nil);
     {The window data is a pointer to this memory manager}
-    SetWindowLong(MMWindow, GWL_USERDATA, Integer(@NewMemoryManager));
+    SetWindowLong(MMWindow, GWL_USERDATA, NativeUInt(@NewMemoryManager));
     {We will be using this memory manager}
     NewMemoryManager.GetMem := LoggedGetMem;
     NewMemoryManager.FreeMem := LoggedFreeMem;
@@ -211,7 +211,7 @@ begin
     OperationBuffer := VirtualAlloc(nil, SizeOf(TMMOperationArray), MEM_COMMIT,
       PAGE_READWRITE);
     {Create the log file}
-    LogFileHandle := Integer(CreateFile(LogFileName,
+    LogFileHandle := NativeUInt(CreateFile(LogFileName,
       GENERIC_READ or GENERIC_WRITE, 0, nil, CREATE_ALWAYS,
       FILE_ATTRIBUTE_NORMAL, 0));
   end

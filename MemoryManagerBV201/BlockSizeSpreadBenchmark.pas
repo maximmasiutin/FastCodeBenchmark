@@ -7,15 +7,15 @@ uses
 
 const
   {The number of pointers}
-  NumPointers = 2000000;
+  NumPointers = 3000000;
   {The maximum block size}
-  MaxBlockSize = 25; // *4
+  MaxBlockSize = 25;
 
 type
 
   TBlockSizeSpreadBench = class(TFastcodeMMBenchmark)
   protected
-    FPointers: array[0..NumPointers - 1] of PChar;
+    FPointers: array[0..NumPointers - 1] of PAnsiChar;
   public
     constructor CreateBenchmark; override;
     destructor Destroy; override;
@@ -26,6 +26,9 @@ type
   end;
 
 implementation
+
+const
+  IterationsCount = 60;
 
 { TSmallResizeBench }
 
@@ -57,28 +60,38 @@ begin
 end;
 
 procedure TBlockSizeSpreadBench.RunBenchmark;
+const
+  Prime = 17;
 var
   i, n, LSize: integer;
+  NextValue: Int64;
 begin
   {Call the inherited handler}
   inherited;
-
-  for n := 1 to 3 do     // loop added to have more than 1000 MTicks for this benchmark
+  NextValue := Prime;
+  for n := 1 to IterationsCount do     // loop added to have more than 1000 MTicks for this benchmark
   begin
     {Do the benchmark}
     for i := 0 to high(FPointers) do
     begin
       {Get the initial block size, assume object sizes are 4-byte aligned}
-      LSize := (1 + random(MaxBlockSize)) * 4;
+      LSize := (1 + (MaxBlockSize+NextValue) mod NextValue) * 4;
+      Inc(NextValue, Prime);
       GetMem(FPointers[i], LSize);
       FPointers[i][0] := #13;
-      FPointers[i][LSize - 1] := #13;
+      if LSize > 2 then
+      begin
+        FPointers[i][LSize - 1] := #13;
+      end;
     end;
     {What we end with should be close to the peak usage}
     UpdateUsageStatistics;
     {Free the pointers}
     for i := 0 to high(FPointers) do
+    begin
       FreeMem(FPointers[i]);
+      FPointers[i] := nil;
+    end;
   end;
 end;
 

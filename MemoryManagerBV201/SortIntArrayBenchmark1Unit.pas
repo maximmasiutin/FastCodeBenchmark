@@ -22,8 +22,10 @@ uses SysUtils;
 type
 
   TSortIntArrayThread = class(TThread)
-     FBenchmark: TFastcodeMMBenchmark;
-     procedure Execute; override;
+    FPrime: Integer;
+    FCurValue: Int64;
+    FBenchmark: TFastcodeMMBenchmark;
+    procedure Execute; override;
   end;
 
 procedure TSortIntArrayThread.Execute;
@@ -31,18 +33,21 @@ var
  IntArray : array of Integer;
  Size, I1, I2, I3, IndexMax, Temp, Max : Integer;
 const
- MINSIZE : Integer = 500;
- MAXSIZE : Integer = 1500;
+ MINSIZE = 5;
+ MAXSIZE = 3200;
+ MaxValue = 103 {prime};
 
 begin
+ FCurValue := FPrime;
  for Size := MINSIZE to MAXSIZE do
-  begin
+ begin
    SetLength(IntArray, Size);
-   //Fill array with random values
+   //Fill array with arbitrary values
    for I1 := 0 to Size-1 do
-    begin
-     IntArray[I1] := Random(100);
-    end;
+   begin
+     IntArray[I1] := FCurValue mod MaxValue;
+     Inc(FCurValue, FPrime);
+   end;
    //Sort array just to create an acces pattern
    for I2 := 0 to Size-2 do
     begin
@@ -71,7 +76,7 @@ end;
 class function TSortIntArrayThreads.GetBenchmarkDescription: string;
 begin
   Result := 'A benchmark that measures read and write speed to an array of Integer. '
-          + 'Access pattern is created by  selection sorting array of random values. '
+          + 'Access pattern is created by  selection sorting array of arbitrary values. '
           + 'Measures memory usage after all blocks have been freed. '
           + 'Benchmark submitted by Dennis Kjaer Christensen.';
 end;
@@ -93,16 +98,18 @@ end;
 
 procedure TSortIntArrayThreads.RunBenchmark;
 var
- SortIntArrayThread : TSortIntArrayThread;
+  SortIntArrayThread : TSortIntArrayThread;
 
 begin
   inherited;
   SortIntArrayThread := TSortIntArrayThread.Create(True);
   SortIntArrayThread.FreeOnTerminate := False;
   SortIntArrayThread.FBenchmark := Self;
-  SortIntArrayThread.Resume;
+  SortIntArrayThread.FPrime := 1153;
+  SortIntArrayThread.Start;
   SortIntArrayThread.WaitFor;
   SortIntArrayThread.Free;
+  SortIntArrayThread := nil;
 end;
 
 end.

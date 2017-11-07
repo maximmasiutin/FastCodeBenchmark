@@ -31,27 +31,35 @@ var
  PointerArray : array of Pointer;
  I, AllocSize : Integer;
  AllocSizeFP : Double;
+  J: Integer;
 const
- NOOFPOINTERS : Integer = 600000;
- ALLOCGROWSTEPSIZE : Double = 0.001;
- SLEEPTIMEAFTERFREE : Integer = 10;//Seconds to free
-
+ RUNS = 2;
+ NOOFPOINTERS = 120000000;
+ ALLOCGROWSTEPSIZE = 0.0000006;
+{$IFDEF WIN32}
+ SLEEPTIMEAFTERFREE = 10;//Seconds to free
+{$ENDIF}
 begin
  //Allocate
  SetLength(PointerArray, NOOFPOINTERS);
- AllocSizeFP := 1;
- for I:= 0 to Length(PointerArray)-1 do
-  begin
-   AllocSizeFP := AllocSizeFP + ALLOCGROWSTEPSIZE;
-   AllocSize := Round(AllocSizeFP);
-   GetMem(PointerArray[I], AllocSize);
-  end;
- //Free
- for I:= 0 to Length(PointerArray)-1 do
-  FreeMem(PointerArray[I]);
+ for J := 1 to Runs do
+ begin
+   AllocSizeFP := 1;
+   for I:= 0 to Length(PointerArray)-1 do
+    begin
+     AllocSizeFP := AllocSizeFP + ALLOCGROWSTEPSIZE;
+     AllocSize := Round(AllocSizeFP);
+     GetMem(PointerArray[I], AllocSize);
+    end;
+   //Free
+   for I:= 0 to Length(PointerArray)-1 do
+    FreeMem(PointerArray[I]);
+ end;
  SetLength(PointerArray, 0);
+{$IFDEF WIN32}
  //Give a little time to free
  Sleep(SLEEPTIMEAFTERFREE*1000);
+{$ENDIF}
  FBenchmark.UpdateUsageStatistics;
 end;
 
@@ -85,9 +93,10 @@ begin
   MemFreeThread1 := TMemFreeThread1.Create(True);
   MemFreeThread1.FreeOnTerminate := False;
   MemFreeThread1.FBenchmark := Self;
-  MemFreeThread1.Resume;
+  MemFreeThread1.Start;
   MemFreeThread1.WaitFor;
   MemFreeThread1.Free;
+  MemFreeThread1 := nil;
 end;
 
 end.

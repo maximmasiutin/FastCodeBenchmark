@@ -13,19 +13,22 @@ uses
    Classes, windows, sysutils;
 
 const
-   cRandomSizes = False;
+   cRandomSizes = True;
 
 type
-   TStringThread = class(TThread)
+   TStringThreadEx = class(TThread)
    private
      FStringItems: Integer;
      FValidate: Boolean;
      FIterations: Integer;
      FSize:Integer;
+     FCurValue: Int64;
    protected
      procedure StringAction;
    public
-     constructor Create(AIterations: Integer; AItems: Integer; 
+     FPrime: Integer;
+     FEventHandle: THandle;
+     constructor Create(AIterations: Integer; AItems: Integer;
        AItemSize:Integer;AValidate: Boolean); reintroduce;
      procedure Execute; override;
    end;
@@ -41,11 +44,10 @@ implementation
 
 uses StringThreadTestUnit;
 
-constructor TStringThread.Create(AIterations: Integer; AItems: Integer;
-AItemSize:Integer;AValidate: Boolean);
+constructor TStringThreadEx.Create(AIterations: Integer; AItems: Integer; AItemSize:Integer;AValidate: Boolean);
 begin
-   inherited Create(False);
-   FreeOnTerminate := True;
+   inherited Create(True);
+   FreeOnTerminate := False;
    IncRunningThreads;
    FStringItems := AItems;
    FValidate := AValidate;
@@ -53,73 +55,83 @@ begin
    FSize:=AItemSize;
 end;
 
-procedure TStringThread.Execute;
-var I: Integer;
+procedure TStringThreadEx.Execute;
+var
+  I: Integer;
 begin
-   try
-     for I := 0 to FIterations - 1 do StringAction;
-   except
-    // Notify TestUnit we had a failure
+  try
+    for I := 0 to FIterations - 1 do StringAction;
+  except
+   // Notify TestUnit we had a failure
     NotifyThreadError;
-   end;
-   DecRunningThreads;
+  end;
+  DecRunningThreads;
+  if FEventHandle <> 0 then
+  begin
+    SetEvent(FEventHandle);
+  end;
 end;
 
-procedure TStringThread.StringAction;
-var I: Integer;
-   B1, B2: Integer;
-   FCB: Byte;
-   FillLen: Integer;
-   A, B: array of string;
+procedure TStringThreadEx.StringAction;
+var
+  I: Integer;
+  B1, B2: Integer;
+  FCB: Byte;
+  FillLen: Integer;
+  A, B: array of AnsiString;
+  MyEmptyStr: AnsiString;
 begin
-   SetLength(A, FStringItems);
-   SetLength(B, FStringItems);
-   if cRandomSizes then
+  MyEmptyStr := '';
+  SetLength(A, FStringItems);
+  SetLength(B, FStringItems);
+  if cRandomSizes then
+  begin
+   B1 := (FCurValue mod FSize) + 1;
+   Inc(FCurValue, FPrime);
+   B2 := (FCurValue mod FSize) + 1;
+   Inc(FCurValue, FPrime);
+  end else
+  begin
+   B1 := FSize;
+   B2 := FSize div 2;
+  end;
+  for I := 0 to FStringItems - 1 do
+  begin
+   SetLength(A[I], B1);
+   if FValidate then
    begin
-     B1 := Random(FSize) + 1;
-     B2 := Random(FSize) + 1;
-   end else
-   begin
-     B1 := FSize;
-     B2 := FSize div 2;
+     FCB := Byte((I mod 250) + 1);
+     FillPattern(PAnsiChar(A[I]), B1, FCB);
    end;
-   for I := 0 to FStringItems - 1 do
+  end;
+  // Reference counter, no copy
+  for I := FStringItems - 1 downto 0 do
+   B[I] := A[I];
+  // Copy resizing
+  for I := 0 to FStringItems - 1 do
+   SetLength(B[I], B2);
+  // Validate and CleanUp
+  for I := FStringItems - 1 downto 0 do
+  begin
+   if FValidate then
    begin
-     SetLength(A[I], B1);
-     if FValidate then
+     FCB := Byte((I mod 250) + 1);
+     FillLen := length(A[I]);
+     if not CheckPattern(PAnsiChar(A[I]), FillLen, FCB) then
      begin
-       FCB := Byte((I mod 250) + 1);
-       FillPattern(PChar(A[I]), B1, FCB);
+      NotifyValidationError;
+      Exit;
+     end;
+     if length(B[I]) < FillLen then FillLen := Length(B[I]);
+     if not CheckPattern(PAnsiChar(B[I]), FillLen, FCB) then
+           begin
+      NotifyValidationError;
+      Exit;
      end;
    end;
-   // Reference counter, no copy
-   for I := FStringItems - 1 downto 0 do
-     B[I] := A[I];
-   // Copy resizing
-   for I := 0 to FStringItems - 1 do
-     SetLength(B[I], B2);
-   // Validate and CleanUp
-   for I := FStringItems - 1 downto 0 do
-   begin
-     if FValidate then
-     begin
-       FCB := Byte((I mod 250) + 1);
-       FillLen := length(A[I]);
-       if not CheckPattern(PChar(A[I]), FillLen, FCB) then
-       begin
-        NotifyValidationError;
-        Exit;
-       end;
-       if length(B[I]) < FillLen then FillLen := Length(B[I]);
-       if not CheckPattern(PChar(B[I]), FillLen, FCB) then
-             begin
-        NotifyValidationError;
-        Exit;
-       end;
-     end;
-     B[I] := EmptyStr; // Cleanup
-     A[I] := EmptyStr;
-   end;
+   B[I] := MyEmptyStr; // Cleanup
+   A[I] := MyEmptyStr;
+  end;
 end;
 
 // Fill Memory with a Pattern

@@ -6,7 +6,7 @@ uses
   Classes, BenchmarkClassUnit, Math;
 
 const
-   cNB_LIST_ITEMS = 128*1024;
+   cNB_LIST_ITEMS = 1200000;
 
 type
 
@@ -91,29 +91,31 @@ var
    i : Integer;
    list : TLinkedList;
    current : PLinkedListItem;
+   NextValue: Integer;
 begin
    inherited;
    // allocate the list
+   NextValue := 199; // prime
    list:=TLinkedList.Create;
    New(current);
-   current.Next:=nil;
-   current.Prev:=nil;
-   current.ExternalRef:=TExternalRefObject1.Create;
+   current^.Next:=nil;
+   current^.Prev:=nil;
+   current^.ExternalRef:=TExternalRefObject1.Create;
    list.First:=current;
    list.Last:=list.First;
-   RandSeed:=0;
    for i:=2 to cNB_LIST_ITEMS do begin
       New(current);
-      current.Next:=nil;
-      list.Last.Next:=current;
-      current.Prev:=list.Last;
+      current^.Next:=nil;
+      list.Last^.Next:=current;
+      current^.Prev:=list.Last;
       list.Last:=current;
-      case Random(4) of // allocate randomly from a small variety of external refs
-         0 : current.ExternalRef:=TExternalRefObject1.Create;
-         1 : current.ExternalRef:=TExternalRefObject2.Create;
-         2 : current.ExternalRef:=TExternalRefObject3.Create;
-         3 : current.ExternalRef:=TExternalRefObject4.Create;
+      case NextValue mod 4 of // allocate from a small variety of external refs
+         0 : current^.ExternalRef:=TExternalRefObject1.Create;
+         1 : current^.ExternalRef:=TExternalRefObject2.Create;
+         2 : current^.ExternalRef:=TExternalRefObject3.Create;
+         3 : current^.ExternalRef:=TExternalRefObject4.Create;
       end;
+      Inc(NextValue, 199); // prime
    end;
 
    // peak usage reached now
@@ -123,21 +125,21 @@ begin
    for i:=1 to 100 do begin
       current:=list.First;
       while current<>nil do begin
-         if current.ExternalRef.Padding[0]=-1 then Dummy; // access the ExternalRef
-         current:=current.Next;
+         if current^.ExternalRef.Padding[0]=-1 then Dummy; // access the ExternalRef
+         current:=current^.Next;
       end;
       current:=list.Last;
       while current<>nil do begin
-         if current.ExternalRef.Padding[0]=-1 then Dummy; // access the ExternalRef
-         current:=current.Prev;
+         if current^.ExternalRef.Padding[0]=-1 then Dummy; // access the ExternalRef
+         current:=current^.Prev;
       end;
    end;
 
    // cleanup
    current:=list.First;
    while current<>nil do begin
-      list.First:=current.Next;
-      current.ExternalRef.Free;
+      list.First:=current^.Next;
+      current^.ExternalRef.Free;
       Dispose(current);
       current:=list.First;
    end;

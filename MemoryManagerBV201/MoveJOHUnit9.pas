@@ -1,3 +1,8 @@
+{$ifdef fpc}
+{$mode delphi}
+{$asmmode intel}
+{$endif}
+
 unit MoveJOHUnit9;
 
 interface
@@ -90,7 +95,7 @@ const
 {-------------------------------------------------------------------------}
 {Perform Forward Move of 0..36 Bytes}
 {On Entry, ECX = Count, EAX = Source+Count, EDX = Dest+Count.  Destroys ECX}
-procedure SmallForwardMove_9;
+procedure SmallForwardMove_9; assembler;
 asm
   jmp     dword ptr [@@FwdJumpTable+ecx*4]
   nop {Align Jump Table}
@@ -1614,7 +1619,7 @@ asm  {Small (253 Byte) RTL Replacement Candidate}
 @@LargeDone:
   ret
 @@M01:
-  movzx   ecx, [eax]
+  movzx   ecx, byte ptr [eax]
   mov     [edx], cl
   ret
 @@M02:

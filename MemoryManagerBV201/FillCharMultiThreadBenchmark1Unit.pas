@@ -1,3 +1,8 @@
+{$ifdef fpc}
+{$mode delphi}
+{$asmmode intel}
+{$endif}
+
 unit FillCharMultiThreadBenchmark1Unit;
 
 interface
@@ -30,6 +35,7 @@ type
 //Instructionset(s): IA32, MMX, SSE, SSE2
 //Does nothing to align writes. Will run much faster on 16 byte aligned blocks
 
+{$IFDEF WIN32}
 procedure FillCharSpecial(var Dest; count: Integer; Value: Char);
 asm
    test edx,edx
@@ -211,8 +217,14 @@ asm
  dd @CaseCount13
  dd @CaseCount14
  dd @CaseCount15
-
 end;
+{$ELSE}
+procedure FillCharSpecial(var Dest; count: Integer; Value: Char); inline;
+begin
+  FilLChar(Dest, Count, Value);
+end;
+{$ENDIF}
+
 
 //Allocate a block, fill it with SSE2 instruction without aligning, free block,
 //measure amount of allocated memory
@@ -222,13 +234,13 @@ var
  P1, P2, P3, P4, P5 : Pointer; //Need some pointers to get proper alignment distribution
  RunNo, FillRunNo : Integer;
 const
- RUNNOMAX : Integer = 33;
- FILLRUNNOMAX : Integer = 3;
- SIZE1 : Integer = 300000; //300 kB
- SIZE2 : Integer = 650000; //650 kB
- SIZE3 : Integer = 900000; //900 kB
- SIZE4 : Integer = 1250000;//1.25 MB
- SIZE5 : Integer = 2500000;//2.5 MB
+ RUNNOMAX = 1000;
+ FILLRUNNOMAX = 3;
+ SIZE1 = 300000; //300 kB
+ SIZE2 = 650000; //650 kB
+ SIZE3 = 900000; //900 kB
+ SIZE4 = 1250000;//1.25 MB
+ SIZE5 = 2500000;//2.5 MB
 
 begin
  for RunNo := 1 to RUNNOMAX do
@@ -259,14 +271,14 @@ end;
 
 class function TFillCharThreads.GetBenchmarkDescription: string;
 begin
-  Result := 'A benchmark that measures write speed to allocated block - gives bonus for 16 byte alignment '
-          + 'Measures memory usage after all blocks have been freed '
+  Result := 'A benchmark that uses 2 threads to measure write speed to allocated block - gives bonus for 16 byte alignment '
+          + 'Measures memory usage after all blocks have been freed. Fill data blocks of sizes from 300 kB to 2.5 MB '
           + 'Benchmark submitted by Dennis Kjaer Christensen.';
 end;
 
 class function TFillCharThreads.GetBenchmarkName: string;
 begin
-  Result := 'FillCharMultiThread';
+  Result := 'FillCharDoubleThread';
 end;
 
 class function TFillCharThreads.GetCategory: TBenchmarkCategory;
@@ -292,12 +304,14 @@ begin
   FillCharThread2.FreeOnTerminate := False;
   FillCharThread1.FBenchmark := Self;
   FillCharThread2.FBenchmark := Self;
-  FillCharThread1.Resume;
-  FillCharThread2.Resume;
+  FillCharThread1.Start;
+  FillCharThread2.Start;
   FillCharThread1.WaitFor;
   FillCharThread2.WaitFor;
   FillCharThread1.Free;
   FillCharThread2.Free;
+  FillCharThread1 := nil;
+  FillCharThread2 := nil;
 end;
 
 end.

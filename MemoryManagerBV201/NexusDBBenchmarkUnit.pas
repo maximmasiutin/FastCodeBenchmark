@@ -12,13 +12,15 @@ unit NexusDBBenchmarkUnit;
 
 interface
 
-uses Windows, SysUtils, Classes, BenchmarkClassUnit, Math;
+uses
+  Windows, SysUtils, Classes, BenchmarkClassUnit, Math;
 
 type
 
   TNexusBenchmark = class(TFastcodeMMBenchmark)
   protected
     FSemaphore: THandle;
+    FThreads: TList;
   public
     constructor CreateBenchmark; override;
     destructor Destroy; override;
@@ -31,57 +33,109 @@ type
     class function IterationCount: integer; virtual;
   end;
 
-  TNexusBenchmark1Thread = class(TNexusBenchmark)
-  public
-    class function NumThreads: integer; override;
+  TNexusBenchmarkThread = class(TNexusBenchmark)
+    class function IsThreadedSpecial: Boolean; override;
   end;
 
-  TNexusBenchmark2Threads = class(TNexusBenchmark)
+  TNexusBenchmark1Thread = class(TNexusBenchmarkThread)
   public
     class function NumThreads: integer; override;
     class function IterationCount: integer; override;
   end;
 
-  TNexusBenchmark4Threads = class(TNexusBenchmark)
+  TNexusBenchmark2Threads = class(TNexusBenchmarkThread)
   public
     class function NumThreads: integer; override;
     class function IterationCount: integer; override;
   end;
 
-  TNexusBenchmark8Threads = class(TNexusBenchmark)
+  TNexusBenchmark4Threads = class(TNexusBenchmarkThread)
   public
     class function NumThreads: integer; override;
     class function IterationCount: integer; override;
   end;
 
-  TNexusBenchmark12Threads = class(TNexusBenchmark)
+  TNexusBenchmark8Threads = class(TNexusBenchmarkThread)
   public
     class function NumThreads: integer; override;
-    class function RunByDefault: boolean; override;
+    class function IterationCount: integer; override;
   end;
 
-  TNexusBenchmark16Threads = class(TNexusBenchmark)
+  TNexusBenchmark12Threads = class(TNexusBenchmarkThread)
   public
     class function NumThreads: integer; override;
     class function RunByDefault: boolean; override;
+    class function IterationCount: integer; override;
   end;
 
-  TNexusBenchmark32Threads = class(TNexusBenchmark)
+  TNexusBenchmark16Threads = class(TNexusBenchmarkThread)
   public
     class function NumThreads: integer; override;
     class function RunByDefault: boolean; override;
+    class function IterationCount: integer; override;
   end;
+
+  TNexusBenchmark31Threads = class(TNexusBenchmarkThread)
+  public
+    class function NumThreads: integer; override;
+    class function RunByDefault: boolean; override;
+    class function IterationCount: integer; override;
+  end;
+
+  TNexusBenchmark64Threads = class(TNexusBenchmarkThread)
+  public
+    class function NumThreads: integer; override;
+    class function RunByDefault: boolean; override;
+    class function IterationCount: integer; override;
+  end;
+
+{$IFDEF NEXUS_UP_TO_512}
+  TNexusBenchmark128Threads = class(TNexusBenchmarkThread)
+  public
+    class function NumThreads: integer; override;
+    class function RunByDefault: boolean; override;
+    class function IterationCount: integer; override;
+  end;
+
+  TNexusBenchmark256Threads = class(TNexusBenchmarkThread)
+  public
+    class function NumThreads: integer; override;
+    class function RunByDefault: boolean; override;
+    class function IterationCount: integer; override;
+  end;
+
+  TNexusBenchmark512Threads = class(TNexusBenchmarkThread)
+  public
+    class function NumThreads: integer; override;
+    class function RunByDefault: boolean; override;
+    class function IterationCount: integer; override;
+  end;
+{$ENDIF}
 
 implementation
 
+uses
+  PrimeNumbers;
+
 const
-  MaxItems = 7;
+  NexusIterationDivider = 1;
+
+
+  MaxItems = 5;
   TestClass : array [1..MaxItems] of TClass =
-    (TStringlist, TObject, Tlist, TBits, TCollectionItem, TCollection, TStream);
+
+    (TStringlist, TObject, Tlist, TBits,
+
+    // FreePascal cannot create very big number of TCollection/TCollectionItem
+    {TCollectionItem, TCollection,}
+
+    TStream);
 
 type
   TTestThread = class(TThread)
   protected
+    CurValue: Int64;
+    Prime: Integer;
     FBenchmark: TNexusBenchmark;
   public
     procedure Execute; override;
@@ -92,39 +146,45 @@ type
 
 constructor TTestThread.Create(ABenchmark: TNexusBenchmark);
 begin
-  inherited Create(False);
-  FreeOnTerminate := True;
-  Priority := tpNormal;
+  inherited Create(True);
+  FreeOnTerminate := False;
+  Priority := tpLower;
   FBenchmark := ABenchmark;
 end;
 
 procedure TTestThread.Execute;
 var
-  k : Integer;
-  i, j : Integer;
-  p    : Pointer;
+  k: Integer;
+  i, j, jm: Integer;
+  p: Pointer;
   aString: string;
+  L: TList;
+  SL: TStringList;
 begin
   // direct memory allocation
-  with TList.Create do
+  L := TList.Create;
+
   try
-    for i := 0 to FBenchmark.IterationCount do   // RH replaced 1 * 1000 * 1000 by FBenchmark.IterationCount
+    for i := 0 to FBenchmark.IterationCount-1 do   // RH replaced 1 * 1000 * 1000 by FBenchmark.IterationCount
     begin
-      j:=Random(16*1024);
+      Inc(CurValue, Prime);
+      j := (CurValue mod (16*1024))+1;
+
       GetMem(p, j);
       k:=0;
       while k<j do begin
-        pchar(p)[k]:=#13;
+        pAnsiChar(p)[k]:=#13;
         inc(k,4*1024);
       end;
-      if j>0 then
-        pchar(p)[j-1]:=#13;
-      Add(p);
+      if j>5 then
+        pAnsiChar(p)[j-1]:=#13;
+      L.Add(p);
       //PLR - Reduced the count from 4K to 2K to lower memory usage
-      j := Random(2 * 1024);
-      if j < Count then begin
-        p := List[j];
-        Delete(j);
+      Inc(CurValue, Prime);
+      j := (CurValue mod (2 * 1024));
+      if j < L.Count then begin
+        p := L[j];
+        L.Delete(j);
         FreeMem(p);
       end;
 
@@ -133,26 +193,29 @@ begin
         FBenchmark.UpdateUsageStatistics;
 
     end;
-    for i := Pred(Count) downto 0 do
+    for i := Pred(L.Count) downto 0 do
     begin
-      FreeMem(List[i]);
+      FreeMem(L[i]);
     end;
   finally
-    Free;
+    L.Free;
+    L := nil;
   end;
   // component creation
-  with TList.Create do
+  L := TList.Create;
   try
-    for i := 0 to FBenchmark.IterationCount do   // RH replaced 1 * 1000 * 1000 by FBenchmark.IterationCount
+    for i := 0 to FBenchmark.IterationCount-1 do   // RH replaced 1 * 1000 * 1000 by FBenchmark.IterationCount
     begin
-      j := Random(MaxItems);
-      Add(TestClass[j+1].Create());
+      Inc(CurValue, Prime);
+      j := CurValue mod MaxItems;
+      L.Add(TestClass[j+1].Create());
       //PLR - Reduced the count from 4K to 2K to lower memory usage
-      j := Random(2 * 1024);
-      if j < Count then
+      Inc(CurValue, Prime);
+      j := CurValue mod (2 * 1024);
+      if j < L.Count then
       begin
-        TComponent(List[j]).Free;
-        Delete(j);
+        TComponent(L[j]).Free;
+        L.Delete(j);
       end;
 
       //PLR - Added to measure usage every 64K iterations
@@ -160,38 +223,43 @@ begin
         FBenchmark.UpdateUsageStatistics;
 
     end;
-    for i := Pred(Count) downto 0 do
+    for i := Pred(L.Count) downto 0 do
     begin
-      TComponent(List[i]).Free;
+      TComponent(L[i]).Free;
     end;
   finally
-    Free;
+    L.Free;
+    L := nil;
   end;
   // strings and stringlist
-  with TStringList.Create do
+  SL := TStringList.Create;
   try
-    for i := 0 to FBenchmark.IterationCount do   // RH replaced 1 * 1000 * 1000 by FBenchmark.IterationCount
+    for i := 0 to FBenchmark.IterationCount-1 do   // RH replaced 1 * 1000 * 1000 by FBenchmark.IterationCount
     begin
       aString:='';
-      for j := 0 to Random(250) do
+      Inc(CurValue, Prime);
+      jm := CurValue mod 250;
+      for j := 0 to jm do
       begin    // Iterate
         aString:=aString+'A';
       end;    // for
-      Add(aString);
+      SL.Add(aString);
 
       //PLR - Added to measure usage every 4K iterations
       if i and $fff = 0 then
         FBenchmark.UpdateUsageStatistics;
 
       //PLR - Reduced the count from 4K to 2K to lower memory usage
-      j := Random(2 * 1024);
-      if j < Count then
+      Inc(CurValue, Prime);
+      j := CurValue mod (2 * 1024);
+      if j < SL.Count then
       begin
-        Delete(j);
+        SL.Delete(j);
       end;
     end;
   finally
-    Free;
+    SL.Free;
+    SL := nil;
   end;
   {Notify that the thread is done}
   ReleaseSemaphore(FBenchmark.FSemaphore, 1, nil);
@@ -235,24 +303,63 @@ end;
 
 class function TNexusBenchmark.IterationCount: integer;
 begin
-  Result := 1 * 1000 * 1000;
+  raise Exception.Create('Please override the iteration count for '+ClassName);
 end;
 
 procedure TNexusBenchmark.RunBenchmark;
 var
-  i : Integer;
+  PrimeIndex, i: Integer;
+  T: TTestThread;
 begin
   {Call the inherited method to reset the peak usage}
   inherited;
-  {Create and start the threads}
+  PrimeIndex := Low(VeryGoodPrimes);
+  {Create the threads}
   for i := 1 to NumThreads do
-    TTestThread.Create(Self);
+  begin
+    if FThreads = nil then FThreads := TList.Create;
+    T := TTestThread.Create(Self);
+    T.Prime := VeryGoodPrimes[PrimeIndex];
+    Inc(PrimeIndex); if PrimeIndex > High(VeryGoodPrimes) then PrimeIndex := Low(VeryGoodPrimes);
+    FThreads.Add(T);
+  end;
+
+  {Start the threads}
+  for i := 0 to FThreads.Count-1 do
+  begin
+    T := TTestThread(FThreads[i]);
+    T.Start;
+  end;
+
   {Wait for threads to finish}
   for i := 1 to NumThreads do
     WaitForSingleObject(FSemaphore, INFINITE);
+  for i := 0 to FThreads.Count-1 do
+  begin
+    T := TTestThread(FThreads[i]);
+    T.Terminate;
+  end;
+  for i := 0 to FThreads.Count-1 do
+  begin
+    T := TTestThread(FThreads[i]);
+    T.WaitFor;
+  end;
+  for i := 0 to FThreads.Count-1 do
+  begin
+    T := TTestThread(FThreads[i]);
+    T.Free;
+  end;
+  FThreads.Clear;
+  FThreads.Free;
+  FThreads := nil;
 end;
 
 { TNexusBenchmark1Thread }
+
+class function TNexusBenchmark1Thread.IterationCount: integer;
+begin
+  Result := (10000 * 1000) div NexusIterationDivider;
+end;
 
 class function TNexusBenchmark1Thread.NumThreads: integer;
 begin
@@ -263,7 +370,7 @@ end;
 
 class function TNexusBenchmark2Threads.IterationCount: integer;
 begin
-  Result := 500 * 1000;    // RH 50% of the original value
+  Result := (5000 * 1000) div NexusIterationDivider;    // RH 50% of the original value
 end;
 
 class function TNexusBenchmark2Threads.NumThreads: integer;
@@ -275,7 +382,7 @@ end;
 
 class function TNexusBenchmark4Threads.IterationCount: integer;
 begin
-  Result := 250 * 1000;    // RH 50% of the original value
+  Result := (2500 * 1000) div NexusIterationDivider;    // RH 50% of the original value
 end;
 
 class function TNexusBenchmark4Threads.NumThreads: integer;
@@ -287,7 +394,7 @@ end;
 
 class function TNexusBenchmark8Threads.IterationCount: integer;
 begin
-  Result := 125 * 1000;    // RH 25% of the original value
+  Result := (1250 * 1000) div NexusIterationDivider;    // RH 25% of the original value
 end;
 
 class function TNexusBenchmark8Threads.NumThreads: integer;
@@ -297,6 +404,11 @@ end;
 
 { TNexusBenchmark12Threads }
 
+class function TNexusBenchmark12Threads.IterationCount: integer;
+begin
+  Result := (1100 * 1000) div NexusIterationDivider;
+end;
+
 class function TNexusBenchmark12Threads.NumThreads: integer;
 begin
   Result := 12;
@@ -304,10 +416,15 @@ end;
 
 class function TNexusBenchmark12Threads.RunByDefault: boolean;
 begin
-  Result := False;
+  Result := {$IFDEF WIN32}False{$ELSE}True{$ENDIF};
 end;
 
 { TNexusBenchmark16Threads }
+
+class function TNexusBenchmark16Threads.IterationCount: integer;
+begin
+  Result := (600 * 1000) div NexusIterationDivider;
+end;
 
 class function TNexusBenchmark16Threads.NumThreads: integer;
 begin
@@ -316,19 +433,103 @@ end;
 
 class function TNexusBenchmark16Threads.RunByDefault: boolean;
 begin
-  Result := False;
+  Result := {$IFDEF WIN32}False{$ELSE}True{$ENDIF};
 end;
 
-{ TNexusBenchmark32Threads }
+{ TNexusBenchmark31Threads }
 
-class function TNexusBenchmark32Threads.NumThreads: integer;
+class function TNexusBenchmark31Threads.IterationCount: integer;
 begin
-  Result := 32;
+  Result := (300 * 1000) div NexusIterationDivider;
 end;
 
-class function TNexusBenchmark32Threads.RunByDefault: boolean;
+class function TNexusBenchmark31Threads.NumThreads: integer;
 begin
-  Result := False;
+  Result := 31;
+end;
+
+class function TNexusBenchmark31Threads.RunByDefault: boolean;
+begin
+  Result := {$IFDEF WIN32}False{$ELSE}True{$ENDIF};
+end;
+
+{ TNexusBenchmark64Threads }
+
+class function TNexusBenchmark64Threads.IterationCount: integer;
+begin
+  Result := (200 * 1000) div NexusIterationDivider;
+end;
+
+class function TNexusBenchmark64Threads.NumThreads: integer;
+begin
+  Result := 64;
+end;
+
+class function TNexusBenchmark64Threads.RunByDefault: boolean;
+begin
+  Result := {$IFDEF WIN32}False{$ELSE}True{$ENDIF};
+end;
+
+{$IFDEF NEXUS_UP_TO_512}
+
+{ TNexusBenchmark128Threads }
+
+class function TNexusBenchmark128Threads.IterationCount: integer;
+begin
+  Result := (70 * 1000) div NexusIterationDivider;
+end;
+
+class function TNexusBenchmark128Threads.NumThreads: integer;
+begin
+  Result := 128;
+end;
+
+class function TNexusBenchmark128Threads.RunByDefault: boolean;
+begin
+  Result := {$IFDEF WIN32}False{$ELSE}True{$ENDIF};
+end;
+
+{ TNexusBenchmark256Threads }
+
+class function TNexusBenchmark256Threads.IterationCount: integer;
+begin
+  Result := (60 * 1000) div NexusIterationDivider;
+end;
+
+class function TNexusBenchmark256Threads.NumThreads: integer;
+begin
+  Result := 256;
+end;
+
+class function TNexusBenchmark256Threads.RunByDefault: boolean;
+begin
+  Result := {$IFDEF WIN32}False{$ELSE}True{$ENDIF};
+end;
+
+{ TNexusBenchmark512Threads }
+
+class function TNexusBenchmark512Threads.IterationCount: integer;
+begin
+  Result := (30 * 1000) div NexusIterationDivider;
+end;
+
+class function TNexusBenchmark512Threads.NumThreads: integer;
+begin
+  Result := 512;
+end;
+
+class function TNexusBenchmark512Threads.RunByDefault: boolean;
+begin
+  Result := {$IFDEF WIN32}False{$ELSE}True{$ENDIF};
+end;
+
+{$ENDIF}
+
+{ TNexusBenchmarkThread }
+
+class function TNexusBenchmarkThread.IsThreadedSpecial: Boolean;
+begin
+  Result := NumThreads > 1;
 end;
 
 end.

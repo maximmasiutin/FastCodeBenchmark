@@ -17,7 +17,11 @@ type
 
 implementation
 
-uses SysUtils;
+uses
+  SysUtils;
+
+const
+  IterationCount = 5;
 
 type
 
@@ -70,9 +74,8 @@ var
  ResultArray6 : array of TRegtangularComplexD;
  BenchArraySize : Integer;
 const
- MINBENCHARRAYSIZE : Integer = 9500;
- MAXBENCHARRAYSIZE : Integer = 10000;
- NOOFRUNS : Integer = 2;
+ MINBENCHARRAYSIZE = 9500;
+ MAXBENCHARRAYSIZE = 10000;
 
 begin
  for BenchArraySize := MINBENCHARRAYSIZE to MAXBENCHARRAYSIZE do
@@ -106,22 +109,22 @@ begin
     end;
    //Run on one set of arrays at a time
    //Only 3 memory blocks active at a time
-   for J1 := 0 to NOOFRUNS do
+   for J1 := 1 to IterationCount do
     for I3 := 0 to BenchArraySize-1 do
      TestFunction(ResultArray1[I3], Src1Array1[I3], Src2Array1[I3]);
-   for J2 := 0 to NOOFRUNS do
+   for J2 := 1 to IterationCount do
     for I4 := 0 to BenchArraySize-1 do
      TestFunction(ResultArray2[I4], Src1Array2[I4], Src2Array2[I4]);
-   for J3 := 0 to NOOFRUNS do
+   for J3 := 2 to IterationCount do
     for I5 := 0 to BenchArraySize-1 do
      TestFunction(ResultArray3[I5], Src1Array3[I5], Src2Array3[I5]);
-   for J4 := 0 to NOOFRUNS do
+   for J4 := 1 to IterationCount do
     for I6 := 0 to BenchArraySize-1 do
      TestFunction(ResultArray4[I6], Src1Array4[I6], Src2Array4[I6]);
-   for J5 := 0 to NOOFRUNS do
+   for J5 := 1 to IterationCount do
     for I7 := 0 to BenchArraySize-1 do
      TestFunction(ResultArray5[I7], Src1Array5[I7], Src2Array5[I7]);
-   for J6 := 0 to NOOFRUNS do
+   for J6 := 1 to IterationCount do
     for I8 := 0 to BenchArraySize-1 do
      TestFunction(ResultArray6[I8], Src1Array6[I8], Src2Array6[I8]);
   end;
@@ -159,9 +162,10 @@ begin
   DoubleFPThread1 := TDoubleFPThread1.Create(True);
   DoubleFPThread1.FreeOnTerminate := False;
   DoubleFPThread1.FBenchmark := Self;
-  DoubleFPThread1.Resume;
+  DoubleFPThread1.Start;
   DoubleFPThread1.WaitFor;
   DoubleFPThread1.Free;
+  DoubleFPThread1 := nil;
 end;
 
 end.

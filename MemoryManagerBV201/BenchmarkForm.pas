@@ -48,8 +48,9 @@ type
     PopupSelectAllCheckMarks: TMenuItem;
     N1: TMenuItem;
     PopupCheckAllDefaultBenchmarks: TMenuItem;
+    PopupCheckAllThreadedBenchmarks: TMenuItem;
     procedure FormCreate(Sender: TObject);
-    procedure FormClose(Sender: TObject; var Action: TCloseAction);
+    procedure FormClose(Sender: TObject; var AAction: TCloseAction);
     procedure btnCopySummaryClick(Sender: TObject);
     procedure ValidateButtonClick(Sender: TObject);
     procedure bRunSelectedBenchmarkClick(Sender: TObject);
@@ -66,6 +67,7 @@ type
     procedure PopupClearAllCheckMarksClick(Sender: TObject);
     procedure PopupSelectAllCheckMarksClick(Sender: TObject);
     procedure PopupCheckAllDefaultBenchmarksClick(Sender: TObject);
+    procedure PopupCheckAllThreadedBenchmarksClick(Sender: TObject);
   private
     FRanBenchmarkCount: Integer;
     FMMValidation: TMMValidation;
@@ -97,7 +99,7 @@ type
 
     procedure CalculateScores;
   public
-    CSVResultsFileName: AnsiString;
+    CSVResultsFileName: string;
   end;
 
 var
@@ -278,7 +280,7 @@ implementation
 uses
   FragmentationTestUnit, NexusDBBenchmarkUnit, ReallocMemBenchmark,
   DownsizeTestUnit, ReplayBenchmarkUnit, WildThreadsBenchmarkUnit,
-  GraphsForm, BlockSizeSpreadBenchmark, SmallDownsizeBenchmark,
+  BlockSizeSpreadBenchmark, SmallDownsizeBenchmark,
   SmallUpsizeBenchmark, RawPerformanceSingleThread, RawPerformanceMultiThread,
   AddressSpaceCreepBenchmark, LargeBlockSpreadBenchmark,
   StringThreadTestUnit, ArrayUpsizeSingleThread, DoubleFPBenchmark1Unit,
@@ -295,18 +297,25 @@ uses
  responding. (This "feature" causes problems with form z-order and also
  modal forms not showing as modal after long periods of non-responsiveness)}
 procedure DisableProcessWindowsGhosting;
+type
+  TDisableProcessWindowsGhostingProc = procedure;
 var
-  DisableProcessWindowsGhostingProc: procedure;
+  PDisableProcessWindowsGhostingProc: TDisableProcessWindowsGhostingProc;
 begin
-  DisableProcessWindowsGhostingProc := GetProcAddress(
+  {$IFDEF FPC}
+  Pointer(PDisableProcessWindowsGhostingProc) := GetProcAddress(
+  {$ELSE}
+  PDisableProcessWindowsGhostingProc := GetProcAddress(
+  {$ENDIF}
     GetModuleHandle('user32.dll'),
     'DisableProcessWindowsGhosting');
-  if Assigned(DisableProcessWindowsGhostingProc) then
-    DisableProcessWindowsGhostingProc;
+  if Assigned(PDisableProcessWindowsGhostingProc) then
+    PDisableProcessWindowsGhostingProc;
 end;
 
 procedure TfBenchmark.FormCreate(Sender: TObject);
 
+  {$IFDEF WIN32}
   //From FastcodeBenchmarkTool091 - Per Dennis C. Suggestion
   procedure ShowCPUInfo;
   var
@@ -328,6 +337,7 @@ procedure TfBenchmark.FormCreate(Sender: TObject);
           MemoCPU.Lines.Add('Vendor:            ' + GetCPUVendor);
         end;
   end;
+  {$ENDIF}
 
 var
   i: integer;
@@ -336,13 +346,15 @@ var
   CopiedExeFileName: string;
 begin
   Caption := Format('%s %s - %s   %s', [Caption, GetFormattedVersion, GetMMName, GetCompilerName]);
-  // ShowCPUInfo;
+  {$IFDEF WIN32}
+  ShowCPUInfo;
+  {$ENDIF}
   MemoCPU.Lines.Clear;
   MemoCPU.Lines.Add(SystemInfoCPU);
   MemoCPU.Lines.Add('');
   MemoCPU.Lines.Add(SystemInfoWindows);
 
-  fGraphs := TfGraphs.Create(Self);
+  //fGraphs := TfGraphs.Create(Self);
 
   CSVResultsFileName := Format('%s%s_%s.csv',
     [ExtractFilePath(GetModuleName(HInstance)), CSV_RESULT_PREFIX, GetCompilerAbbr]);
@@ -392,7 +404,7 @@ begin
   InitResultsDisplay;
 
   FMMValidation := TMMValidation.Create(Self);
-  FMMValidation.OnProgress := ValidationProgress;
+  FMMValidation.OnProgress := {$IFDEF FPC}@{$ENDIF}ValidationProgress;
   MemoValidation.Lines.Clear;
 
   PageControl1.ActivePage := TabSheetBenchmarkResults;
@@ -422,7 +434,7 @@ begin
     PostMessage(Handle, WM_POSTPROCESSING, 0, 0)
 end;
 
-procedure TfBenchmark.FormClose(Sender: TObject; var Action: TCloseAction);
+procedure TfBenchmark.FormClose(Sender: TObject; var AAction: TCloseAction);
 begin
   if FRanBenchmarkCount > 0 then
     SaveResults;
@@ -447,7 +459,7 @@ begin
   Application.ProcessMessages;
   Enabled := True;
 
-  RunBenchmark(Benchmarks[Integer(ListViewBenchmarks.Selected.Data)]);
+  RunBenchmark(Benchmarks[NativeInt(ListViewBenchmarks.Selected.Data)]);
   if FRanBenchmarkCount > 0 then
     SaveResults;
 
@@ -469,10 +481,12 @@ procedure TfBenchmark.RunBenchmark(ABenchmarkClass: TFastcodeMMBenchmarkClass);
 var
   LBenchmark: TFastcodeMMBenchmark;
   LStartTicks, LUsedTicks: Int64;
+  s: string;
 begin
   PageControl1.ActivePage := TabSheetProgress;
 
-  mResults.Lines.Add(FormatDateTime('HH:nn:ss', time) + ' Running Benchmark: ' + ABenchmarkClass.GetBenchmarkName + '...');
+  s := Trim(Trim(FormatDateTime('HH:nn:ss', time)) + ' Running Benchmark: ' + ABenchmarkClass.GetBenchmarkName + '...');
+  mResults.Lines.Add(s);
   {Create the benchmark}
   LBenchmark := ABenchmarkClass.CreateBenchmark;
   try
@@ -484,16 +498,16 @@ begin
       LUsedTicks := GetCPUTicks - LStartTicks;
       {Add a line}
 
-      mResults.Lines[mResults.Lines.Count - 1] := FormatDateTime('HH:nn:ss', time) + ' '
-        + Format('%-45s  MTicks = %6d    Mem = %7d',
-        [ ABenchmarkClass.GetBenchmarkName, LUsedTicks shr 20, LBenchmark.PeakAddressSpaceUsage ]);
+      mResults.Lines[mResults.Lines.Count - 1] := Trim(Trim(FormatDateTime('HH:nn:ss', time)) + ' '
+        + Trim(Format('%-45s  MTicks = %6d    Mem = %7d',
+        [ Trim(ABenchmarkClass.GetBenchmarkName), LUsedTicks shr 20, LBenchmark.PeakAddressSpaceUsage])));
       Enabled := False;
       Application.ProcessMessages;
       Enabled := True;
 
       AddResultsToDisplay(ABenchmarkClass.GetBenchmarkName,
                           MemoryManager_Name,
-                          FormatDateTime('YYYYMMDD HH:NN:SS.ZZZ', Now),
+                          Trim(FormatDateTime('YYYYMMDD HH:NN:SS.ZZZ', Now)),
                           LUsedTicks shr 20,
                           LBenchmark.PeakAddressSpaceUsage);
       if not FBenchmarkHasBeenRun then
@@ -505,7 +519,7 @@ begin
     end
     else
       begin
-        mResults.Lines[mResults.Lines.Count - 1] := ABenchmarkClass.GetBenchmarkName +
+        mResults.Lines[mResults.Lines.Count - 1] := Trim(ABenchmarkClass.GetBenchmarkName) +
           ': Skipped';
         Enabled := False;
         Application.ProcessMessages;
@@ -607,6 +621,7 @@ begin
    if FailedValidation = '' then
    begin
      MemoValidation.Color := clGreen;
+     MemoValidation.Lines.Add('Passed All Validations!');
    end
    else
    begin
@@ -636,9 +651,9 @@ end;
 
 procedure TfBenchmark.bGraphClick(Sender: TObject);
 begin
-  fGraphs.LoadResultsFromFile(CSVResultsFileName);
-  fGraphs.BuildGraphs;
-  fGraphs.Show;
+  //fGraphs.LoadResultsFromFile(CSVResultsFileName);
+//  fGraphs.BuildGraphs;
+//  fGraphs.Show;
 end;
 
 procedure TfBenchmark.ValidationProgress(const CurrentValidation, Failed: string);
@@ -673,10 +688,10 @@ begin
   FRanBenchmarkCount := 0;
   LoadResultsToDisplay;
 
-  ListViewResults.Column[LVCOL_BENCH].Width := -2;
-  ListViewResults.Column[LVCOL_MM].Width    := -2;
-  ListViewResults.Column[LVCOL_TIME].Width  := -2;
-  ListViewResults.Column[LVCOL_TICKS].Width := -2;
+  ListViewResults.Column[LVCOL_BENCH].Width := 120;
+  ListViewResults.Column[LVCOL_MM].Width    := 120;
+  ListViewResults.Column[LVCOL_TIME].Width  := 120;
+  ListViewResults.Column[LVCOL_TICKS].Width := 120;
   ListViewResults.Column[LVCOL_MEM].Width   := 120;
 
   CalculateScores;
@@ -735,8 +750,8 @@ begin
           TimeRan   := Bench[RESULTS_TIME]
         else
           TimeRan   := '';
-        Ticks     := StrToInt(Bench[RESULTS_TICKS]);
-        Peak      := StrToInt(Bench[RESULTS_MEM]);
+        Ticks     := StrToIntDef(Bench[RESULTS_TICKS], MaxInt);
+        Peak      := StrToIntDef(Bench[RESULTS_MEM], MaxInt);
 
         AddResultsToDisplay(BenchName, MMName, TimeRan, Ticks, Peak, 'F');
       end;
@@ -830,13 +845,13 @@ begin
       Exit;
     end;
 
-  fGraphs.LoadResultsFromFile(CSVResultsFileName);
+  //fGraphs.LoadResultsFromFile(CSVResultsFileName);
 
   {load score in memo}
   MemoScores.Lines.BeginUpdate;
   try
     MemoScores.Lines.Clear;
-    fGraphs.ShowSummary(MemoScores.Lines);
+    //fGraphs.ShowSummary(MemoScores.Lines);
   finally
     MemoScores.Lines.EndUpdate;
   end;
@@ -876,10 +891,10 @@ var
 begin
   if not FileExists(CSVResultsFileName) then
     Exit;
-  fGraphs.LoadResultsFromFile(CSVResultsFileName);
+  //fGraphs.LoadResultsFromFile(CSVResultsFileName);
   StringList := TStringList.Create;
   try
-    fGraphs.ExportTabbedSummary(StringList);
+    //fGraphs.ExportTabbedSummary(StringList);
     Clipboard.AsText := StringList.Text;
   finally
     StringList.Free;
@@ -944,7 +959,7 @@ begin
   //Set the benchmark description
   if (Item <> nil) and Selected then
     mBenchmarkDescription.Text :=
-      Benchmarks[Integer(Item.Data)].GetBenchmarkDescription;
+      Benchmarks[NativeInt(Item.Data)].GetBenchmarkDescription;
 end;
 
 procedure TfBenchmark.PopupClearAllCheckMarksClick(Sender: TObject);
@@ -969,6 +984,14 @@ var
 begin
   for i := 0 to ListViewBenchmarks.Items.Count - 1 do
     ListViewBenchmarks.Items[i].Checked := Benchmarks[i].RunByDefault;
+end;
+
+procedure TfBenchmark.PopupCheckAllThreadedBenchmarksClick(Sender: TObject);
+var
+  i: Integer;
+begin
+  for i := 0 to ListViewBenchmarks.Items.Count - 1 do
+    ListViewBenchmarks.Items[i].Checked := Benchmarks[i].IsThreadedSpecial;
 end;
 
 // ----------------------------------------------------------------------------
@@ -1020,7 +1043,7 @@ begin
   // FXMLResultList.Insert(InsertionPoint, '<validation compiler="' + GetCompilerName + '" MM="' + GetMMName + '" >');
   
   // FXMLResultList.Insert(InsertionPoint+1, Format('<cpu>%s</cpu>', [SystemInfoCPU]));
-  FXMLResultList.Insert(InsertionPoint+1, SystemInfoCPUAsXML);
+  FXMLResultList.Insert(InsertionPoint+1, {$IFDEF WIN32__}SystemInfoCPUAsXML{$ELSE}''{$ENDIF});
   FXMLResultList.Insert(InsertionPoint+2, Format('<os>%s</os>', [SystemInfoWindows]));
   FXMLResultList.Insert(InsertionPoint+3, '<result> </result>');
   FXMLResultList.Insert(InsertionPoint+4, '<extraresult> </extraresult>');
@@ -1076,7 +1099,7 @@ begin
   // FXMLResultList.Insert(InsertionPoint, '<benchmark compiler="' + GetCompilerName + '" MM="' + GetMMName + '" >');
 
   // FXMLResultList.Insert(InsertionPoint+1, Format('<cpu>%s</cpu>', [SystemInfoCPU]));
-  FXMLResultList.Insert(InsertionPoint+1, SystemInfoCPUAsXML);
+  FXMLResultList.Insert(InsertionPoint+1, {$IFDEF WIN32__}SystemInfoCPUAsXML{$ELSE}''{$ENDIF});
   FXMLResultList.Insert(InsertionPoint+2, Format('<os>%s</os>', [SystemInfoWindows]));
   FXMLResultList.Insert(InsertionPoint+3, '<result> </result>');
   FXMLResultList.Insert(InsertionPoint+4, '</benchmark>');

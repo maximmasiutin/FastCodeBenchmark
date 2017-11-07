@@ -19,6 +19,9 @@ implementation
 
 uses SysUtils;
 
+const
+  IterationCount = 145;
+
 type
 
   TSingleFPThread = class(TThread)
@@ -61,11 +64,9 @@ var
  ResultArray2 : array of TRegtangularComplexS;
  BenchArraySize, PrevArraySize : Integer;
 const
- MINBENCHARRAYSIZE : Integer = 1000;
- MAXBENCHARRAYSIZE : Integer = 6000;
+ MINBENCHARRAYSIZE = 1000;
+ MAXBENCHARRAYSIZE = 6000;
  ARRAYSIZEINCREMENT = 53;
- NOOFRUNS : Integer = 500;
-
 begin
  PrevArraySize := 0;
  BenchArraySize := MINBENCHARRAYSIZE;
@@ -93,7 +94,7 @@ begin
    //This is the real botleneck and the performance we want to measure
    for I5 := 0 to BenchArraySize-1 do
     begin
-     for I2 := 0 to NOOFRUNS do
+     for I2 := 1 to IterationCount do
       begin
        TestFunction(ResultArray1[I5], Src1Array1[I5], Src2Array1[I5]);
        TestFunction(ResultArray2[I5], Src1Array2[I5], Src2Array2[I5]);
@@ -136,9 +137,10 @@ begin
   SingleFPThread := TSingleFPThread.Create(True);
   SingleFPThread.FreeOnTerminate := False;
   SingleFPThread.FBenchmark := Self;
-  SingleFPThread.Resume;
+  SingleFPThread.Start;
   SingleFPThread.WaitFor;
   SingleFPThread.Free;
+  SingleFPThread := nil;
 end;
 
 end.

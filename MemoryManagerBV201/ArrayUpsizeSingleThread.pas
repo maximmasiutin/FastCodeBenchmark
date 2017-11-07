@@ -3,7 +3,7 @@ unit ArrayUpsizeSingleThread;
 interface
 
 uses
-  Windows, BenchmarkClassUnit, Classes, Math;
+  BenchmarkClassUnit, Classes;
 
 type
   TArrayUpsizeSingleThread = class(TFastcodeMMBenchmark)
@@ -21,6 +21,10 @@ implementation
 uses
   SysUtils;
 
+const
+  IterationCount = 280000 * 1000;
+
+
 { TArrayUpsizeSingleThread }
 
 procedure TArrayUpsizeSingleThread.Execute;
@@ -28,7 +32,7 @@ var
   i: Integer;
   x: array of Int64;
 begin
-  for i := 1 to 10 * 1024 * 1024 do begin
+  for i := 1 to IterationCount do begin
     SetLength(x, i);
     x[i - 1] := i;
   end;

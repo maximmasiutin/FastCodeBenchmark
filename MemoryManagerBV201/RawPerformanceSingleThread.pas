@@ -26,40 +26,48 @@ implementation
 uses
   SysUtils;
 
+const
+  IterationCount = 9;
+
+
 procedure TRawPerformanceSingleThread.Execute;
 const
   POINTERS = 16361; // take prime just below 16384
   MAXCHUNK = 1024;  // take power of 2
 var
-  i, n, Size, LIndex: Cardinal;
+  i, n, k, Size, LIndex: Cardinal;
   s: array [0..POINTERS - 1] of string;
 begin
-  n := Low(s);
-  for i := 1 to 8 * 1024 * 1024 do begin
-    if i and $FF < $F0 then         // 240 times out of 256 ==> chunk < 1 kB
-      Size := (4 * i) and (MAXCHUNK-1) + 1
-    else if i and $FF <> $FF then   //  15 times out of 256 ==> chunk < 32 kB
-      Size := 2 * n + 1
-    else                            //   1 time  out of 256 ==> chunk < 256 kB
-      Size := 16 * n + 1;
-    s[n] := '';
-    SetLength(s[n], Size);
-    //start and end of string are already assigned, access every 4K page in the middle
-    LIndex := 1;
-    while LIndex <= Size do
+  for k := 1 to IterationCount do
+  begin
+    n := Low(s);
+    for i := 1 to 8 * 1024 * 1024 do
     begin
-      s[n][LIndex] := #1;
-      Inc(LIndex, 4096);
+      if i and $FF < $F0 then         // 240 times out of 256 ==> chunk < 1 kB
+        Size := (4 * i) and (MAXCHUNK-1) + 1
+      else if i and $FF <> $FF then   //  15 times out of 256 ==> chunk < 32 kB
+        Size := 2 * n + 1
+      else                            //   1 time  out of 256 ==> chunk < 256 kB
+        Size := 16 * n + 1;
+      s[n] := '';
+      SetLength(s[n], Size);
+      //start and end of string are already assigned, access every 4K page in the middle
+      LIndex := 1;
+      while LIndex <= Size do
+      begin
+        s[n][LIndex] := #1;
+        Inc(LIndex, 4096);
+      end;
+      Inc(n);
+      if n > High(s) then
+        n := Low(s);
+      if i and $FFFF = 0 then
+        UpdateUsageStatistics;
     end;
-    Inc(n);
-    if n > High(s) then
-      n := Low(s);
-    if i and $FFFF = 0 then
-      UpdateUsageStatistics;
+    for n := Low(s) to High(s) do
+      s[n] := '';
   end;
   UpdateUsageStatistics;
-  for n := Low(s) to High(s) do
-    s[n] := '';
 end;
 
 { TRawPerformanceSingleThread }

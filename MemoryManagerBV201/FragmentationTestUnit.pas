@@ -5,7 +5,8 @@ unit FragmentationTestUnit;
 
 interface
 
-uses BenchmarkClassUnit, Math;
+uses
+  BenchmarkClassUnit;
 
 type
 
@@ -21,6 +22,9 @@ type
   end;
 
 implementation
+
+const
+  IterationCount = 120;
 
 { TFragmentationTest }
 
@@ -55,8 +59,8 @@ var
   i, n: integer;
 begin
   inherited;
-  
-  for n := 1 to 3 do     // loop added to have more than 1000 MTicks for this benchmark
+
+  for n := 1 to IterationCount do     // loop added to have more than 1000 MTicks for this benchmark
   begin
     SetLength(FStrings, 0);
     for i := 1 to 90 do

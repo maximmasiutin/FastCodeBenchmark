@@ -35,7 +35,7 @@ var
 
 // Allocate Size bytes and return a pointer to uninitialized memory,
 // or nil for a failure.
-function HeapGetMem(Size: Integer): Pointer;
+function HeapGetMem(Size: NativeInt): Pointer;
 var
   Flags: Cardinal;
 begin
@@ -65,7 +65,7 @@ end;
 
 // Reallocate Size bytes, and return the new pointer,
 // or nil for a failure.
-function HeapReallocMem(Ptr: Pointer; Size: Integer): Pointer;
+function HeapReallocMem(Ptr: Pointer; Size: NativeInt): Pointer;
 var
   Flags: Cardinal;
 begin

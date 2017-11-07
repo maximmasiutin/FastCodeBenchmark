@@ -128,6 +128,7 @@ begin
   SingleFPThread.Resume;
   SingleFPThread.WaitFor;
   SingleFPThread.Free;
+  SingleFPThread := nil;
 end;
 
 end.

@@ -53,7 +53,7 @@ unit BucketMem;
 {$define SPINLOCK}            // activate to use spinlocks instead of critical sections
 {$define USEISMULTITHREAD}    // activate to take into account the variable IsMultiThread
 {$define ALIGN16BYTE}         // activate to align all memory allocations to 16-byte boundaries
-{$define USECACHEOFFSET}      // give random offset to large blocks to improve cache associativity
+{$define USECACHEOFFSET}      // give arbitrary offset to large blocks to improve cache associativity
 {.$define USESYSTEMMOVE}      // activate when you're using FastMove in your project
 
 {$ifdef LINUX}
@@ -416,7 +416,7 @@ begin
     end;
   end;
   Index := GetBitIndexAndClear(VirtualBlock.Available);
-  Result := PSheet(Cardinal(VirtualBlock.P) + Index * VBlockDescriptor.SheetSize);
+  Result := PSheet(NativeUInt(VirtualBlock.P) + Index * VBlockDescriptor.SheetSize);
   Result.VirtualBlock := VirtualBlock;
   Result.VBlockIndex := Index;
   if VirtualBlock.Available = 0 then begin
@@ -471,11 +471,11 @@ begin
     Exit;
   Bucket.ActiveSheet := Result;
   {$ifdef ALIGN16BYTE}
-  Bucket.CurAddr := Cardinal(Result) + 44;  // + 44 so with 4 byte overhead all final blocks are 16-byte aligned
+  Bucket.CurAddr := NativeUInt(Result) + 44;  // + 44 so with 4 byte overhead all final blocks are 16-byte aligned
   {$else}
-  Bucket.CurAddr := Cardinal(Result) + 64;  // + 64 no 16-byte alignment, but slightly better cache associativity
+  Bucket.CurAddr := NativeUInt(Result) + 64;  // + 64 no 16-byte alignment, but slightly better cache associativity
   {$endif}
-  Bucket.MaxAddr := Cardinal(Result) + Size - Bucket.BlockSize;
+  Bucket.MaxAddr := NativeUInt(Result) + Size - Bucket.BlockSize;
   inc(Bucket.SheetCount);
 
   Result.Magic := MAGIC_SHEET;
@@ -649,7 +649,7 @@ begin
   end;
   inc(Sheet.BlockUsedCount);
   PBlockUsed(Result).Sheet := Sheet;
-  inc(Integer(Result), 4);
+  inc(NativeInt(Result), 4);
   {$ifdef SPINLOCK}
   Bucket.SpinLock := 0;
   {$else}{$ifdef USEISMULTITHREAD}if IsMultiThread then{$endif}
@@ -714,7 +714,7 @@ begin
   if OldSize < Size then
     Size := OldSize;
   Size := (Size + $00000003) and $FFFFFFFC;  // round for Move operation
-  FastCodeMove(Pointer(Integer(Pntr) + 4)^, Result^, Size - 4);
+  FastCodeMove(Pointer(NativeUInt(Pntr) + 4)^, Result^, Size - 4);
   FreeMemBlock(Pntr);
 end;
 
@@ -731,7 +731,7 @@ begin
       // possibly small downsize... check whether the original block would be fine
       if (Size > MAX_BUCKET_MEM) and ((Size + $0000FFFF) and $FFFF0000 = OldSize) then begin
         inc(Pntr.ReallocCount);
-        Result := Pointer(Integer(Pntr) + 16);
+        Result := Pointer(NativeUInt(Pntr) + 16);
         Exit;
       end;
     end;
@@ -740,11 +740,11 @@ begin
   if OldSize < Size then
     Size := OldSize;
   Size := (Size + $00000003) and $FFFFFFFC;  // round for Move operation
-  if Integer(PBlockUsed(Integer(Result) - 4).Sheet) = MAGIC_BLOCK_HEAP_ALLOC then
-    PHeapBlockUsed(Integer(Result) - 16).ReallocCount := Pntr.ReallocCount + 1;   // increment Realloc count
-  FastCodeMove(Pointer(Integer(Pntr) + 16)^, Result^, Size - 16);
+  if NativeUInt(PBlockUsed(NativeUint(Result) - 4).Sheet) = MAGIC_BLOCK_HEAP_ALLOC then
+    PHeapBlockUsed(NativeUint(Result) - 16).ReallocCount := Pntr.ReallocCount + 1;   // increment Realloc count
+  FastCodeMove(Pointer(NativeUint(Pntr) + 16)^, Result^, Size - 16);
   {$ifdef USECACHEOFFSET}  // avoid Win98 VirtualFree problem
-  Pntr := PHeapBlockUsed(Integer(Pntr) and $FFFF0000);
+  Pntr := PHeapBlockUsed(NativeUint(Pntr) and $FFFF0000);
   {$endif}
   OSVirtualFree(Pntr);
 end;
@@ -772,7 +772,7 @@ begin
     OffSet := 0;
   Size := (Size + OffSet + $FFFF) and $FFFF0000;
   Result := OSVirtualAlloc(Size);
-  inc(Integer(Result), OffSet);
+  inc(NativeUint(Result), OffSet);
   Dec(Size, OffSet);
   {$else}
   Size := (Size + $FFFF) and $FFFF0000;
@@ -782,7 +782,7 @@ begin
     PHeapBlockUsed(Result).ReallocCount := 0;
     PHeapBlockUsed(Result).Size := Size;
     PHeapBlockUsed(Result).Sheet := PSheet(MAGIC_BLOCK_HEAP_ALLOC);
-    inc(Integer(Result), 16);
+    inc(NativeUint(Result), 16);
   end;
 end;
 
@@ -797,7 +797,7 @@ begin
   inc(Size, 4);
   if Size <= MAX_BUCKET_MEM then begin
     // for blocks <= MAX_BUCKET_MEM use bucket
-    Result := GetMemBlock(@Buckets[BucketIndexForSize[(Cardinal(Size) - 1) div 16]]);
+    Result := GetMemBlock(@Buckets[BucketIndexForSize[(NativeUInt(Size) - 1) div 16]]);
   end
   else begin
     // for blocks > MAX_BUCKET_MEM use OS functions
@@ -808,11 +808,11 @@ end;
 function BucketFreeMem(Pntr: Pointer): Integer;
 // Return 0 = success, 1 = failure
 begin
-  dec(Integer(Pntr), 4);
-  if Integer(PBlockUsed(Pntr).Sheet) = MAGIC_BLOCK_HEAP_ALLOC then begin
-    dec(Integer(Pntr), 12);
+  dec(NativeUint(Pntr), 4);
+  if NativeUint(PBlockUsed(Pntr).Sheet) = MAGIC_BLOCK_HEAP_ALLOC then begin
+    dec(NativeUint(Pntr), 12);
     {$ifdef USECACHEOFFSET}  // avoid Win98 VirtualFree problem
-    Pntr := Pointer(Integer(Pntr) and $FFFF0000);
+    Pntr := Pointer(NativeUint(Pntr) and $FFFF0000);
     {$endif}
     if OSVirtualFree(Pntr) then
       Result := 0
@@ -832,16 +832,16 @@ function BucketReallocMem(Pntr: Pointer; Size: Integer): Pointer;
 var
   OldSize: Cardinal;
 begin
-  dec(Integer(Pntr), 4);
-  if Integer(PBlockUsed(Pntr).Sheet) = MAGIC_BLOCK_HEAP_ALLOC then begin
-    dec(Integer(Pntr), 12);
+  dec(NativeUint(Pntr), 4);
+  if NativeUint(PBlockUsed(Pntr).Sheet) = MAGIC_BLOCK_HEAP_ALLOC then begin
+    dec(NativeUint(Pntr), 12);
     inc(Size, 16);
     OldSize := PHeapBlockUsed(Pntr).Size;
     // only perform downsize when really worthwile (NewSize < OldSize div 4)
     // if resized less than EXACT_REALLOC_COUNT times always return the exact size
     if (PHeapBlockUsed(Pntr).ReallocCount >= EXACT_REALLOC_COUNT) and
-       (Cardinal(Size) <= OldSize) and ((Cardinal(Size) >= OldSize div 4)) then
-      Result := Pointer(Integer(Pntr) + 16)
+       (NativeUInt(Size) <= OldSize) and ((NativeUInt(Size) >= OldSize div 4)) then
+      Result := Pointer(NativeUint(Pntr) + 16)
     else
       Result := ReallocHeapBlock(Pntr, Size, OldSize);
   end
@@ -849,8 +849,8 @@ begin
     inc(Size, 4);
     OldSize := PBlockUsed(Pntr).Sheet.Bucket.BlockSize;
     // only perform downsize when really worthwile (OldSize > 128 bytes and NewSize < OldSize div 4)
-    if (Cardinal(Size) <= OldSize) and ((OldSize <= 128) or (Cardinal(Size) >= OldSize div 4)) then
-      Result := Pointer(Integer(Pntr) + 4)
+    if (NativeUInt(Size) <= OldSize) and ((OldSize <= 128) or (NativeUInt(Size) >= OldSize div 4)) then
+      Result := Pointer(NativeUint(Pntr) + 4)
     else
       Result := ReallocMemBlock(Pntr, Size, OldSize);
   end

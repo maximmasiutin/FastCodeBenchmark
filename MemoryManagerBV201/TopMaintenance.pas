@@ -14,7 +14,7 @@ uses
   Windows;
 
 type
-  TTopMaintenance = class(TThread)
+  TTopMaintenanceEx = class(TThread)
   private
     FCurrentManager: Byte;
     FStop, FBusy: Boolean;
@@ -30,7 +30,7 @@ type
   end;
 
 var
-  TopThread: TTopMaintenance = nil;
+  TopThread: TTopMaintenanceEx = nil;
 
 implementation
 
@@ -59,16 +59,16 @@ begin
   TThreadManagerList(TopMM).GlobalPool.GetSizeManagerByIndex(SMIndex).ManagePoolSize;
 end;
 
-constructor TTopMaintenance.Create;
+constructor TTopMaintenanceEx.Create;
 begin
-  inherited Create(False);
-  FreeOnTerminate := True;
+  inherited Create(True);
+  FreeOnTerminate := False;
   FCurrentManager := 0;
   FStop := False;
   FBusy := True;
 end;
 
-procedure TTopMaintenance.Execute;
+procedure TTopMaintenanceEx.Execute;
 begin
   while (not Terminated) do
   begin
@@ -95,7 +95,7 @@ begin
   end;
 end;
 
-procedure TTopMaintenance.Nextmanager;
+procedure TTopMaintenanceEx.Nextmanager;
 begin
   // Move to next
   Inc(FCurrentManager);
@@ -104,7 +104,7 @@ begin
     FCurrentManager := 0;
 end;
 
-procedure TTopMaintenance.Stop;
+procedure TTopMaintenanceEx.Stop;
 begin
   FStop := True;
 end;
@@ -113,7 +113,7 @@ initialization
   // Do not start a thread when installing/registering as a server. This will otherwise crash the COM+
   // installation of any program using this unit
  if not NotReallyRunning then
-  TopThread := TTopMaintenance.Create;
+  TopThread := TTopMaintenanceEx.Create;
 
 finalization
   if Assigned(TopThread) then

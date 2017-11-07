@@ -54,7 +54,7 @@ unit BucketMemDKC_ASM;
 {$D+,WARNINGS ON}            // activate to debug this unit
 {$define USEISMULTITHREAD}    // activate to take into account the variable IsMultiThread
 {$define ALIGN16BYTE}         // activate to align all memory allocations to 16-byte boundaries
-{.$define USECACHEOFFSET}      // give random offset to large blocks to improve cache associativity
+{.$define USECACHEOFFSET}      // give arbitrary offset to large blocks to improve cache associativity
 
 interface
 
@@ -641,7 +641,7 @@ begin
   else
    MoveSize := Size;
   MoveSize := (MoveSize + $00000003) and $FFFFFFFC;  // round for Move operation
-  FastMove(Pointer(Integer(Pntr) + 4)^, Result^, MoveSize - 4);
+  FastMove(Pointer(NativeUInt(Pntr) + 4)^, Result^, MoveSize - 4);
   FreeMemBlock(Pntr);
 end;
 
@@ -666,7 +666,7 @@ begin
       if (Size > MAX_BUCKET_MEM) and (((Size + $0000FFFF) and $FFFF0000) = OldSize) then
        begin
         inc(Pntr.ReallocCount);
-        Result := Pointer(Integer(Pntr) + 16);
+        Result := Pointer(NativeUInt(Pntr) + 16);
         Exit;
        end;
       {$else}
@@ -679,7 +679,7 @@ begin
       if (Size+16 > MAX_BUCKET_MEM) and (ReallocSizeDifference <= Size div 4) then
        begin
         inc(Pntr.ReallocCount);
-        Result := Pointer(Integer(Pntr) + 16);
+        Result := Pointer(NativeUInt(Pntr) + 16);
         Exit;
        end;
       {$endif}
@@ -692,11 +692,11 @@ begin
   else
    MoveSize := Size;
   MoveSize := (MoveSize + $00000003) and $FFFFFFFC;  // round for Move operation
-  if Integer(PBlockUsed(Integer(Result) - 4).Sheet) = MAGIC_BLOCK_HEAP_ALLOC then
-    PHeapBlockUsed(Integer(Result) - 16).ReallocCount := Pntr.ReallocCount + 1;   // increment Realloc count
-  FastMove(Pointer(Integer(Pntr) + 16)^, Result^, MoveSize - 16);
+  if NativeUInt(PBlockUsed(NativeUInt(Result) - 4).Sheet) = MAGIC_BLOCK_HEAP_ALLOC then
+    PHeapBlockUsed(NativeUInt(Result) - 16).ReallocCount := Pntr.ReallocCount + 1;   // increment Realloc count
+  FastMove(Pointer(NativeUInt(Pntr) + 16)^, Result^, MoveSize - 16);
   {$ifdef USECACHEOFFSET}  // avoid Win98 VirtualFree problem
-  Pntr := PHeapBlockUsed(Integer(Pntr) and $FFFF0000);
+  Pntr := PHeapBlockUsed(NativeUInt(Pntr) and $FFFF0000);
   {$endif}
   OSVirtualFree(Pntr);
 end;
@@ -727,12 +727,12 @@ begin
 
   if Result <> nil then
    begin
-    inc(Integer(Result), OffSet);
+    inc(NativeUInt(Result), OffSet);
     Dec(Size, OffSet);
     PHeapBlockUsed(Result).ReallocCount := 0;
     PHeapBlockUsed(Result).Size := Size;
     PHeapBlockUsed(Result).Sheet := PSheet(MAGIC_BLOCK_HEAP_ALLOC);
-    inc(Integer(Result), 16);
+    inc(NativeUInt(Result), 16);
   end;
   {$else}
   Size := (Size + $0000FFFF) and $FFFF0000;
@@ -743,7 +743,7 @@ begin
     PHeapBlockUsed(Result).ReallocCount := 0;
     PHeapBlockUsed(Result).Size := Size;
     PHeapBlockUsed(Result).Sheet := PSheet(MAGIC_BLOCK_HEAP_ALLOC);
-    inc(Integer(Result), 16);
+    inc(NativeUInt(Result), 16);
   end;
   {$endif}
 end;

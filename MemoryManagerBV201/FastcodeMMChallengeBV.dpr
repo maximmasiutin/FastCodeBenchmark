@@ -3,8 +3,11 @@ program FastcodeMMChallengeBV;
 {$I FASTCODE_MM.INC}
 
 uses
-  {Must be first to measure the initial VM Usage}
-  BenchmarkUtilities in 'BenchmarkUtilities.pas',
+{$IFDEF MM_FASTMM4}
+  FastMM4 // Pierre le Riche's Fastcode challenge entry v4.xx
+{$ENDIF}
+//  {Must be first to measure the initial VM Usage}
+//  BenchmarkUtilities in 'BenchmarkUtilities.pas',
 {$IFDEF MM_BUCKETMM}
   BucketMem // Robert Houdart's BucketMM
 {$ENDIF}
@@ -25,9 +28,6 @@ uses
 {$ENDIF}
 {$IFDEF MM_FASTMM3}
   FastMM3 // Pierre le Riche's Fastcode challenge entry v3.01
-{$ENDIF}
-{$IFDEF MM_FASTMM4}
-  FastMM4 // Pierre le Riche's Fastcode challenge entry v4.xx
 {$ENDIF}
 {$IFDEF MM_FASTMM4_16}
   FastMM4_16 // Pierre le Riche's Fastcode challenge entry v4.xx
@@ -68,6 +68,7 @@ uses
 
   {Other units}
   Forms,
+  PrimeNumbers in 'PrimeNumbers.pas' {fBenchmark},
   BenchmarkForm in 'BenchmarkForm.pas' {fBenchmark},
   RenameMMForm in 'RenameMMForm.pas' {fRenameMM},
   FragmentationTestUnit in 'FragmentationTestUnit.pas',
@@ -81,7 +82,6 @@ uses
   SmallDownsizeBenchmark in 'SmallDownsizeBenchmark.pas',
   RawPerformanceSingleThread in 'RawPerformanceSingleThread.pas',
   RawPerformanceMultiThread in 'RawPerformanceMultiThread.pas',
-  GraphsForm in 'GraphsForm.pas' {fGraphs},
   AddressSpaceCreepBenchmark in 'AddressSpaceCreepBenchmark.pas',
   LargeBlockSpreadBenchmark in 'LargeBlockSpreadBenchmark.pas',
   StringThread in 'StringThread.pas',
@@ -105,7 +105,8 @@ uses
   SortExtendedArrayBenchmark2Unit in 'SortExtendedArrayBenchmark2Unit.pas',
   SingleThreadedAllocMem in 'SingleThreadedAllocMem.pas',
   MMvalidation in 'MMvalidation.pas',
-  GeneralFunctions in 'GeneralFunctions.pas';
+  GeneralFunctions in 'GeneralFunctions.pas'
+  {$IFDEF FPC}, Interfaces{$ENDIF};
 
 {$R *.res}
 

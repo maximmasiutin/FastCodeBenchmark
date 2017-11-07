@@ -8,6 +8,7 @@ type
 
   TMemFreeThreads2 = class(TFastcodeMMBenchmark)
   public
+    class function RunByDefault: Boolean; override;
     procedure RunBenchmark; override;
     class function GetBenchmarkName: string; override;
     class function GetBenchmarkDescription: string; override;
@@ -62,9 +63,15 @@ begin
   MemFreeThread2 := TMemFreeThread2.Create(True);
   MemFreeThread2.FreeOnTerminate := False;
   MemFreeThread2.FBenchmark := Self;
-  MemFreeThread2.Resume;
+  MemFreeThread2.Start;
   MemFreeThread2.WaitFor;
   MemFreeThread2.Free;
+  MemFreeThread2 := nil;
+end;
+
+class function TMemFreeThreads2.RunByDefault: Boolean;
+begin
+  Result := False;
 end;
 
 end.

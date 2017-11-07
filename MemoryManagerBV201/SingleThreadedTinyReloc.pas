@@ -1,7 +1,6 @@
-{A benchmark that creates and frees many objects in a multi-threaded
- environment}
+{A single-threaded benchmark that reallocates and uses memory blocks.}
 
-unit SingleThreadedAllocAndFree;
+unit SingleThreadedTinyReloc;
 
 interface
 
@@ -9,7 +8,7 @@ uses Windows, BenchmarkClassUnit, Classes, Math;
 
 type
 
-  TSingleThreadAllocateAndFreeBenchmark = class(TFastcodeMMBenchmark)
+  TSingleThreadedTinyRelocBenchmark = class(TFastcodeMMBenchmark)
   public
     procedure RunBenchmark; override;
     class function GetBenchmarkName: string; override;
@@ -20,97 +19,98 @@ type
 
 implementation
 
-{ TSingleThreadAllocateAndFreeBenchmark }
+const
+  IterationsCount = 610000;
 
-class function TSingleThreadAllocateAndFreeBenchmark.GetBenchmarkDescription: string;
+
+{ TSingleThreadReallocateBenchmark }
+
+class function TSingleThreadedTinyRelocBenchmark.GetBenchmarkDescription: string;
 begin
-  Result := 'A single-threaded benchmark that allocates and frees memory blocks. '
-    + 'The usage of different block sizes approximates real-world usage as seen '
-    + 'in various replays. Allocated memory is actually "used", i.e. written to '
-    + 'and read.  '
+  Result := 'A single-threaded benchmark for tiny memory blocs. It allocates and reallocates tiny memory '
+    + 'blocks. Allocated memory is actually "used", i.e. written to and read. '
+    + 'Rough breakdown: 50% of pointers are <=64 bytes, 95% < 128 bytes, 99% < 256 bytes, rest < 512 bytes. '
     + 'Benchmark submitted by Pierre le Riche.';
 end;
 
-class function TSingleThreadAllocateAndFreeBenchmark.GetBenchmarkName: string;
+class function TSingleThreadedTinyRelocBenchmark.GetBenchmarkName: string;
 begin
-  Result := 'Single-threaded allocate, use and free';
+  Result := 'Single-threaded tiny reallocate and use';
 end;
 
-class function TSingleThreadAllocateAndFreeBenchmark.GetCategory: TBenchmarkCategory;
+class function TSingleThreadedTinyRelocBenchmark.GetCategory: TBenchmarkCategory;
 begin
-  Result := bmSingleThreadAllocAndFree;
+  Result := bmSingleThreadRealloc;
 end;
 
-class function TSingleThreadAllocateAndFreeBenchmark.GetSpeedWeight: Double;
+class function TSingleThreadedTinyRelocBenchmark.GetSpeedWeight: Double;
 begin
   Result := 0.6;
 end;
 
-procedure TSingleThreadAllocateAndFreeBenchmark.RunBenchmark;
+procedure TSingleThreadedTinyRelocBenchmark.RunBenchmark;
 const
-  Prime = 13;
-  RepeatCount = 100;
-  PointerCount = 610000;
+  Prime = 83;
+  PointerCount = 500; {small number to fit the cache}
 type
   PPointers = ^TPointers;
   TPointers = array[0..PointerCount - 1] of Pointer;
+
 var
   i, j: Integer;
-  k: NativeUInt;
+  k: NativeUint;
   CurValue: Int64;
   LPointers: PPointers;
   LMax, LSize, LSum: Integer;
 begin
   inherited;
   {We want predictable results}
-  CurValue := Prime;
   New(LPointers);
+  CurValue := Prime;
   {Allocate the initial pointers}
   for i := 0 to PointerCount - 1 do
   begin
     {Rough breakdown: 50% of pointers are <=64 bytes, 95% < 1K, 99% < 4K, rest < 256K}
     if i and 1 <> 0 then
-      LMax := 64
+      LMax := 67 {prime}
     else
       if i and 15 <> 0 then
-        LMax := 1024
+        LMax := 131 {prime}
       else
         if i and 255 <> 0 then
-          LMax := 4 * 1024
+          LMax := 257 {prime}
         else
-          LMax := 256 * 1024;
+          LMax := 521 {prime};
     {Get the size, minimum 1}
     LSize := (CurValue mod LMax) + 1;
     Inc(CurValue, Prime);
     {Get the pointer}
     GetMem(LPointers^[i], LSize);
   end;
-  {Free and allocate in a loop}
-  for j := 1 to RepeatCount do
+  {Reallocate in a loop}
+  for j := 1 to IterationsCount do
   begin
     {Update usage statistics}
     UpdateUsageStatistics;
     for i := 0 to PointerCount - 1 do
     begin
-      {Free the pointer}
-      FreeMem(LPointers^[i]);
-      LPointers^[i] := nil;
-      {Rough breakdown: 50% of pointers are <=64 bytes, 95% < 1K, 99% < 4K, rest < 256K}
+      {Rough breakdown: 50% of pointers are <=64 bytes, 95% < 128 bytes, 99% < 256 bytes, rest < 512 bytes.}
       if i and 1 <> 0 then
-        LMax := 64
+        LMax := 67 {prime}
       else
         if i and 15 <> 0 then
-          LMax := 1024
+          LMax := 131 {prime}
         else
           if i and 255 <> 0 then
-            LMax := 4 * 1024
+            LMax := 257 {prime}
           else
-            LMax := 256 * 1024;
+            LMax := 521 {prime};
       {Get the size, minimum 1}
       LSize := (CurValue mod LMax) + 1;
       Inc(CurValue, Prime);
-      {Get the pointer}
-      GetMem(LPointers^[i], LSize);
+
+      {Reallocate the pointer}
+      ReallocMem(LPointers^[i], LSize);
       {Write the memory}
       for k := 0 to (LSize - 1) div 32 do
       begin
@@ -135,6 +135,7 @@ begin
     FreeMem(LPointers^[i]);
     LPointers^[i] := nil;
   end;
+  Dispose(LPointers);
 end;
 
 end.
