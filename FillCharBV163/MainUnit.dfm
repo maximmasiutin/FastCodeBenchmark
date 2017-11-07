@@ -143,8 +143,9 @@ object MainForm: TMainForm
     Top = 656
     Width = 75
     Height = 25
-    TabOrder = 5
     Kind = bkClose
+    NumGlyphs = 2
+    TabOrder = 5
   end
   object FunctionSelectionRadioGroup: TRadioGroup
     Left = 160
@@ -300,7 +301,7 @@ object MainForm: TMainForm
     Height = 577
     TabStop = False
     Color = clInfoBk
-    Font.Charset = DEFAULT_CHARSET
+    Font.Charset = RUSSIAN_CHARSET
     Font.Color = clInfoText
     Font.Height = -11
     Font.Name = 'MS Sans Serif'
@@ -312,6 +313,7 @@ object MainForm: TMainForm
     ReadOnly = True
     ScrollBars = ssVertical
     TabOrder = 10
+    Zoom = 100
   end
   object BenchmarkAllButton: TButton
     Left = 680
