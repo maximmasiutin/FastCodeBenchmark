@@ -1869,6 +1869,12 @@ var
   ExportedMethod: TExportedMethod;
   LFileName: string;
 begin
+  if not FileExists(LFileName) then
+  begin
+    Result := True;
+    Exit;
+  end;
+
   {Get the initial memory usage}
   LInitialUsage := GetAddressSpaceUsed;
   {Default to fail}
