@@ -5,7 +5,8 @@ interface
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   Dialogs, StdCtrls, BenchmarkClassUnit, Math, CheckLst, Grids, Buttons,
-  ExtCtrls, ComCtrls, Clipbrd, MMValidation, ToolWin, ImgList, Menus;
+  ExtCtrls, ComCtrls, Clipbrd, MMValidation, ToolWin, ImgList, Menus,
+  System.ImageList;
 
   {$I FASTCODE_MM.INC}
 
@@ -344,6 +345,7 @@ var
   Item: TListItem;
   LWeight: Double;
   CopiedExeFileName: string;
+  LBenchmark: TFastcodeMMBenchmarkClass;
 begin
   Caption := Format('%s %s - %s   %s', [Caption, GetFormattedVersion, GetMMName, GetCompilerName]);
   {$IFDEF WIN32}
@@ -377,18 +379,22 @@ begin
   end;
 
   {List the benchmarks}
-  for i := 0 to high(Benchmarks) do
+  for i := low(Benchmarks) to high(Benchmarks) do
   begin
+    LBenchmark := Benchmarks[i];
     Item := ListViewBenchmarks.Items.Add;
     Item.Data := Pointer(i);
-    Item.Checked := Benchmarks[i].RunByDefault;
-    Item.Caption := Benchmarks[i].GetBenchmarkName;
-    LWeight := Benchmarks[i].GetSpeedWeight;
-    Item.SubItems.Add(BenchmarkCategoryNames[Benchmarks[i].GetCategory]);
-    Item.SubItems.Add(FormatFloat('0.## %', LWeight * 100));
-    Item.SubItems.Add(FormatFloat('0.## %', 100 - LWeight * 100));
-    Item.SubItems.Add(FormatFloat('0.## %', Benchmarks[i].GetBenchmarkWeight * 100));
-    Item.SubItems.Add(FormatFloat('0.## %', GlobalBenchmarkWeights[i] * 100));
+    if Assigned(LBenchmark) then
+    begin
+      Item.Checked := LBenchmark.RunByDefault;
+      Item.Caption := LBenchmark.GetBenchmarkName;
+      LWeight := LBenchmark.GetSpeedWeight;
+      Item.SubItems.Add(BenchmarkCategoryNames[LBenchmark.GetCategory]);
+      Item.SubItems.Add(FormatFloat('0.## %', LWeight * 100));
+      Item.SubItems.Add(FormatFloat('0.## %', 100 - LWeight * 100));
+      Item.SubItems.Add(FormatFloat('0.## %', LBenchmark.GetBenchmarkWeight * 100));
+      Item.SubItems.Add(FormatFloat('0.## %', GlobalBenchmarkWeights[i] * 100));
+    end;
   end;
 
   if ListViewBenchmarks.Items.Count > 0 then
@@ -546,7 +552,7 @@ begin
   Application.ProcessMessages;
   Enabled := True;
   mResults.Lines.Add('***Running All Checked Benchmarks***');
-  for i := 0 to high(BenchMarks) do
+  for i := Low(BenchMarks) to high(BenchMarks) do
   begin
     {Must this benchmark be run?}
     if ListViewBenchmarks.Items[i].Checked then
@@ -953,13 +959,20 @@ begin
   end;
 end;
 
-procedure TfBenchmark.ListViewBenchmarksSelectItem(Sender: TObject;
-  Item: TListItem; Selected: Boolean);
+procedure TfBenchmark.ListViewBenchmarksSelectItem(Sender: TObject; Item: TListItem; Selected: Boolean);
+var
+  LBenchmarkClass: TFastcodeMMBenchmarkClass;
+
 begin
   //Set the benchmark description
   if (Item <> nil) and Selected then
-    mBenchmarkDescription.Text :=
-      Benchmarks[NativeInt(Item.Data)].GetBenchmarkDescription;
+  begin
+    LBenchmarkClass := Benchmarks[NativeInt(Item.Data)];
+    if Assigned(LBenchmarkClass) then
+    begin
+      mBenchmarkDescription.Text := LBenchmarkClass.GetBenchmarkDescription;
+    end;
+  end;
 end;
 
 procedure TfBenchmark.PopupClearAllCheckMarksClick(Sender: TObject);

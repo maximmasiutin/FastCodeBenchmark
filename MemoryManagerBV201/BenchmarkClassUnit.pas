@@ -306,23 +306,31 @@ var
   i: integer;
   WeightSumArray: array[TBenchmarkCategory] of Double;
   Category: TBenchmarkCategory;
+  LClass: TFastcodeMMBenchmarkClass;
 begin
   // compute sum of relative weights within each category
   FillChar(WeightSumArray, SizeOf(WeightSumArray), 0);
-  for i := 0 to high(Benchmarks) do begin
-    if Benchmarks[i].RunByDefault then begin
-      Category := Benchmarks[i].GetCategory;
-      WeightSumArray[Category] := WeightSumArray[Category] + Benchmarks[i].GetBenchmarkWeight;
+  for i := Low(Benchmarks) to high(Benchmarks) do
+  begin
+    LClass := Benchmarks[i];
+    if not Assigned(LClass) then Continue;
+    if LClass.RunByDefault then
+    begin
+      Category := LClass.GetCategory;
+      WeightSumArray[Category] := WeightSumArray[Category] + LClass.GetBenchmarkWeight;
     end;
   end;
   // compute global weight in accordance with array WeightPerCategory
   SetLength(GlobalBenchmarkWeights, Length(Benchmarks));
-  for i := 0 to high(Benchmarks) do begin
-    Category := Benchmarks[i].GetCategory;
+  for i := Low(Benchmarks) to high(Benchmarks) do
+  begin
+    LClass := Benchmarks[i];
+    if not Assigned(LClass) then Continue;
+    Category := LClass.GetCategory;
     if WeightSumArray[Category] = 0 then
       GlobalBenchmarkWeights[i] := 0
     else
-      GlobalBenchmarkWeights[i] := Benchmarks[i].GetBenchmarkWeight * WeightPerCategory[Category] / WeightSumArray[Category];
+      GlobalBenchmarkWeights[i] := LClass.GetBenchmarkWeight * WeightPerCategory[Category] / WeightSumArray[Category];
   end;
 end;
 
