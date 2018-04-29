@@ -2488,7 +2488,11 @@ function TMMValidation.Validate32 : Boolean;
 const
   CIterNormalRun = 1250;
   CIterQuickRun = 125;
+{$IFDEF WIN64}
   CNumPointers = 1000;
+{$ELSE}
+  CNumPointers = 50;
+{$ENDIF}
 var
  I1, I2, I3, BytesToAllocate, RunNo : Cardinal;
  pMem : Pointer;
@@ -2498,14 +2502,23 @@ var
  RUNNOMAX: Cardinal;
  MaxAllocValidate32, Total: Int64;
 const
+{$IFDEF WIN64}
  BYTESTOALLOCATEMAX = 2*1024*1024;//2 Mbyte per pointer max
+{$ELSE}
+ BYTESTOALLOCATEMAX = 128*1024;//128K per pointer max
+{$ENDIF}
 
 begin
   Result := True;
   if ShortRun then RUNNOMAX := CIterQuickRun else RUNNOMAX := CIterNormalRun;
+
+  {$IFDEF WIN64}
+dfdf
   MaxAllocValidate32 := 1*1024*1024*1024; {1GB}
   MaxAllocValidate32 := MaxAllocValidate32 * 2; {2 GB}
-
+  {$ELSE}
+  MaxAllocValidate32 := 32*1024*1024;//32 Mbytes total
+  {$ENDIF}
 
  try
   //Initialize pointer array - not really needed
@@ -3267,7 +3280,6 @@ begin
   AddSuite({$IFDEF FPC}@{$ENDIF}Validate46);
   AddSuite({$IFDEF FPC}@{$ENDIF}Validate47);
   AddSuite({$IFDEF FPC}@{$ENDIF}Validate48);
-//  AddSuite(Validate49);
   i := Low(VeryGoodPrimes);
   repeat
     Prime := VeryGoodPrimes[i];
