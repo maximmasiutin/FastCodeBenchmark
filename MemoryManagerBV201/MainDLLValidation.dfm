@@ -5,11 +5,6 @@ object Form1: TForm1
   Height = 454
   Caption = 'FastCode MM Challenge DLL Validation'
   Color = clBtnFace
-  Font.Charset = DEFAULT_CHARSET
-  Font.Color = clWindowText
-  Font.Height = -11
-  Font.Name = 'MS Sans Serif'
-  Font.Style = []
   OldCreateOrder = False
   Position = poScreenCenter
   OnCreate = FormCreate

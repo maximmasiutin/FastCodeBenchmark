@@ -9,11 +9,6 @@ object fGraphs: TfGraphs
   Color = clBtnFace
   Constraints.MinHeight = 600
   Constraints.MinWidth = 800
-  Font.Charset = DEFAULT_CHARSET
-  Font.Color = clWindowText
-  Font.Height = -11
-  Font.Name = 'MS Sans Serif'
-  Font.Style = []
   KeyPreview = True
   OldCreateOrder = False
   WindowState = wsMaximized
