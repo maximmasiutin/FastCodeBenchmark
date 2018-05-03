@@ -2513,7 +2513,7 @@ begin
   if ShortRun then RUNNOMAX := CIterQuickRun else RUNNOMAX := CIterNormalRun;
 
   {$IFDEF WIN64}
-dfdf
+
   MaxAllocValidate32 := 1*1024*1024*1024; {1GB}
   MaxAllocValidate32 := MaxAllocValidate32 * 2; {2 GB}
   {$ELSE}
