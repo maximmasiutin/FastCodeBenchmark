@@ -69,7 +69,8 @@ const
   PointerCount = 2500;
 var
   LRepeatCount, i, j: Integer;
-  k: NativeUint;
+  kcalc: NativeUint;
+  kloop: Cardinal;
   LPointers: array[0..PointerCount - 1] of Pointer;
   LMax, LSize, LSum: Integer;
 begin
@@ -115,17 +116,19 @@ begin
       {Reallocate the pointer}
       ReallocMem(LPointers[i], LSize);
       {Write the memory}
-      for k := 0 to (LSize - 1) div 32 do
+      for kloop := 0 to (LSize - 1) div 32 do
       begin
-        PByte(NativeUInt(LPointers[i]) + k * 32)^ := byte(i);
+        kcalc := kloop;
+        PByte(NativeUInt(LPointers[i]) + kcalc * 32)^ := byte(i);
       end;
       {Read the memory}
       LSum := 0;
       if LSize > 15 then
       begin
-        for k := 0 to (LSize - 16) div 32 do
+        for kloop := 0 to (LSize - 16) div 32 do
         begin
-          Inc(LSum, PShortInt(NativeUInt(LPointers[i]) + k * 32 + 15)^);
+          kcalc := kloop;
+          Inc(LSum, PShortInt(NativeUInt(LPointers[i]) + kcalc * 32 + 15)^);
         end;
       end;
       {"Use" the sum to suppress the compiler warning}
@@ -198,7 +201,7 @@ begin
   for n:=0 to threads.Count-1 do
   begin
     LCreateAndFree:=TCreateAndFreeThread(threads.Items[n]);
-    LCreateAndFree.Start;
+    LCreateAndFree.Suspended := False;
   end;
   SetThreadPriority(GetCurrentThread, THREAD_PRIORITY_NORMAL);
   {wait for completion of the threads}

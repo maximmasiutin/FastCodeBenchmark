@@ -162,7 +162,7 @@ begin
   DoubleFPThread2 := TDoubleFPThread2.Create(True);
   DoubleFPThread2.FreeOnTerminate := False;
   DoubleFPThread2.FBenchmark := Self;
-  DoubleFPThread2.Start;
+  DoubleFPThread2.Suspended := False;
   DoubleFPThread2.WaitFor;
   DoubleFPThread2.Free;
   DoubleFPThread2 := nil;

@@ -455,7 +455,7 @@ begin
   {start threads...}
   for i := 0 to RunningThreads - 1 do
   begin
-    ThreadArray[i].Start;
+    ThreadArray[i].Suspended := False;
   end;
   {loop to replace terminated threads}
   for i := RunningThreads + 1 to ThreadCount do
@@ -472,7 +472,7 @@ begin
     WT.Operations := FOperations;
     HandleArray[slot] := WT.Handle;
     ThreadArray[slot] := WT;
-    WT.Start;
+    WT.Suspended := False;
   end;
   rc := WaitForMultipleObjects(RunningThreads, @HandleArray, True, INFINITE);
   for i := 0 to RunningThreads - 1 do

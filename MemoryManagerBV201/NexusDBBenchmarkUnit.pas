@@ -328,7 +328,7 @@ begin
   for i := 0 to FThreads.Count-1 do
   begin
     T := TTestThread(FThreads[i]);
-    T.Start;
+    T.Suspended := False;
   end;
 
   {Wait for threads to finish}

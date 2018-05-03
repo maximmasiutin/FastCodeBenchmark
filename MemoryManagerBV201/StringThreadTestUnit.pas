@@ -162,7 +162,7 @@ begin
    for i := 0 to Threads.Count-1 do
    begin
      T := TStringThreadEx(Threads[i]);
-     T.Start;
+     T.Suspended := False;
    end;
 
    wr := WaitForMultipleObjects(Threads.Count, Handles, True, INFINITE);
@@ -291,7 +291,7 @@ begin
    for I := 0 to ThreadList.Count-1 do
    begin
      T := TStringThreadEx(ThreadList[i]);
-     T.Start;
+     T.Suspended := False;
    end;
    repeat
      wr := WaitForSingleObject(E, INFINITE);
@@ -300,7 +300,7 @@ begin
        for I := ThreadList.Count-1 downto 0 do
        begin
          T := TStringThreadEx(ThreadList[i]);
-         if T.Finished then
+         if T.IsTerminated then
          begin
            T.WaitFor;
            T.Free;

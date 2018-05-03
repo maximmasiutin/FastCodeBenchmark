@@ -93,7 +93,7 @@ begin
   MemFreeThread1 := TMemFreeThread1.Create(True);
   MemFreeThread1.FreeOnTerminate := False;
   MemFreeThread1.FBenchmark := Self;
-  MemFreeThread1.Start;
+  MemFreeThread1.Suspended := False;
   MemFreeThread1.WaitFor;
   MemFreeThread1.Free;
   MemFreeThread1 := nil;

@@ -150,7 +150,7 @@ begin
   end;
   for i := 0 to THREADCOUNT - 1 do
   begin
-    Threads[i].Start;
+    Threads[i].Suspended := False;
   end;
   for i := 0 to THREADCOUNT - 1 do
   begin

@@ -31,6 +31,7 @@ type
      constructor Create(AIterations: Integer; AItems: Integer;
        AItemSize:Integer;AValidate: Boolean); reintroduce;
      procedure Execute; override;
+     function IsTerminated: Boolean;
    end;
 
 type TLargeByteArray = array[0..MaxInt - 1] of Byte;
@@ -54,6 +55,12 @@ begin
    FIterations := AIterations;
    FSize:=AItemSize;
 end;
+
+function TStringThreadEx.IsTerminated: Boolean;
+begin
+  Result := Terminated;
+end;
+
 
 procedure TStringThreadEx.Execute;
 var

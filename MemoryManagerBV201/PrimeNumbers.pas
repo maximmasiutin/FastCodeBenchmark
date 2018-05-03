@@ -776,12 +776,12 @@ end;
 {$ELSE}
 function PopCnt16(A: Word): Word; assembler;
 asm
-  popcnt      ax,ax
+  db $66, $F3, $0F, $B8, $C1 // popcnt      ax,cx
 end;
 
 function PopCnt32(A: Cardinal): Cardinal; assembler;
 asm
-  popcnt      eax,eax
+  db $F3, $0F, $B8, $C1  // popcnt      eax,ecx
 end;
 
 {$ENDIF}

@@ -162,7 +162,7 @@ begin
   DoubleFPThread1 := TDoubleFPThread1.Create(True);
   DoubleFPThread1.FreeOnTerminate := False;
   DoubleFPThread1.FBenchmark := Self;
-  DoubleFPThread1.Start;
+  DoubleFPThread1.Suspended := False;
   DoubleFPThread1.WaitFor;
   DoubleFPThread1.Free;
   DoubleFPThread1 := nil;

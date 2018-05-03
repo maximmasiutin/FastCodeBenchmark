@@ -101,7 +101,7 @@ begin
   SortIntArrayThread.FreeOnTerminate := False;
   SortIntArrayThread.FBenchmark := Self;
   SortIntArrayThread.FPrime := 463;
-  SortIntArrayThread.Start;
+  SortIntArrayThread.Suspended := False;
   SortIntArrayThread.WaitFor;
   SortIntArrayThread.Free;
 end;

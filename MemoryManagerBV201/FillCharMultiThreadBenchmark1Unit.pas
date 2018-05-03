@@ -304,8 +304,8 @@ begin
   FillCharThread2.FreeOnTerminate := False;
   FillCharThread1.FBenchmark := Self;
   FillCharThread2.FBenchmark := Self;
-  FillCharThread1.Start;
-  FillCharThread2.Start;
+  FillCharThread1.Suspended := False;
+  FillCharThread2.Suspended := False;
   FillCharThread1.WaitFor;
   FillCharThread2.WaitFor;
   FillCharThread1.Free;

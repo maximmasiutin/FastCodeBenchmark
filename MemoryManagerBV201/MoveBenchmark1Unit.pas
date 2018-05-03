@@ -146,7 +146,7 @@ begin
   MoveThread1 := TMoveThread1.Create(True);
   MoveThread1.FreeOnTerminate := False;
   MoveThread1.FBenchmark := Self;
-  MoveThread1.Start;
+  MoveThread1.Suspended := False;
   MoveThread1.WaitFor;
   MoveThread1.Free;
   MoveThread1 := nil;

@@ -130,7 +130,7 @@ begin
   for n:=0 to threads.Count-1 do
   begin
      wild:=TAWildThread(threads.Items[n]);
-     wild.Start;
+     wild.Suspended := False;
   end;
 
   repeat

@@ -1,5 +1,7 @@
 unit BenchmarkForm;
 
+{$DEFINE MM_FASTMM4}
+
 interface
 
 uses

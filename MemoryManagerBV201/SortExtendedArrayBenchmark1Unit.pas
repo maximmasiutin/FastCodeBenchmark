@@ -184,14 +184,14 @@ begin
   SortExtendedArrayThread7.FBenchmark := Self;
   SortExtendedArrayThread8.FBenchmark := Self;
 
-  SortExtendedArrayThread1.Start;
-  SortExtendedArrayThread2.Start;
-  SortExtendedArrayThread3.Start;
-  SortExtendedArrayThread4.Start;
-  SortExtendedArrayThread5.Start;
-  SortExtendedArrayThread6.Start;
-  SortExtendedArrayThread7.Start;
-  SortExtendedArrayThread8.Start;
+  SortExtendedArrayThread1.Suspended := False;
+  SortExtendedArrayThread2.Suspended := False;
+  SortExtendedArrayThread3.Suspended := False;
+  SortExtendedArrayThread4.Suspended := False;
+  SortExtendedArrayThread5.Suspended := False;
+  SortExtendedArrayThread6.Suspended := False;
+  SortExtendedArrayThread7.Suspended := False;
+  SortExtendedArrayThread8.Suspended := False;
 
   SortExtendedArrayThread8.WaitFor;
   SortExtendedArrayThread1.Priority := tpTimeCritical;

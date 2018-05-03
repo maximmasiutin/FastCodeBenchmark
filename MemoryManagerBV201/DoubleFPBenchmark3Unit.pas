@@ -177,7 +177,7 @@ begin
   DoubleFPThread3 := TDoubleFPThread3.Create(True);
   DoubleFPThread3.FreeOnTerminate := False;
   DoubleFPThread3.FBenchmark := Self;
-  DoubleFPThread3.Start;
+  DoubleFPThread3.Suspended := False;
   DoubleFPThread3.WaitFor;
   DoubleFPThread3.Free;
   DoubleFPThread3 := nil;

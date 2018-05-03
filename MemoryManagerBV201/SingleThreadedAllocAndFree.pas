@@ -56,7 +56,8 @@ type
   TPointers = array[0..PointerCount - 1] of Pointer;
 var
   i, j: Integer;
-  k: NativeUInt;
+  kcalc: NativeUInt;
+  kloop: Cardinal;
   CurValue: Int64;
   LPointers: PPointers;
   LMax, LSize, LSum: Integer;
@@ -112,17 +113,19 @@ begin
       {Get the pointer}
       GetMem(LPointers^[i], LSize);
       {Write the memory}
-      for k := 0 to (LSize - 1) div 32 do
+      for kloop := 0 to (LSize - 1) div 32 do
       begin
-        PByte(NativeUInt(LPointers^[i]) + k * 32)^ := byte(i);
+        kcalc := kloop;
+        PByte(NativeUInt(LPointers^[i]) + kcalc * 32)^ := byte(i);
       end;
       {Read the memory}
       LSum := 0;
       if LSize > 15 then
       begin
-        for k := 0 to (LSize - 16) div 32 do
+        for kloop := 0 to (LSize - 16) div 32 do
         begin
-          Inc(LSum, PShortInt(NativeUInt(LPointers^[i]) + k * 32 + 15)^);
+          kcalc := kloop;
+          Inc(LSum, PShortInt(NativeUInt(LPointers^[i]) + kcalc * 32 + 15)^);
         end;
       end;
       {"Use" the sum to suppress the compiler warning}

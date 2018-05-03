@@ -137,7 +137,7 @@ begin
   SingleFPThread := TSingleFPThread.Create(True);
   SingleFPThread.FreeOnTerminate := False;
   SingleFPThread.FBenchmark := Self;
-  SingleFPThread.Start;
+  SingleFPThread.Suspended := False;
   SingleFPThread.WaitFor;
   SingleFPThread.Free;
   SingleFPThread := nil;

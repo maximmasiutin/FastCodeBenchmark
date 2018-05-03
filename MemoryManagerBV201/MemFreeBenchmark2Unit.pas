@@ -63,7 +63,7 @@ begin
   MemFreeThread2 := TMemFreeThread2.Create(True);
   MemFreeThread2.FreeOnTerminate := False;
   MemFreeThread2.FBenchmark := Self;
-  MemFreeThread2.Start;
+  MemFreeThread2.Suspended := False;
   MemFreeThread2.WaitFor;
   MemFreeThread2.Free;
   MemFreeThread2 := nil;
