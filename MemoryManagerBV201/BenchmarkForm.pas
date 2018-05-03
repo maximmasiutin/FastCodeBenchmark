@@ -5,8 +5,7 @@ interface
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   Dialogs, StdCtrls, BenchmarkClassUnit, Math, CheckLst, Grids, Buttons,
-  ExtCtrls, ComCtrls, Clipbrd, MMValidation, ToolWin, ImgList, Menus,
-  System.ImageList;
+  ExtCtrls, ComCtrls, Clipbrd, MMValidation, ToolWin, ImgList, Menus;
 
   {$I FASTCODE_MM.INC}
 

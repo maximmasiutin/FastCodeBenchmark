@@ -67,7 +67,7 @@ uses
   // FastMove,   // uncomment if you want to benchmark with FastMove
 
   {Other units}
-  Vcl.Forms,
+  Forms,
   PrimeNumbers in 'PrimeNumbers.pas' {fBenchmark},
   BenchmarkForm in 'BenchmarkForm.pas' {fBenchmark},
   RenameMMForm in 'RenameMMForm.pas' {fRenameMM},
