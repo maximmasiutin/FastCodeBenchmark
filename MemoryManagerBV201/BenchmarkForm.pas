@@ -5,9 +5,9 @@ unit BenchmarkForm;
 interface
 
 uses
-  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, StdCtrls, BenchmarkClassUnit, Math, CheckLst, Grids, Buttons,
-  ExtCtrls, ComCtrls, Clipbrd, MMValidation, ToolWin, ImgList, Menus;
+  Windows, Messages, SysUtils, Variants, Classes, Vcl.Graphics, BenchmarkClassUnit, Math, MMValidation,
+  System.ImageList, Vcl.Controls, Vcl.StdCtrls, Vcl.ComCtrls, Vcl.Buttons,
+  Vcl.Menus, Vcl.ImgList, Vcl.ToolWin, Vcl.Forms;
 
   {$I FASTCODE_MM.INC}
 
@@ -269,7 +269,7 @@ you'll get a message that you should change the source code.
   DllExtension = 'TOP';
 {$ENDIF}
 {$IFDEF MM_WINMEM}
-  {Mike Lischke's WinMem (Uses the windows heap)}
+	{Mike Lischke's WinMem (Uses the windows heap)}
   MemoryManager_Name = 'WinMem';
   PassValidations = True;
   FastCodeQualityLabel = False;
@@ -280,15 +280,16 @@ you'll get a message that you should change the source code.
 implementation
 
 uses
-  FragmentationTestUnit, NexusDBBenchmarkUnit, ReallocMemBenchmark,
-  DownsizeTestUnit, ReplayBenchmarkUnit, WildThreadsBenchmarkUnit,
-  BlockSizeSpreadBenchmark, SmallDownsizeBenchmark,
-  SmallUpsizeBenchmark, RawPerformanceSingleThread, RawPerformanceMultiThread,
-  AddressSpaceCreepBenchmark, LargeBlockSpreadBenchmark,
-  StringThreadTestUnit, ArrayUpsizeSingleThread, DoubleFPBenchmark1Unit,
-  DoubleFPBenchmark2Unit, DoubleFPBenchmark3Unit, SingleFPBenchmark1Unit,
-  SingleFPBenchmark2Unit, MoveBenchmark1Unit, MoveBenchmark2Unit,
-  AddressSpaceCreepBenchmarkLarge, LinkedListBenchmark, RenameMMForm,
+  Vcl.Clipbrd,
+	FragmentationTestUnit, NexusDBBenchmarkUnit, ReallocMemBenchmark,
+	DownsizeTestUnit, ReplayBenchmarkUnit, WildThreadsBenchmarkUnit,
+	BlockSizeSpreadBenchmark, SmallDownsizeBenchmark,
+	SmallUpsizeBenchmark, RawPerformanceSingleThread, RawPerformanceMultiThread,
+	AddressSpaceCreepBenchmark, LargeBlockSpreadBenchmark,
+	StringThreadTestUnit, ArrayUpsizeSingleThread, DoubleFPBenchmark1Unit,
+	DoubleFPBenchmark2Unit, DoubleFPBenchmark3Unit, SingleFPBenchmark1Unit,
+	SingleFPBenchmark2Unit, MoveBenchmark1Unit, MoveBenchmark2Unit,
+	AddressSpaceCreepBenchmarkLarge, LinkedListBenchmark, RenameMMForm,
   BenchmarkUtilities, GeneralFunctions, SystemInfoUnit;
 
 {$R *.dfm}
@@ -838,7 +839,7 @@ begin
       StringList.Add(s);
     end;
 
-    Clipboard.AsText := StringList.Text;
+		Vcl.Clipbrd.Clipboard.AsText := StringList.Text;
   finally
     StringList.Free;
   end;

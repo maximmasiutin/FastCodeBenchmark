@@ -3,7 +3,7 @@ unit MMValidation;
 interface
 
 uses
-  Windows, SysUtils, Classes, Dialogs, Math;
+  Windows, SysUtils, Classes, Math;
 
 type
   TValidateFunction = function: Boolean of object;

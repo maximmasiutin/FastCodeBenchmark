@@ -1,5 +1,17 @@
-FastCode Memory Manager B&V 2.0.1 - 23-Apr-2006
+FastCode Memory Manager Benchmark and Validation tool
+Version 3.0.1
 
+17-Jan-2021 (3.0.1)
+-------------------
+Didn't compile under Delphi 10.3 for Windows
+
+07-Nov-2017 (3.0.0)
+-------------------
+Added support for the Win64 platform
+Added multiple modern test cases and scenarios, especially for the thread-heavy usage
+
+23-Apr-2006 (2.0.1)
+-------------------
 This B&V is similar to the 1.1 series and is intended to be used by MM authors to test thair latest entries while the more significant changes are made for the 2.1 series.
 
 All MMs have been added back to the batch files.  Some of these may stil lock up, so be careful.

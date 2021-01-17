@@ -1,5 +1,20 @@
 program FastcodeMMChallengeBV;
 
+(*
+
+Fastcode Memory Manager Benchmark and Validation Tool 
+Support for the Win64 platform added by Maxim Masiutin <maxim@masiutin.com>
+
+Version 3.0.1
+
+Copyright (C) 2003-2013 Dennis Kjaer Christensen and contributors. All rights reserved
+Copyright (C) 2017-2021 Maxim Masiutin. All rights reserved
+
+See the file ReleaseNotes.txt for more details
+
+*)
+
+
 {$I FASTCODE_MM.INC}
 
 uses
@@ -67,7 +82,7 @@ uses
   // FastMove,   // uncomment if you want to benchmark with FastMove
 
   {Other units}
-  Forms,
+  Vcl.Forms,
   PrimeNumbers in 'PrimeNumbers.pas' {fBenchmark},
   BenchmarkForm in 'BenchmarkForm.pas' {fBenchmark},
   RenameMMForm in 'RenameMMForm.pas' {fRenameMM},
