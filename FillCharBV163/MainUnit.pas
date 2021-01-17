@@ -1,17 +1,33 @@
 unit MainUnit;
 
+(*
+
+Fastcode FillChar Benchmark and Validation Tool 
+Support for the Win64 platform added by Maxim Masiutin <maxim@masiutin.com>
+
+Version 2.0
+
+Copyright (C) 2003-2013 Dennis Kjaer Christensen and contributors. All rights reserved
+Copyright (C) 2017-2021 Maxim Masiutin. All rights reserved
+
+revision history:
+- November 7th, 2017: Added support for Win64 
+- January 17th, 2021: Didn't compile under Delphi 10.3 for Win32; Button captions are now easier to understand
+
+*)
+
 interface
 
 uses
-  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, ExtCtrls, StdCtrls, Buttons, ComCtrls;
+  WinApi.Windows, WinApi.Messages, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.ComCtrls, Vcl.ExtCtrls,
+  Vcl.Buttons, Vcl.Controls, System.Classes;
+
 const
   WM_POSTPROCESSING = WM_USER + 1;
   CHALLENGE_NAME = 'FillChar';
 
 type
   TMainForm = class(TForm)
-    DevelopButton: TButton;
     Panel1: TPanel;
     CloseBitBtn: TBitBtn;
     FunctionSelectionRadioGroup: TRadioGroup;
@@ -46,7 +62,6 @@ type
     Label8: TLabel;
     Clean: TButton;
     procedure FormDestroy(Sender: TObject);
-    procedure DevelopButtonClick(Sender: TObject);
     procedure FunctionSelectionRadioGroupClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure ValidateButtonClick(Sender: TObject);
@@ -93,7 +108,10 @@ var
 
 implementation
 
-uses SystemInfoUnit, FastCodeCPUID, FillCharUnit, FillCharJOHUnit, FillCharDKCUnit;
+uses
+  Vcl.Graphics,
+  System.SysUtils,
+	SystemInfoUnit, FastCodeCPUID, FillCharUnit, FillCharJOHUnit, FillCharDKCUnit;
 
 {$R *.dfm}
 
@@ -105,12 +123,13 @@ begin
   System.FillChar(Dest, Count, Value);
 end;
 
+{$IFDEF WIN64}
 procedure FillChar_J_BontesInternal(var Dest; Count: NativeInt; Value: AnsiChar);
 //rcx = dest
 //rdx=count
 //r8b=value
 asm
-              .noframe
+							.noframe
               .align 16
               movzx r8,r8b           //There's no need to optimize for count <= 3
               mov rax,$0101010101010101
@@ -119,10 +138,10 @@ asm
               cmp rdx,59             //Use simple code for small blocks.
               jl  @Below32
 @Above32:     mov r11,rcx
-              mov r8b,7              //code shrink to help alignment.
-              lea r9,[rcx+rdx]       //r9=end of array
+							mov r8b,7              //code shrink to help alignment.
+							lea r9,[rcx+rdx]       //r9=end of array
               sub rdx,8
-              rep mov [rcx],rax
+							rep mov [rcx],rax
               add rcx,8
               and r11,r8             //and 7 See if dest is aligned
               jz @tail
@@ -134,12 +153,12 @@ asm
               and r9,r8              //and 7
               sub rdx,r9             //dec(count, tailcount)
 @alignOK:     mov r10,rdx
-              and edx,(32+16+8)      //count the partial iterations of the loop
-              mov r8b,64             //code shrink to help alignment.
+							and edx,(32+16+8)      //count the partial iterations of the loop
+							mov r8b,64             //code shrink to help alignment.
               mov r9,rdx
               jz @Initloop64
 @partialloop: shr r9,1              //every instruction is 4 bytes
-              lea r11,[rip + @partial +(4*7)] //start at the end of the loop
+							lea r11,[rip + @partial +(4*7)] //start at the end of the loop
               sub r11,r9            //step back as needed
               add rcx,rdx            //add the partial loop count to dest
               cmp r10,r8             //do we need to do more loops?
@@ -150,13 +169,13 @@ asm
               shr r10,(19-6)         //use non-temporal move for > 512kb
               jnz @InitFillHuge
 @Doloop64:    add rcx,r8
-              dec edx
+							dec edx
               mov [rcx-64+00H],rax
               mov [rcx-64+08H],rax
               mov [rcx-64+10H],rax
               mov [rcx-64+18H],rax
               mov [rcx-64+20H],rax
-              mov [rcx-64+28H],rax
+							mov [rcx-64+28H],rax
               mov [rcx-64+30H],rax
               mov [rcx-64+38H],rax
               jnz @DoLoop64
@@ -164,8 +183,8 @@ asm
               //db $66,$66,$0f,$1f,$44,$00,$00 //nop7
 @partial:     mov [rcx-64+08H],rax
               mov [rcx-64+10H],rax
-              mov [rcx-64+18H],rax
-              mov [rcx-64+20H],rax
+							mov [rcx-64+18H],rax
+							mov [rcx-64+20H],rax
               mov [rcx-64+28H],rax
               mov [rcx-64+30H],rax
               mov [rcx-64+38H],rax
@@ -179,8 +198,8 @@ asm
               db $48,$0F,$C3,$41,$C8 // movnti  [rcx-64+08H],rax
               db $48,$0F,$C3,$41,$D0 // movnti  [rcx-64+10H],rax
               db $48,$0F,$C3,$41,$D8 // movnti  [rcx-64+18H],rax
-              db $48,$0F,$C3,$41,$E0 // movnti  [rcx-64+20H],rax
-              db $48,$0F,$C3,$41,$E8 // movnti  [rcx-64+28H],rax
+							db $48,$0F,$C3,$41,$E0 // movnti  [rcx-64+20H],rax
+							db $48,$0F,$C3,$41,$E8 // movnti  [rcx-64+28H],rax
               db $48,$0F,$C3,$41,$F0 // movnti  [rcx-64+30H],rax
               db $48,$0F,$C3,$41,$F8 // movnti  [rcx-64+38H],rax
               jnz @FillHuge
@@ -190,12 +209,12 @@ asm
 @Below32:     and  r9d,not(3)
               jz @SizeIs3
 @FillTail:    sub   edx,4
-              lea   r10,[rip + @SmallFill + (15*4)]
+							lea   r10,[rip + @SmallFill + (15*4)]
               sub   r10,r9
               jmp   r10
 @SmallFill:   rep mov [rcx+56], eax
-              rep mov [rcx+52], eax
-              rep mov [rcx+48], eax
+							rep mov [rcx+52], eax
+							rep mov [rcx+48], eax
               rep mov [rcx+44], eax
               rep mov [rcx+40], eax
               rep mov [rcx+36], eax
@@ -207,9 +226,9 @@ asm
               rep mov [rcx+12], eax
               rep mov [rcx+08], eax
               rep mov [rcx+04], eax
-              mov [rcx],eax
+							mov [rcx],eax
 @Fallthough:  mov [rcx+rdx],eax  //unaligned write to fix up tail
-              rep ret
+							rep ret
 
 @SizeIs3:     shl edx,2           //r9 <= 3  r9*4
               lea r10,[rip + @do3 + (4*3)]
@@ -225,8 +244,10 @@ end;
 
 procedure FillChar_J_Bontes(var Dest; Count: NativeInt; Value: AnsiChar);
 begin
-  FillChar_J_BontesInternal(Dest, Count, Value);
+	FillChar_J_BontesInternal(Dest, Count, Value);
 end;
+{$ENDIF}
+
 
 const
  //Selected to achieve even contribution by subbenchmarks on P4 (1000 on P41600A)(should be on Blended?)
@@ -285,7 +306,7 @@ begin
     Result := I
    else
     Result := 0;
-  end
+	end
  else
   Result := 0;
 end;
@@ -300,7 +321,7 @@ var
 begin
  for LineNo1 := 0 to ReportRichEdit.Lines.Count-2 do
   begin
-   S1 := ReportRichEdit.Lines[LineNo1];
+	 S1 := ReportRichEdit.Lines[LineNo1];
    LineNo2 := LineNo1+1;
    while LineNo2 <= ReportRichEdit.Lines.Count-1 do
     begin
@@ -315,7 +336,7 @@ begin
        Dec(LineNo2);
       end;
      Inc(LineNo2);
-    end;
+		end;
   end;
 end;
 
@@ -330,7 +351,7 @@ var
 begin
  repeat
   Swapped := False;
-  for LineNo := 0 to ReportRichEdit.Lines.Count-2 do
+	for LineNo := 0 to ReportRichEdit.Lines.Count-2 do
    begin
     S1 := ReportRichEdit.Lines[LineNo];
     S2 := ReportRichEdit.Lines[LineNo+1];
@@ -345,11 +366,11 @@ begin
      C2 := S2[I3];
      Dec(I3);
     until(C2 = #9);
-    X2 := I3+2;
+		X2 := I3+2;
     Bench1String := Copy(S1, X1, Length(S1));
     Bench2String := Copy(S2, X2, Length(S2));
-    Bench1 := StrToFloat(Bench1String);
-    Bench2 := StrToFloat(Bench2String);
+		Bench1 := System.SysUtils.StrToFloat(Bench1String);
+    Bench2 := System.SysUtils.StrToFloat(Bench2String);
     if Bench2 < Bench1 then
      begin
       Swapped := True;
@@ -375,7 +396,7 @@ begin
  MaxSpread := 0;
  for LineNo1 := 0 to ReportRichEdit.Lines.Count-2 do
   begin
-   S1 := ReportRichEdit.Lines[LineNo1];
+	 S1 := ReportRichEdit.Lines[LineNo1];
    for LineNo2 := LineNo1+1 to ReportRichEdit.Lines.Count-1 do
     begin
      S2 := ReportRichEdit.Lines[LineNo2];
@@ -431,7 +452,7 @@ begin
          MaxSpread := Spread;
          MaxSpreadBenchPercentageEdit.Text := FloatToStrF(MaxSpread, ffFixed, 9, 1);
          FunctionNameEdit.Text := FunctionName1;
-         MaxSpreadBenchPercentageEdit.Color := clGreen;
+         MaxSpreadBenchPercentageEdit.Color := Vcl.Graphics.clGreen;
          if MaxSpread > 2 then
           MaxSpreadBenchPercentageEdit.Color := clYellow;
          if MaxSpread > 5 then
@@ -533,31 +554,24 @@ begin
             end;
           end;
         end;
-      end;
-    end;
-  end;
+			end;
+		end;
+	end;
 end;
 
-procedure TMainForm.DevelopButtonClick(Sender: TObject);
-var
- Count : Integer;
- ChrVal : AnsiChar;
- XArray : array[0..10] of AnsiChar;
-
+procedure _FillChar(var Dest; count: NativeInt; Value: AnsiChar);
 begin
- Count := 11;
- ChrVal := 'A';
- FillChar(XArray, Count, ChrVal);
- FillCharProcedure(XArray, Count, ChrVal);
+	System.FillChar(Dest, count, Value);
 end;
+
 
 procedure TMainForm.FunctionSelectionRadioGroupClick(Sender: TObject);
 begin
  case FunctionSelectionRadioGroup.ItemIndex+1 of
 {$IFDEF WIN32}
-//  1 : FillCharProcedure := _FillChar;
-  2 : FillCharProcedure := FillChar_RTL_Pas_1;
-  3 : FillCharProcedure := FillChar_JOH_PAS_1_a;
+	1 : FillCharProcedure := _FillChar;
+	2 : FillCharProcedure := FillChar_RTL_Pas_1;
+	3 : FillCharProcedure := FillChar_JOH_PAS_1_a;
   4 : FillCharProcedure := FillChar_JOH_PAS_1_b;
   5 : FillCharProcedure := FillChar_JOH_PAS_1_c;
   6 : FillCharProcedure := FillChar_JOH_PAS_1_d;
@@ -575,7 +589,7 @@ begin
   18 : FillCharProcedure := FillChar_PLR_IA32_4_d;
   19 : FillCharProcedure := FillChar_PLR_MMX_1_a;
   20 : FillCharProcedure := FillChar_PLR_MMX_1_b;
-  21 : FillCharProcedure := FillChar_PLR_MMX_1_c;
+	21 : FillCharProcedure := FillChar_PLR_MMX_1_c;
   22 : FillCharProcedure := FillChar_PLR_MMX_1_d;
   23 : FillCharProcedure := FillChar_DKC_Pas_24_a;
   24 : FillCharProcedure := FillChar_JOH_MMX_1_a;
@@ -593,7 +607,7 @@ begin
   36 : FillCharProcedure := FillChar_JOH_IA32_3_a;
   37 : FillCharProcedure := FillChar_JOH_IA32_3_b;
   38 : FillCharProcedure := FillChar_JOH_IA32_3_c;
-  39 : FillCharProcedure := FillChar_JOH_IA32_3_d;
+	39 : FillCharProcedure := FillChar_JOH_IA32_3_d;
   40 : FillCharProcedure := FillChar_DKC_IA32_20_a;
   41 : FillCharProcedure := FillChar_DKC_IA32_20_b;
   42 : FillCharProcedure := FillChar_DKC_IA32_20_c;
@@ -611,35 +625,35 @@ begin
   54 : FillCharProcedure := FillChar_JOH_SSE_1_c;
   55 : FillCharProcedure := FillChar_JOH_SSE_1_d;
   56 : FillCharProcedure := FillChar_DKC_SSE_14_a;
-  57 : FillCharProcedure := FillChar_DKC_SSE_14_b;
+	57 : FillCharProcedure := FillChar_DKC_SSE_14_b;
   58 : FillCharProcedure := FillChar_DKC_SSE_14_c;
   59 : FillCharProcedure := FillChar_DKC_SSE_14_d;
   60 : FillCharProcedure := FillChar_DKC_SSE2_11_a;
   61 : FillCharProcedure := FillChar_DKC_SSE2_11_b;
   62 : FillCharProcedure := FillChar_DKC_SSE2_11_c;
   63 : FillCharProcedure := FillChar_DKC_SSE2_11_d;
-  64 : FillCharProcedure := FillChar_CJG_Pas_5_a;
-  65 : FillCharProcedure := FillChar_CJG_Pas_5_b;
-  66 : FillCharProcedure := FillChar_CJG_Pas_5_c;
-  67 : FillCharProcedure := FillChar_CJG_Pas_5_d;
-  68 : FillCharProcedure := FillChar_DKC_SSE2_10_a;
-  69 : FillCharProcedure := FillChar_DKC_SSE2_10_b;
-  70 : FillCharProcedure := FillChar_DKC_SSE2_10_c;
-  71 : FillCharProcedure := FillChar_DKC_SSE2_10_d;
-  72 : FillCharProcedure := FillChar_DKC_MMX_12_a;
-  73 : FillCharProcedure := FillChar_DKC_MMX_12_b;
-  74 : FillCharProcedure := FillChar_DKC_MMX_12_c;
-  75 : FillCharProcedure := FillChar_DKC_MMX_12_d;
-  76 : FillCharProcedure := FillChar_JOH_MMX_4_a;
-  77 : FillCharProcedure := FillChar_JOH_MMX_4_b;
-  78 : FillCharProcedure := FillChar_JOH_MMX_4_c;
-  79 : FillCharProcedure := FillChar_JOH_MMX_4_d;
-  80 : FillCharProcedure := FillChar_DKC_Pas_24_b;
-  81 : FillCharProcedure := FillChar_DKC_Pas_24_c;
-  82 : FillCharProcedure := FillChar_DKC_Pas_24_d;
+	64 : FillCharProcedure := FillChar_CJG_Pas_5_a;
+	65 : FillCharProcedure := FillChar_CJG_Pas_5_b;
+	66 : FillCharProcedure := FillChar_CJG_Pas_5_c;
+	67 : FillCharProcedure := FillChar_CJG_Pas_5_d;
+	68 : FillCharProcedure := FillChar_DKC_SSE2_10_a;
+	69 : FillCharProcedure := FillChar_DKC_SSE2_10_b;
+	70 : FillCharProcedure := FillChar_DKC_SSE2_10_c;
+	71 : FillCharProcedure := FillChar_DKC_SSE2_10_d;
+	72 : FillCharProcedure := FillChar_DKC_MMX_12_a;
+	73 : FillCharProcedure := FillChar_DKC_MMX_12_b;
+	74 : FillCharProcedure := FillChar_DKC_MMX_12_c;
+	75 : FillCharProcedure := FillChar_DKC_MMX_12_d;
+	76 : FillCharProcedure := FillChar_JOH_MMX_4_a;
+	77 : FillCharProcedure := FillChar_JOH_MMX_4_b;
+	78 : FillCharProcedure := FillChar_JOH_MMX_4_c;
+	79 : FillCharProcedure := FillChar_JOH_MMX_4_d;
+	80 : FillCharProcedure := FillChar_DKC_Pas_24_b;
+	81 : FillCharProcedure := FillChar_DKC_Pas_24_c;
+	82 : FillCharProcedure := FillChar_DKC_Pas_24_d;
 {$ELSE}
-  2 : FillCharProcedure := FC_TokyoBugfixAVXEx;
-  3 : FillCharProcedure := FillChar_J_Bontes;
+	2 : FillCharProcedure := FC_TokyoBugfixAVXEx;
+	3 : FillCharProcedure := FillChar_J_Bontes;
 {$ENDIF}
  else
   if FunctionSelectionRadioGroup.ItemIndex <> 0 then//RTL function selected
@@ -653,7 +667,7 @@ begin
 {$IFDEF WIN64}
   FunctionSelectionRadioGroup.Items.Clear;
   FunctionSelectionRadioGroup.Items.Add('FC_TokyoBugfixAVXEx');
-  FunctionSelectionRadioGroup.Items.Add('FillChar_J_Bontes');
+	FunctionSelectionRadioGroup.Items.Add('FillChar_J_Bontes');
   FunctionSelectionRadioGroup.ItemIndex := 0;
 {$ENDIF}
  ReportRichEdit.Clear;
@@ -752,7 +766,7 @@ begin
     if FunctionSelectionRadioGroup.ItemIndex = 0 then
      FillChar(XArray[BYTESAFTERFILL], Count, ChrVal)
     else
-     FillCharProcedure(XArray[BYTESAFTERFILL], Count, ChrVal);
+		 FillCharProcedure(XArray[BYTESAFTERFILL], Count, ChrVal);
     //Is the array filled
     for I := 10 to Count-1+BYTESAFTERFILL do
      begin
@@ -830,7 +844,7 @@ begin
  if FunctionSelectionRadioGroup.ItemIndex = 0 then
   FillChar(CharArray[10], Count, ChrVal)
  else
-  FillCharProcedure(CharArray[10], Count, ChrVal);
+	FillCharProcedure(CharArray[10], Count, ChrVal);
  Result := True;
  //Is anything changed
  for I := 0 to 20 do
@@ -1108,7 +1122,7 @@ begin
     begin
      FillCharProcedure(SubBench1Array[1], Count, ChrVal1);
      FillCharProcedure(SubBench1Array[2], Count, ChrVal2);//Different alignment
-     FillCharProcedure(SubBench1Array[3], Count, ChrVal3);//Different alignment
+		 FillCharProcedure(SubBench1Array[3], Count, ChrVal3);//Different alignment
      FillCharProcedure(SubBench1Array[4], Count, ChrVal4);//Different alignment
      FillCharProcedure(SubBench1Array[5], Count, ChrVal5);//Different alignment
      FillCharProcedure(SubBench1Array[6], Count, ChrVal6);//Different alignment
@@ -1165,7 +1179,7 @@ begin
   begin
    for Count := MINCOUNTSUBBENCH2 to MaxCount do
     begin
-     FillCharProcedure(SubBench2Array[1], Count, ChrVal1);
+		 FillCharProcedure(SubBench2Array[1], Count, ChrVal1);
      FillCharProcedure(SubBench2Array[2], Count, ChrVal2);//Different alignment
      FillCharProcedure(SubBench2Array[3], Count, ChrVal3);//Different alignment
      FillCharProcedure(SubBench2Array[4], Count, ChrVal4);//Different alignment
@@ -1225,7 +1239,7 @@ begin
    Count := MINCOUNTSUBBENCH3;
    while Count < MaxCount do
     begin
-     FillCharProcedure(SubBench3Array[1], Count, ChrVal1);
+		 FillCharProcedure(SubBench3Array[1], Count, ChrVal1);
      FillCharProcedure(SubBench3Array[2], Count, ChrVal2);//Different alignment
      FillCharProcedure(SubBench3Array[3], Count, ChrVal3);//Different alignment
      FillCharProcedure(SubBench3Array[4], Count, ChrVal4);//Different alignment

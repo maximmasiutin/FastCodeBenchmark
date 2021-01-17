@@ -3,39 +3,39 @@ unit FillCharDKCUnit;
 interface
 
 {$IFDEF WIN32}
-procedure FillChar_DKC_Pas_24_a(var Dest; count: Integer; Value: Char);
-procedure FillChar_DKC_Pas_24_b(var Dest; count: Integer; Value: Char);
-procedure FillChar_DKC_Pas_24_c(var Dest; count: Integer; Value: Char);
-procedure FillChar_DKC_Pas_24_d(var Dest; count: Integer; Value: Char);
-procedure FillChar_DKC_IA32_20_a(var Dest; count: Integer; Value: Char);
-procedure FillChar_DKC_IA32_20_b(var Dest; count: Integer; Value: Char);
-procedure FillChar_DKC_IA32_20_c(var Dest; count: Integer; Value: Char);
-procedure FillChar_DKC_IA32_20_d(var Dest; count: Integer; Value: Char);
-procedure FillChar_DKC_MMX_11_a(var Dest; count: Integer; Value: Char);
-procedure FillChar_DKC_MMX_11_b(var Dest; count: Integer; Value: Char);
-procedure FillChar_DKC_MMX_11_c(var Dest; count: Integer; Value: Char);
-procedure FillChar_DKC_MMX_11_d(var Dest; count: Integer; Value: Char);
-procedure FillChar_DKC_MMX_12_a(var Dest; count: Integer; Value: Char);
-procedure FillChar_DKC_MMX_12_b(var Dest; count: Integer; Value: Char);
-procedure FillChar_DKC_MMX_12_c(var Dest; count: Integer; Value: Char);
-procedure FillChar_DKC_MMX_12_d(var Dest; count: Integer; Value: Char);
-procedure FillChar_DKC_SSE_9_a(var Dest; count: Integer; Value: Char);
-procedure FillChar_DKC_SSE_9_b(var Dest; count: Integer; Value: Char);
-procedure FillChar_DKC_SSE_9_c(var Dest; count: Integer; Value: Char);
-procedure FillChar_DKC_SSE_9_d(var Dest; count: Integer; Value: Char);
-procedure FillChar_DKC_SSE_14_a(var Dest; count: Integer; Value: Char);
-procedure FillChar_DKC_SSE_14_b(var Dest; count: Integer; Value: Char);
-procedure FillChar_DKC_SSE_14_c(var Dest; count: Integer; Value: Char);
-procedure FillChar_DKC_SSE_14_d(var Dest; count: Integer; Value: Char);
-procedure FillChar_DKC_SSE2_10_a(var Dest; count: Integer; Value: Char);
-procedure FillChar_DKC_SSE2_10_b(var Dest; count: Integer; Value: Char);
-procedure FillChar_DKC_SSE2_10_c(var Dest; count: Integer; Value: Char);
-procedure FillChar_DKC_SSE2_10_d(var Dest; count: Integer; Value: Char);
-procedure FillChar_DKC_SSE2_11_a(var Dest; count: Integer; Value: Char);
-procedure FillChar_DKC_SSE2_11_b(var Dest; count: Integer; Value: Char);
-procedure FillChar_DKC_SSE2_11_c(var Dest; count: Integer; Value: Char);
-procedure FillChar_DKC_SSE2_11_d(var Dest; count: Integer; Value: Char);
-procedure FillCharDKC_SSE2_12_a(var Dest; count: Integer; Value: Char);
+procedure FillChar_DKC_Pas_24_a(var Dest; Count: NativeInt; Value: AnsiChar);
+procedure FillChar_DKC_Pas_24_b(var Dest; Count: NativeInt; Value: AnsiChar);
+procedure FillChar_DKC_Pas_24_c(var Dest; Count: NativeInt; Value: AnsiChar);
+procedure FillChar_DKC_Pas_24_d(var Dest; Count: NativeInt; Value: AnsiChar);
+procedure FillChar_DKC_IA32_20_a(var Dest; Count: NativeInt; Value: AnsiChar);
+procedure FillChar_DKC_IA32_20_b(var Dest; Count: NativeInt; Value: AnsiChar);
+procedure FillChar_DKC_IA32_20_c(var Dest; Count: NativeInt; Value: AnsiChar);
+procedure FillChar_DKC_IA32_20_d(var Dest; Count: NativeInt; Value: AnsiChar);
+procedure FillChar_DKC_MMX_11_a(var Dest; Count: NativeInt; Value: AnsiChar);
+procedure FillChar_DKC_MMX_11_b(var Dest; Count: NativeInt; Value: AnsiChar);
+procedure FillChar_DKC_MMX_11_c(var Dest; Count: NativeInt; Value: AnsiChar);
+procedure FillChar_DKC_MMX_11_d(var Dest; Count: NativeInt; Value: AnsiChar);
+procedure FillChar_DKC_MMX_12_a(var Dest; Count: NativeInt; Value: AnsiChar);
+procedure FillChar_DKC_MMX_12_b(var Dest; Count: NativeInt; Value: AnsiChar);
+procedure FillChar_DKC_MMX_12_c(var Dest; Count: NativeInt; Value: AnsiChar);
+procedure FillChar_DKC_MMX_12_d(var Dest; Count: NativeInt; Value: AnsiChar);
+procedure FillChar_DKC_SSE_9_a(var Dest; Count: NativeInt; Value: AnsiChar);
+procedure FillChar_DKC_SSE_9_b(var Dest; Count: NativeInt; Value: AnsiChar);
+procedure FillChar_DKC_SSE_9_c(var Dest; Count: NativeInt; Value: AnsiChar);
+procedure FillChar_DKC_SSE_9_d(var Dest; Count: NativeInt; Value: AnsiChar);
+procedure FillChar_DKC_SSE_14_a(var Dest; Count: NativeInt; Value: AnsiChar);
+procedure FillChar_DKC_SSE_14_b(var Dest; Count: NativeInt; Value: AnsiChar);
+procedure FillChar_DKC_SSE_14_c(var Dest; Count: NativeInt; Value: AnsiChar);
+procedure FillChar_DKC_SSE_14_d(var Dest; Count: NativeInt; Value: AnsiChar);
+procedure FillChar_DKC_SSE2_10_a(var Dest; Count: NativeInt; Value: AnsiChar);
+procedure FillChar_DKC_SSE2_10_b(var Dest; Count: NativeInt; Value: AnsiChar);
+procedure FillChar_DKC_SSE2_10_c(var Dest; Count: NativeInt; Value: AnsiChar);
+procedure FillChar_DKC_SSE2_10_d(var Dest; Count: NativeInt; Value: AnsiChar);
+procedure FillChar_DKC_SSE2_11_a(var Dest; Count: NativeInt; Value: AnsiChar);
+procedure FillChar_DKC_SSE2_11_b(var Dest; Count: NativeInt; Value: AnsiChar);
+procedure FillChar_DKC_SSE2_11_c(var Dest; Count: NativeInt; Value: AnsiChar);
+procedure FillChar_DKC_SSE2_11_d(var Dest; Count: NativeInt; Value: AnsiChar);
+procedure FillCharDKC_SSE2_12_a(var Dest; Count: NativeInt; Value: AnsiChar);
 {$ENDIF}
 
 implementation
@@ -48,7 +48,7 @@ implementation
 
 {$IFDEF WIN32}
 
-procedure FillChar_DKC_IA32_20_a(var Dest; count: Integer; Value: Char);
+procedure FillChar_DKC_IA32_20_a(var Dest; Count: NativeInt; Value: AnsiChar);
 asm
    test edx,edx
    jle  @Exit2
@@ -233,7 +233,7 @@ asm
 
 end;
 
-procedure FillChar_DKC_IA32_20_b(var Dest; count: Integer; Value: Char);
+procedure FillChar_DKC_IA32_20_b(var Dest; Count: NativeInt; Value: AnsiChar);
 asm
    test edx,edx
    jle  @Exit2
@@ -418,7 +418,7 @@ asm
 
 end;
 
-procedure FillChar_DKC_IA32_20_c(var Dest; count: Integer; Value: Char);
+procedure FillChar_DKC_IA32_20_c(var Dest; Count: NativeInt; Value: AnsiChar);
 asm
    test edx,edx
    jle  @Exit2
@@ -603,7 +603,7 @@ asm
 
 end;
 
-procedure FillChar_DKC_IA32_20_d(var Dest; count: Integer; Value: Char);
+procedure FillChar_DKC_IA32_20_d(var Dest; Count: NativeInt; Value: AnsiChar);
 asm
    test edx,edx
    jle  @Exit2
@@ -794,16 +794,16 @@ end;
 //Instructionset(s): IA32
 //Size:
 
-procedure FillChar_DKC_Pas_24_a(var Dest; count: Integer; Value: Char);
+procedure FillChar_DKC_Pas_24_a(var Dest; Count: NativeInt; Value: AnsiChar);
 var
  I, FourValues, ICount, MisAlignment : Integer;
- P, StopP2 : PChar;
+ P, StopP2 : PAnsiChar;
  DstI : PIntegerArray;
 
 begin
  if Count <= 0 then
   Exit;
- P := PChar(@Dest);
+ P := PAnsiChar(@Dest);
  case Count of
   0 :
    Exit;
@@ -1457,16 +1457,16 @@ end;
 //Instructionset(s): IA32
 //Size:
 
-procedure FillChar_DKC_Pas_24_b(var Dest; count: Integer; Value: Char);
+procedure FillChar_DKC_Pas_24_b(var Dest; Count: NativeInt; Value: AnsiChar);
 var
  I, FourValues, ICount, MisAlignment : Integer;
- P, StopP2 : PChar;
+ P, StopP2 : PAnsiChar;
  DstI : PIntegerArray;
 
 begin
  if Count <= 0 then
-  Exit;
- P := PChar(@Dest);
+	Exit;
+ P := PAnsiChar(@Dest);
  case Count of
   0 :
    Exit;
@@ -2120,16 +2120,16 @@ end;
 //Instructionset(s): IA32
 //Size:
 
-procedure FillChar_DKC_Pas_24_c(var Dest; count: Integer; Value: Char);
+procedure FillChar_DKC_Pas_24_c(var Dest; Count: NativeInt; Value: AnsiChar);
 var
  I, FourValues, ICount, MisAlignment : Integer;
- P, StopP2 : PChar;
+ P, StopP2 : PAnsiChar;
  DstI : PIntegerArray;
 
 begin
  if Count <= 0 then
   Exit;
- P := PChar(@Dest);
+ P := PAnsiChar(@Dest);
  case Count of
   0 :
    Exit;
@@ -2783,16 +2783,16 @@ end;
 //Instructionset(s): IA32
 //Size:
 
-procedure FillChar_DKC_Pas_24_d(var Dest; count: Integer; Value: Char);
+procedure FillChar_DKC_Pas_24_d(var Dest; Count: NativeInt; Value: AnsiChar);
 var
  I, FourValues, ICount, MisAlignment : Integer;
- P, StopP2 : PChar;
+ P, StopP2 : PAnsiChar;
  DstI : PIntegerArray;
 
 begin
  if Count <= 0 then
   Exit;
- P := PChar(@Dest);
+ P := PAnsiChar(@Dest);
  case Count of
   0 :
    Exit;
@@ -3446,7 +3446,7 @@ end;
 //Instructionset(s): IA32, MMX
 //Size:
 
-procedure FillChar_DKC_MMX_11_a(var Dest; count: Integer; Value: Char);
+procedure FillChar_DKC_MMX_11_a(var Dest; Count: NativeInt; Value: AnsiChar);
 asm
    test edx,edx
    jle  @Exit2
@@ -3807,7 +3807,7 @@ asm
  @CaseElse :
    push  esi
    push  edi
-   //P := PChar(@Dest);
+   //P := PAnsiChar(@Dest);
    mov   esi,eax
    cmp   edx,40
    jae    @Repeat3
@@ -3907,7 +3907,7 @@ end;
 //Instructionset(s): IA32, MMX
 //Size:
 
-procedure FillChar_DKC_MMX_12_a(var Dest; count: Integer; Value: Char);
+procedure FillChar_DKC_MMX_12_a(var Dest; Count: NativeInt; Value: AnsiChar);
 asm
    test edx,edx
    jle  @Exit2
@@ -4283,7 +4283,7 @@ asm
    movq  [eax+edx-16],mm0
    movq  [eax+edx-24],mm0
    movq  [eax+edx-32],mm0
-   //P := PChar(@Dest);
+   //P := PAnsiChar(@Dest);
    mov   esi,eax
    cmp   edx,40
    jae   @Repeat3
@@ -4370,7 +4370,7 @@ end;
 //Instructionset(s): IA32, MMX
 //Size:
 
-procedure FillChar_DKC_MMX_12_b(var Dest; count: Integer; Value: Char);
+procedure FillChar_DKC_MMX_12_b(var Dest; Count: NativeInt; Value: AnsiChar);
 asm
    test edx,edx
    jle  @Exit2
@@ -4746,7 +4746,7 @@ asm
    movq  [eax+edx-16],mm0
    movq  [eax+edx-24],mm0
    movq  [eax+edx-32],mm0
-   //P := PChar(@Dest);
+   //P := PAnsiChar(@Dest);
    mov   esi,eax
    cmp   edx,40
    jae   @Repeat3
@@ -4833,7 +4833,7 @@ end;
 //Instructionset(s): IA32, MMX
 //Size:
 
-procedure FillChar_DKC_MMX_12_c(var Dest; count: Integer; Value: Char);
+procedure FillChar_DKC_MMX_12_c(var Dest; Count: NativeInt; Value: AnsiChar);
 asm
    test edx,edx
    jle  @Exit2
@@ -5209,7 +5209,7 @@ asm
    movq  [eax+edx-16],mm0
    movq  [eax+edx-24],mm0
    movq  [eax+edx-32],mm0
-   //P := PChar(@Dest);
+   //P := PAnsiChar(@Dest);
    mov   esi,eax
    cmp   edx,40
    jae   @Repeat3
@@ -5296,7 +5296,7 @@ end;
 //Instructionset(s): IA32, MMX
 //Size:
 
-procedure FillChar_DKC_MMX_12_d(var Dest; count: Integer; Value: Char);
+procedure FillChar_DKC_MMX_12_d(var Dest; Count: NativeInt; Value: AnsiChar);
 asm
    test edx,edx
    jle  @Exit2
@@ -5672,7 +5672,7 @@ asm
    movq  [eax+edx-16],mm0
    movq  [eax+edx-24],mm0
    movq  [eax+edx-32],mm0
-   //P := PChar(@Dest);
+   //P := PAnsiChar(@Dest);
    mov   esi,eax
    cmp   edx,40
    jae   @Repeat3
@@ -5753,7 +5753,7 @@ end;
 //Instructionset(s): IA32, MMX
 //Size:
 
-procedure FillChar_DKC_MMX_11_b(var Dest; count: Integer; Value: Char);
+procedure FillChar_DKC_MMX_11_b(var Dest; Count: NativeInt; Value: AnsiChar);
 asm
    test edx,edx
    jle  @Exit2
@@ -6114,7 +6114,7 @@ asm
  @CaseElse :
    push  esi
    push  edi
-   //P := PChar(@Dest);
+   //P := PAnsiChar(@Dest);
    mov   esi,eax
    cmp   edx,40
    jae    @Repeat3
@@ -6214,7 +6214,7 @@ end;
 //Instructionset(s): IA32, MMX
 //Size:
 
-procedure FillChar_DKC_MMX_11_c(var Dest; count: Integer; Value: Char);
+procedure FillChar_DKC_MMX_11_c(var Dest; Count: NativeInt; Value: AnsiChar);
 asm
    test edx,edx
    jle  @Exit2
@@ -6575,7 +6575,7 @@ asm
  @CaseElse :
    push  esi
    push  edi
-   //P := PChar(@Dest);
+   //P := PAnsiChar(@Dest);
    mov   esi,eax
    cmp   edx,40
    jae    @Repeat3
@@ -6675,7 +6675,7 @@ end;
 //Instructionset(s): IA32, MMX
 //Size:
 
-procedure FillChar_DKC_MMX_11_d(var Dest; count: Integer; Value: Char);
+procedure FillChar_DKC_MMX_11_d(var Dest; Count: NativeInt; Value: AnsiChar);
 asm
    test edx,edx
    jle  @Exit2
@@ -7036,7 +7036,7 @@ asm
  @CaseElse :
    push  esi
    push  edi
-   //P := PChar(@Dest);
+   //P := PAnsiChar(@Dest);
    mov   esi,eax
    cmp   edx,40
    jae    @Repeat3
@@ -7136,7 +7136,7 @@ end;
 //Instructionset(s): IA32, MMX, SSE
 //Size
 
-procedure FillChar_DKC_SSE_9_a(var Dest; count: Integer; Value: Char);
+procedure FillChar_DKC_SSE_9_a(var Dest; Count: NativeInt; Value: AnsiChar);
 asm
    test edx,edx
    jle  @Exit2
@@ -7499,7 +7499,7 @@ asm
    push  ebx
    push  esi
    push  edi
-   //P := PChar(@Dest);
+   //P := PAnsiChar(@Dest);
    mov   esi,eax
    //StopP2 := P + Count;
    lea   ebx,[edx+eax]
@@ -7599,7 +7599,7 @@ end;
 //Instructionset(s): IA32, MMX, SSE
 //Size
 
-procedure FillChar_DKC_SSE_9_b(var Dest; count: Integer; Value: Char);
+procedure FillChar_DKC_SSE_9_b(var Dest; Count: NativeInt; Value: AnsiChar);
 asm
    test edx,edx
    jle  @Exit2
@@ -7962,7 +7962,7 @@ asm
    push  ebx
    push  esi
    push  edi
-   //P := PChar(@Dest);
+   //P := PAnsiChar(@Dest);
    mov   esi,eax
    //StopP2 := P + Count;
    lea   ebx,[edx+eax]
@@ -8062,7 +8062,7 @@ end;
 //Instructionset(s): IA32, MMX, SSE
 //Size
 
-procedure FillChar_DKC_SSE_9_c(var Dest; count: Integer; Value: Char);
+procedure FillChar_DKC_SSE_9_c(var Dest; Count: NativeInt; Value: AnsiChar);
 asm
    test edx,edx
    jle  @Exit2
@@ -8425,7 +8425,7 @@ asm
    push  ebx
    push  esi
    push  edi
-   //P := PChar(@Dest);
+   //P := PAnsiChar(@Dest);
    mov   esi,eax
    //StopP2 := P + Count;
    lea   ebx,[edx+eax]
@@ -8525,7 +8525,7 @@ end;
 //Instructionset(s): IA32, MMX, SSE
 //Size
 
-procedure FillChar_DKC_SSE_9_d(var Dest; count: Integer; Value: Char);
+procedure FillChar_DKC_SSE_9_d(var Dest; Count: NativeInt; Value: AnsiChar);
 asm
    test edx,edx
    jle  @Exit2
@@ -8888,7 +8888,7 @@ asm
    push  ebx
    push  esi
    push  edi
-   //P := PChar(@Dest);
+   //P := PAnsiChar(@Dest);
    mov   esi,eax
    //StopP2 := P + Count;
    lea   ebx,[edx+eax]
@@ -8988,7 +8988,7 @@ end;
 //Instructionset(s): IA32, MMX, SSE
 //Size
 
-procedure FillChar_DKC_SSE_14_a(var Dest; count: Integer; Value: Char);
+procedure FillChar_DKC_SSE_14_a(var Dest; Count: NativeInt; Value: AnsiChar);
 asm
    test edx,edx
    jle  @Exit2
@@ -9361,7 +9361,7 @@ asm
    push   ebx
    push   esi
    push   edi
-   //P := PChar(@Dest);
+   //P := PAnsiChar(@Dest);
    mov    esi,eax
    //StopP2 := P + Count;
    lea    ebx,[edx+eax]
@@ -9480,7 +9480,7 @@ end;
 //Instructionset(s): IA32, MMX, SSE
 //Size
 
-procedure FillChar_DKC_SSE_14_b(var Dest; count: Integer; Value: Char);
+procedure FillChar_DKC_SSE_14_b(var Dest; Count: NativeInt; Value: AnsiChar);
 asm
    test edx,edx
    jle  @Exit2
@@ -9853,7 +9853,7 @@ asm
    push   ebx
    push   esi
    push   edi
-   //P := PChar(@Dest);
+   //P := PAnsiChar(@Dest);
    mov    esi,eax
    //StopP2 := P + Count;
    lea    ebx,[edx+eax]
@@ -9972,7 +9972,7 @@ end;
 //Instructionset(s): IA32, MMX, SSE
 //Size
 
-procedure FillChar_DKC_SSE_14_c(var Dest; count: Integer; Value: Char);
+procedure FillChar_DKC_SSE_14_c(var Dest; Count: NativeInt; Value: AnsiChar);
 asm
    test edx,edx
    jle  @Exit2
@@ -10345,7 +10345,7 @@ asm
    push   ebx
    push   esi
    push   edi
-   //P := PChar(@Dest);
+   //P := PAnsiChar(@Dest);
    mov    esi,eax
    //StopP2 := P + Count;
    lea    ebx,[edx+eax]
@@ -10464,7 +10464,7 @@ end;
 //Instructionset(s): IA32, MMX, SSE
 //Size
 
-procedure FillChar_DKC_SSE_14_d(var Dest; count: Integer; Value: Char);
+procedure FillChar_DKC_SSE_14_d(var Dest; Count: NativeInt; Value: AnsiChar);
 asm
    test edx,edx
    jle  @Exit2
@@ -10837,7 +10837,7 @@ asm
    push   ebx
    push   esi
    push   edi
-   //P := PChar(@Dest);
+   //P := PAnsiChar(@Dest);
    mov    esi,eax
    //StopP2 := P + Count;
    lea    ebx,[edx+eax]
@@ -10955,7 +10955,7 @@ end;
 //Optimized for:     P4
 //Instructionset(s): IA32, MMX, SSE, SSE2
 
-procedure FillCharDKC_SSE2_3_a(var Dest; count: Integer; Value: Char);
+procedure FillCharDKC_SSE2_3_a(var Dest; Count: NativeInt; Value: AnsiChar);
 asm
    test edx,edx
    jle  @Exit2
@@ -11318,7 +11318,7 @@ asm
    push    ebx
    push    esi
    push    edi
-   //P := PChar(@Dest);
+   //P := PAnsiChar(@Dest);
    mov     esi,eax
    //StopP2 := P + Count;
    lea     ebx,[edx+eax]
@@ -11416,7 +11416,7 @@ end;
 //Optimized for:     P4
 //Instructionset(s): IA32, MMX, SSE, SSE2
 
-procedure FillCharDKC_SSE2_3_b(var Dest; count: Integer; Value: Char);
+procedure FillCharDKC_SSE2_3_b(var Dest; Count: NativeInt; Value: AnsiChar);
 asm
    test edx,edx
    jle  @Exit2
@@ -11779,7 +11779,7 @@ asm
    push    ebx
    push    esi
    push    edi
-   //P := PChar(@Dest);
+   //P := PAnsiChar(@Dest);
    mov     esi,eax
    //StopP2 := P + Count;
    lea     ebx,[edx+eax]
@@ -11877,7 +11877,7 @@ end;
 //Optimized for:     P4
 //Instructionset(s): IA32, MMX, SSE, SSE2
 
-procedure FillCharDKC_SSE2_3_c(var Dest; count: Integer; Value: Char);
+procedure FillCharDKC_SSE2_3_c(var Dest; Count: NativeInt; Value: AnsiChar);
 asm
    test edx,edx
    jle  @Exit2
@@ -12240,7 +12240,7 @@ asm
    push    ebx
    push    esi
    push    edi
-   //P := PChar(@Dest);
+   //P := PAnsiChar(@Dest);
    mov     esi,eax
    //StopP2 := P + Count;
    lea     ebx,[edx+eax]
@@ -12338,7 +12338,7 @@ end;
 //Optimized for:     P4
 //Instructionset(s): IA32, MMX, SSE, SSE2
 
-procedure FillCharDKC_SSE2_3_d(var Dest; count: Integer; Value: Char);
+procedure FillCharDKC_SSE2_3_d(var Dest; Count: NativeInt; Value: AnsiChar);
 asm
    test edx,edx
    jle  @Exit2
@@ -12701,7 +12701,7 @@ asm
    push    ebx
    push    esi
    push    edi
-   //P := PChar(@Dest);
+   //P := PAnsiChar(@Dest);
    mov     esi,eax
    //StopP2 := P + Count;
    lea     ebx,[edx+eax]
@@ -12800,7 +12800,7 @@ end;
 //Instructionset(s): IA32, MMX, SSE, SSE2
 //Size
 
-procedure FillChar_DKC_SSE2_10_a(var Dest; count: Integer; Value: Char);
+procedure FillChar_DKC_SSE2_10_a(var Dest; Count: NativeInt; Value: AnsiChar);
 asm
    test edx,edx
    jle  @Exit2
@@ -13268,7 +13268,7 @@ end;
 //Instructionset(s): IA32, MMX, SSE, SSE2
 //Size
 
-procedure FillChar_DKC_SSE2_10_b(var Dest; count: Integer; Value: Char);
+procedure FillChar_DKC_SSE2_10_b(var Dest; Count: NativeInt; Value: AnsiChar);
 asm
    test edx,edx
    jle  @Exit2
@@ -13736,7 +13736,7 @@ end;
 //Instructionset(s): IA32, MMX, SSE, SSE2
 //Size
 
-procedure FillChar_DKC_SSE2_10_c(var Dest; count: Integer; Value: Char);
+procedure FillChar_DKC_SSE2_10_c(var Dest; Count: NativeInt; Value: AnsiChar);
 asm
    test edx,edx
    jle  @Exit2
@@ -14204,7 +14204,7 @@ end;
 //Instructionset(s): IA32, MMX, SSE, SSE2
 //Size
 
-procedure FillChar_DKC_SSE2_10_d(var Dest; count: Integer; Value: Char);
+procedure FillChar_DKC_SSE2_10_d(var Dest; Count: NativeInt; Value: AnsiChar);
 asm
    test edx,edx
    jle  @Exit2
@@ -14671,7 +14671,7 @@ end;
 //Optimized for:     P4
 //Instructionset(s): IA32, MMX, SSE, SSE2
 
-procedure FillChar_DKC_SSE2_11_a(var Dest; count: Integer; Value: Char);
+procedure FillChar_DKC_SSE2_11_a(var Dest; Count: NativeInt; Value: AnsiChar);
 asm
    test edx,edx
    jle  @Exit2
@@ -15111,7 +15111,7 @@ end;
 //Optimized for:     P4
 //Instructionset(s): IA32, MMX, SSE, SSE2
 
-procedure FillChar_DKC_SSE2_11_b(var Dest; count: Integer; Value: Char);
+procedure FillChar_DKC_SSE2_11_b(var Dest; Count: NativeInt; Value: AnsiChar);
 asm
    test edx,edx
    jle  @Exit2
@@ -15551,7 +15551,7 @@ end;
 //Optimized for:     P4
 //Instructionset(s): IA32, MMX, SSE, SSE2
 
-procedure FillChar_DKC_SSE2_11_c(var Dest; count: Integer; Value: Char);
+procedure FillChar_DKC_SSE2_11_c(var Dest; Count: NativeInt; Value: AnsiChar);
 asm
    test edx,edx
    jle  @Exit2
@@ -15991,7 +15991,7 @@ end;
 //Optimized for:     P4
 //Instructionset(s): IA32, MMX, SSE, SSE2
 
-procedure FillChar_DKC_SSE2_11_d(var Dest; count: Integer; Value: Char);
+procedure FillChar_DKC_SSE2_11_d(var Dest; Count: NativeInt; Value: AnsiChar);
 asm
    test edx,edx
    jle  @Exit2
@@ -16431,7 +16431,7 @@ end;
 //Optimized for:     P4
 //Instructionset(s): IA32, MMX, SSE, SSE2
 
-procedure FillCharDKC_SSE2_12_a(var Dest; count: Integer; Value: Char);
+procedure FillCharDKC_SSE2_12_a(var Dest; Count: NativeInt; Value: AnsiChar);
 asm
    test edx,edx
    jle  @Exit2

@@ -1,8 +1,8 @@
 object MainForm: TMainForm
   Left = 182
   Top = 110
-  Caption = 'Fastcode FillChar B & V Tool Version 1.6.3'
-  ClientHeight = 689
+  Caption = 'Fastcode FillChar Benchmark and Validation Tool Version 2.0'
+  ClientHeight = 589
   ClientWidth = 892
   Color = clBtnFace
   ParentFont = True
@@ -15,49 +15,49 @@ object MainForm: TMainForm
   object Label1: TLabel
     Left = 16
     Top = 96
-    Width = 22
+    Width = 24
     Height = 13
     Caption = 'Error'
   end
   object Label2: TLabel
     Left = 16
     Top = 176
-    Width = 54
+    Width = 52
     Height = 13
     Caption = 'Benchmark'
   end
   object Bench1Label: TLabel
     Left = 16
     Top = 256
-    Width = 40
+    Width = 38
     Height = 13
     Caption = 'Bench 1'
   end
   object Label4: TLabel
     Left = 16
     Top = 296
-    Width = 40
+    Width = 38
     Height = 13
     Caption = 'Bench 2'
   end
   object Label5: TLabel
     Left = 16
     Top = 336
-    Width = 74
+    Width = 79
     Height = 13
     Caption = 'Max Spread [%]'
   end
   object Label6: TLabel
     Left = 16
     Top = 376
-    Width = 72
+    Width = 71
     Height = 13
     Caption = 'Function Name'
   end
   object Label3: TLabel
     Left = 16
     Top = 432
-    Width = 139
+    Width = 140
     Height = 13
     Caption = 'Spread due to codealignment'
   end
@@ -75,22 +75,13 @@ object MainForm: TMainForm
     Height = 13
     Caption = 'Functionname 2'
   end
-  object DevelopButton: TButton
-    Left = 32
-    Top = 56
-    Width = 75
-    Height = 25
-    Caption = 'Develop'
-    TabOrder = 3
-    OnClick = DevelopButtonClick
-  end
   object Panel1: TPanel
     Left = 0
     Top = 0
     Width = 892
     Height = 41
     Align = alTop
-    TabOrder = 4
+    TabOrder = 3
     object SaveReportSpeedButton: TSpeedButton
       Left = 16
       Top = 8
@@ -135,21 +126,26 @@ object MainForm: TMainForm
     end
   end
   object CloseBitBtn: TBitBtn
-    Left = 808
-    Top = 656
+    Left = 806
+    Top = 555
     Width = 75
     Height = 25
     Kind = bkClose
     NumGlyphs = 2
-    TabOrder = 5
+    TabOrder = 4
   end
   object FunctionSelectionRadioGroup: TRadioGroup
     Left = 160
     Top = 56
     Width = 321
-    Height = 625
+    Height = 493
     Caption = 'Function Selection'
     Columns = 2
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -9
+    Font.Name = 'Tahoma'
+    Font.Style = []
     ItemIndex = 0
     Items.Strings = (
       'FillChar_RTL_IA32_1'
@@ -234,16 +230,17 @@ object MainForm: TMainForm
       'FillChar_DKC_Pas_24_b'
       'FillChar_DKC_Pas_24_c'
       'FillChar_DKC_Pas_24_d')
-    TabOrder = 6
+    ParentFont = False
+    TabOrder = 5
     OnClick = FunctionSelectionRadioGroupClick
   end
   object ValidateButton: TButton
-    Left = 32
-    Top = 144
-    Width = 75
+    Left = 16
+    Top = 145
+    Width = 138
     Height = 25
-    Caption = 'Validate'
-    TabOrder = 7
+    Caption = 'Validate (Selected)'
+    TabOrder = 6
     OnClick = ValidateButtonClick
   end
   object ErrorEdit: TEdit
@@ -253,17 +250,16 @@ object MainForm: TMainForm
     Height = 21
     TabStop = False
     Color = clInfoBk
-    ParentFont = True
     ReadOnly = True
-    TabOrder = 8
+    TabOrder = 7
     Text = 'ErrorEdit'
   end
   object BenchmarkButton: TButton
-    Left = 32
-    Top = 224
-    Width = 75
+    Left = 17
+    Top = 225
+    Width = 137
     Height = 25
-    Caption = 'Benchmark'
+    Caption = 'Benchmark (Selected)'
     TabOrder = 2
     OnClick = BenchmarkButtonClick
   end
@@ -274,9 +270,8 @@ object MainForm: TMainForm
     Height = 21
     TabStop = False
     Color = clInfoBk
-    ParentFont = True
     ReadOnly = True
-    TabOrder = 9
+    TabOrder = 8
     Text = 'BenchmarkEdit'
     OnClick = BenchmarkEditClick
   end
@@ -284,151 +279,148 @@ object MainForm: TMainForm
     Left = 488
     Top = 64
     Width = 393
-    Height = 577
+    Height = 485
     TabStop = False
     Color = clInfoBk
-    ParentFont = True
+    Font.Charset = ANSI_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -11
+    Font.Name = 'Tahoma'
+    Font.Style = []
     Lines.Strings = (
       'ReportRichEdit')
-    ParentFont = True
+    ParentFont = False
     PlainText = True
     ReadOnly = True
     ScrollBars = ssVertical
-    TabOrder = 10
+    TabOrder = 9
     Zoom = 100
   end
   object BenchmarkAllButton: TButton
-    Left = 680
-    Top = 648
+    Left = 656
+    Top = 555
     Width = 81
-    Height = 33
+    Height = 25
     Caption = 'Benchmark All'
     TabOrder = 0
     OnClick = BenchmarkAllButtonClick
   end
   object ValidateAllButton: TButton
-    Left = 584
-    Top = 648
+    Left = 569
+    Top = 555
     Width = 81
-    Height = 33
+    Height = 25
     Caption = 'Validate All'
     TabOrder = 1
     OnClick = ValidateAllButtonClick
   end
   object ClearButton: TButton
-    Left = 496
-    Top = 648
+    Left = 488
+    Top = 555
     Width = 75
     Height = 25
     Caption = 'Clear'
-    TabOrder = 11
+    TabOrder = 10
     OnClick = ClearButtonClick
   end
   object Bench1Edit: TEdit
-    Left = 16
-    Top = 272
-    Width = 121
+    Left = 17
+    Top = 269
+    Width = 137
     Height = 21
     TabStop = False
     Color = clInfoBk
-    ParentFont = True
     ReadOnly = True
-    TabOrder = 12
+    TabOrder = 11
     Text = 'Bench1Edit'
   end
   object Bench2Edit: TEdit
     Left = 16
     Top = 312
-    Width = 121
+    Width = 138
     Height = 21
     TabStop = False
     Color = clInfoBk
-    ParentFont = True
     ReadOnly = True
-    TabOrder = 13
+    TabOrder = 12
     Text = 'Bench2Edit'
   end
   object MaxSpreadBenchPercentageEdit: TEdit
-    Left = 16
-    Top = 352
-    Width = 121
+    Left = 17
+    Top = 349
+    Width = 137
     Height = 21
     TabStop = False
     Color = clInfoBk
-    ParentFont = True
     ReadOnly = True
-    TabOrder = 14
+    TabOrder = 13
     Text = 'MaxSpreadBenchPercentageEdit'
   end
   object FunctionNameEdit: TEdit
     Left = 16
     Top = 392
-    Width = 121
+    Width = 138
     Height = 21
     TabStop = False
     Color = clInfoBk
-    ParentFont = True
     ReadOnly = True
-    TabOrder = 15
+    TabOrder = 14
     Text = 'FunctionNameEdit'
   end
   object SpreadTestButton: TButton
-    Left = 40
-    Top = 560
-    Width = 75
+    Left = 12
+    Top = 556
+    Width = 95
     Height = 25
-    Caption = 'SpreadTest'
-    TabOrder = 16
+    Caption = 'Spread Test (All)'
+    TabOrder = 15
     OnClick = SpreadTestButtonClick
   end
   object BenchTestButton: TButton
-    Left = 40
-    Top = 592
-    Width = 75
+    Left = 113
+    Top = 556
+    Width = 88
     Height = 25
-    Caption = 'Bench Test'
-    TabOrder = 17
+    Caption = 'Bench Test (All)'
+    TabOrder = 16
     OnClick = BenchTestButtonClick
   end
   object AlignMaxSpreadBenchPercentageEdit: TEdit
     Left = 16
     Top = 448
-    Width = 121
+    Width = 138
     Height = 21
     TabStop = False
     Color = clInfoBk
-    ParentFont = True
     ReadOnly = True
-    TabOrder = 18
+    TabOrder = 17
     Text = 'AlignMaxSpreadBenchPercentageEdit'
   end
   object AlignFunctionName1Edit: TEdit
-    Left = 16
-    Top = 488
-    Width = 121
+    Left = 17
+    Top = 491
+    Width = 137
     Height = 21
     TabStop = False
     Color = clInfoBk
-    ParentFont = True
     ReadOnly = True
-    TabOrder = 19
+    TabOrder = 18
     Text = 'AlignFunctionName1Edit'
   end
   object AlignFunctionName2Edit: TEdit
-    Left = 16
-    Top = 528
-    Width = 121
+    Left = 17
+    Top = 529
+    Width = 137
     Height = 21
     TabStop = False
     Color = clInfoBk
-    ParentFont = True
     ReadOnly = True
-    TabOrder = 20
+    TabOrder = 19
     Text = 'AlignFunctionName2Edit'
   end
   object Clean: TButton
-    Left = 40
-    Top = 624
+    Left = 207
+    Top = 556
     Width = 75
     Height = 25
     Hint = 
@@ -437,7 +429,7 @@ object MainForm: TMainForm
     Caption = 'Clean'
     ParentShowHint = False
     ShowHint = True
-    TabOrder = 21
+    TabOrder = 20
     OnClick = CleanClick
   end
   object SaveDialog: TSaveDialog

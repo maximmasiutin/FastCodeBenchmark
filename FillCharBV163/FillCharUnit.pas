@@ -3,44 +3,44 @@ unit FillCharUnit;
 interface
 
 {$IFDEF WIN32}
-procedure FillChar_RTL_Pas_1(var Dest; count: Integer; Value: Char);
-procedure FillCharCJGPAS1(var Dest; count: Integer; Value: Char);
-procedure FillCharCJGPas3(var Dest; count: Integer; Value: Char);
-procedure FillChar_CJG_Pas_5_a(var Dest; count: Integer; Value: Char);
-procedure FillChar_CJG_Pas_5_b(var Dest; count: Integer; Value: Char);
-procedure FillChar_CJG_Pas_5_c(var Dest; count: Integer; Value: Char);
-procedure FillChar_CJG_Pas_5_d(var Dest; count: Integer; Value: Char);
-procedure FillChar_PLR_IA32_3_a(var Dest; Count: Integer; Value: Char);
-procedure FillChar_PLR_IA32_3_b(var Dest; Count: Integer; Value: Char);
-procedure FillChar_PLR_IA32_3_c(var Dest; Count: Integer; Value: Char);
-procedure FillChar_PLR_IA32_3_d(var Dest; Count: Integer; Value: Char);
-procedure FillChar_PLR_IA32_4_a(var Dest; Count: Integer; Value: Char);
-procedure FillChar_PLR_IA32_4_b(var Dest; Count: Integer; Value: Char);
-procedure FillChar_PLR_IA32_4_c(var Dest; Count: Integer; Value: Char);
-procedure FillChar_PLR_IA32_4_d(var Dest; Count: Integer; Value: Char);
-procedure FillChar_PLR_MMX_1_a(var Dest; Count: Integer; Value: Char);
-procedure FillChar_PLR_MMX_1_b(var Dest; Count: Integer; Value: Char);
-procedure FillChar_PLR_MMX_1_c(var Dest; Count: Integer; Value: Char);
-procedure FillChar_PLR_MMX_1_d(var Dest; Count: Integer; Value: Char);
+procedure FillChar_RTL_Pas_1(var Dest; count: NativeInt; Value: AnsiChar);
+procedure FillCharCJGPAS1(var Dest; count: NativeInt; Value: AnsiChar);
+procedure FillCharCJGPas3(var Dest; count: NativeInt; Value: AnsiChar);
+procedure FillChar_CJG_Pas_5_a(var Dest; count: NativeInt; Value: AnsiChar);
+procedure FillChar_CJG_Pas_5_b(var Dest; count: NativeInt; Value: AnsiChar);
+procedure FillChar_CJG_Pas_5_c(var Dest; count: NativeInt; Value: AnsiChar);
+procedure FillChar_CJG_Pas_5_d(var Dest; count: NativeInt; Value: AnsiChar);
+procedure FillChar_PLR_IA32_3_a(var Dest; count: NativeInt; Value: AnsiChar);
+procedure FillChar_PLR_IA32_3_b(var Dest; count: NativeInt; Value: AnsiChar);
+procedure FillChar_PLR_IA32_3_c(var Dest; count: NativeInt; Value: AnsiChar);
+procedure FillChar_PLR_IA32_3_d(var Dest; count: NativeInt; Value: AnsiChar);
+procedure FillChar_PLR_IA32_4_a(var Dest; count: NativeInt; Value: AnsiChar);
+procedure FillChar_PLR_IA32_4_b(var Dest; count: NativeInt; Value: AnsiChar);
+procedure FillChar_PLR_IA32_4_c(var Dest; count: NativeInt; Value: AnsiChar);
+procedure FillChar_PLR_IA32_4_d(var Dest; count: NativeInt; Value: AnsiChar);
+procedure FillChar_PLR_MMX_1_a(var Dest; count: NativeInt; Value: AnsiChar);
+procedure FillChar_PLR_MMX_1_b(var Dest; count: NativeInt; Value: AnsiChar);
+procedure FillChar_PLR_MMX_1_c(var Dest; count: NativeInt; Value: AnsiChar);
+procedure FillChar_PLR_MMX_1_d(var Dest; count: NativeInt; Value: AnsiChar);
 {$ENDIF}
 
 implementation
 
 uses
- SysUtils;
+  System.SysUtils;
 
 {$IFDEF WIN32}
-procedure FillChar_RTL_Pas_1(var Dest; count: Integer; Value: Char);
+procedure FillChar_RTL_Pas_1(var Dest; count: NativeInt; Value: AnsiChar);
 var
   I: Integer;
-  P: PChar;
+	P: PAnsiChar;
 begin
-  P := PChar(@Dest);
+	P := PAnsiChar(@Dest);
   for I := count-1 downto 0 do
     P[I] := Value;
 end;
 
-procedure FillCharCJGPAS1(var Dest; count: Integer; Value: Char);
+procedure FillCharCJGPAS1(var Dest; count: NativeInt; Value: AnsiChar);
 var
   I, J : Integer;
   P    : Pointer;
@@ -87,7 +87,7 @@ begin
     end;
 end;
 
-procedure FillCharPLRAsm1_a(var Dest; Count: Integer; Value: Char);
+procedure FillCharPLRAsm1_a(var Dest; count: NativeInt; Value: AnsiChar);
 asm
   {Copy the fill character into ch}
   mov ch, cl
@@ -155,7 +155,7 @@ asm
 end;
 
 {80386+ instruction set. 179 bytes}
-procedure FillChar_PLR_IA32_3_a(var Dest; Count: Integer; Value: Char);
+procedure FillChar_PLR_IA32_3_a(var Dest; count: NativeInt; Value: AnsiChar);
 asm
   {Copy the fill character into ch}
   mov ch, cl
@@ -268,7 +268,7 @@ asm
 end;
 
 {80386+ instruction set. 179 bytes}
-procedure FillChar_PLR_IA32_3_b(var Dest; Count: Integer; Value: Char);
+procedure FillChar_PLR_IA32_3_b(var Dest; count: NativeInt; Value: AnsiChar);
 asm
   {Copy the fill character into ch}
   mov ch, cl
@@ -381,7 +381,7 @@ asm
 end;
 
 {80386+ instruction set. 179 bytes}
-procedure FillChar_PLR_IA32_3_c(var Dest; Count: Integer; Value: Char);
+procedure FillChar_PLR_IA32_3_c(var Dest; count: NativeInt; Value: AnsiChar);
 asm
   {Copy the fill character into ch}
   mov ch, cl
@@ -494,7 +494,7 @@ asm
 end;
 
 {80386+ instruction set. 179 bytes}
-procedure FillChar_PLR_IA32_3_d(var Dest; Count: Integer; Value: Char);
+procedure FillChar_PLR_IA32_3_d(var Dest; count: NativeInt; Value: AnsiChar);
 asm
   {Copy the fill character into ch}
   mov ch, cl
@@ -606,7 +606,7 @@ asm
   dd @Fill26, @Fill27
 end;
 
-procedure FillCharCJGPas3(var Dest; count: Integer; Value: Char);
+procedure FillCharCJGPas3(var Dest; count: NativeInt; Value: AnsiChar);
 var
   I, J : Integer;
   P    : Pointer;
@@ -658,7 +658,7 @@ begin
 end;
 
 {80386+ instruction set. Size = 239 (code) + 4 * 36 (table) = 387}
-procedure FillChar_PLR_IA32_4_a(var Dest; Count: Integer; Value: Char);
+procedure FillChar_PLR_IA32_4_a(var Dest; count: NativeInt; Value: AnsiChar);
 asm
   {Copy the fill character into ch}
   mov ch, cl
@@ -784,7 +784,7 @@ asm
 end;
 
 {80386+ instruction set. Size = 239 (code) + 4 * 36 (table) = 387}
-procedure FillChar_PLR_IA32_4_b(var Dest; Count: Integer; Value: Char);
+procedure FillChar_PLR_IA32_4_b(var Dest; count: NativeInt; Value: AnsiChar);
 asm
   {Copy the fill character into ch}
   mov ch, cl
@@ -910,7 +910,7 @@ asm
 end;
 
 {80386+ instruction set. Size = 239 (code) + 4 * 36 (table) = 387}
-procedure FillChar_PLR_IA32_4_c(var Dest; Count: Integer; Value: Char);
+procedure FillChar_PLR_IA32_4_c(var Dest; count: NativeInt; Value: AnsiChar);
 asm
   {Copy the fill character into ch}
   mov ch, cl
@@ -1036,7 +1036,7 @@ asm
 end;
 
 {80386+ instruction set. Size = 239 (code) + 4 * 36 (table) = 387}
-procedure FillChar_PLR_IA32_4_d(var Dest; Count: Integer; Value: Char);
+procedure FillChar_PLR_IA32_4_d(var Dest; count: NativeInt; Value: AnsiChar);
 asm
   {Copy the fill character into ch}
   mov ch, cl
@@ -1162,7 +1162,7 @@ asm
 end;
 
 {MMX instruction set. Size = 240 + 4 * 40 = 400}
-procedure FillChar_PLR_MMX_1_a(var Dest; Count: Integer; Value: Char);
+procedure FillChar_PLR_MMX_1_a(var Dest; count: NativeInt; Value: AnsiChar);
 asm
   {Copy the fill character into ch}
   mov ch, cl
@@ -1302,7 +1302,7 @@ asm
 end;
 
 {MMX instruction set. Size = 240 + 4 * 40 = 400}
-procedure FillChar_PLR_MMX_1_b(var Dest; Count: Integer; Value: Char);
+procedure FillChar_PLR_MMX_1_b(var Dest; count: NativeInt; Value: AnsiChar);
 asm
   {Copy the fill character into ch}
   mov ch, cl
@@ -1442,7 +1442,7 @@ asm
 end;
 
 {MMX instruction set. Size = 240 + 4 * 40 = 400}
-procedure FillChar_PLR_MMX_1_c(var Dest; Count: Integer; Value: Char);
+procedure FillChar_PLR_MMX_1_c(var Dest; count: NativeInt; Value: AnsiChar);
 asm
   {Copy the fill character into ch}
   mov ch, cl
@@ -1582,7 +1582,7 @@ asm
 end;
 
 {MMX instruction set. Size = 240 + 4 * 40 = 400}
-procedure FillChar_PLR_MMX_1_d(var Dest; Count: Integer; Value: Char);
+procedure FillChar_PLR_MMX_1_d(var Dest; count: NativeInt; Value: AnsiChar);
 asm
   {Copy the fill character into ch}
   mov ch, cl
@@ -1716,7 +1716,7 @@ asm
   dd @Fill34, @Fill35, @Fill36, @Fill37, @Fill38, @Fill39
 end;
 
-procedure FillChar_CJG_Pas_5_a(var Dest; count: Integer; Value: Char);
+procedure FillChar_CJG_Pas_5_a(var Dest; count: NativeInt; Value: AnsiChar);
 var
   I, J, K : Integer;
   P    : Pointer;
@@ -1821,7 +1821,7 @@ asm
 end;
 
 
-procedure FillChar_CJG_Pas_5_b(var Dest; count: Integer; Value: Char);
+procedure FillChar_CJG_Pas_5_b(var Dest; count: NativeInt; Value: AnsiChar);
 var
   I, J, K : Integer;
   P    : Pointer;
@@ -1925,7 +1925,7 @@ asm
  nop
 end;
 
-procedure FillChar_CJG_Pas_5_c(var Dest; count: Integer; Value: Char);
+procedure FillChar_CJG_Pas_5_c(var Dest; count: NativeInt; Value: AnsiChar);
 var
   I, J, K : Integer;
   P    : Pointer;
@@ -2030,7 +2030,7 @@ asm
 end;
 
 
-procedure FillChar_CJG_Pas_5_d(var Dest; count: Integer; Value: Char);
+procedure FillChar_CJG_Pas_5_d(var Dest; count: NativeInt; Value: AnsiChar);
 var
   I, J, K : Integer;
   P    : Pointer;

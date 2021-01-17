@@ -4,7 +4,8 @@ interface
 
 {$INCLUDE Defines.inc}
 
-uses  Windows;
+uses
+  WinApi.Windows;
 
 type
  TVersion = record
@@ -33,7 +34,7 @@ function HasSSE3 : Boolean;
 implementation
 
 uses
-  FastCodeCPUID, SysUtils;
+  FastCodeCPUID, System.SysUtils;
 
 resourcestring
   TEXT_NO_VERSIONINFO = 'No version info';

@@ -4,48 +4,48 @@ interface
 
 {$IFDEF WIN32}
 
-procedure FillChar_JOH_PAS_1_a (var Dest; count: Integer; Value: Char);
-procedure FillChar_JOH_PAS_1_b (var Dest; count: Integer; Value: Char);
-procedure FillChar_JOH_PAS_1_c (var Dest; count: Integer; Value: Char);
-procedure FillChar_JOH_PAS_1_d (var Dest; count: Integer; Value: Char);
-procedure FillChar_JOH_IA32_3_a (var Dest; count: Integer; Value: Char);
-procedure FillChar_JOH_IA32_3_b (var Dest; count: Integer; Value: Char);
-procedure FillChar_JOH_IA32_3_c (var Dest; count: Integer; Value: Char);
-procedure FillChar_JOH_IA32_3_d (var Dest; count: Integer; Value: Char);
-procedure FillChar_JOH_IA32_1_a(var Dest; count: Integer; Value: Char);
-procedure FillChar_JOH_IA32_1_b(var Dest; count: Integer; Value: Char);
-procedure FillChar_JOH_IA32_1_c(var Dest; count: Integer; Value: Char);
-procedure FillChar_JOH_IA32_1_d(var Dest; count: Integer; Value: Char);
-procedure FillChar_JOH_IA32_2_a (var Dest; count: Integer; Value: Char);
-procedure FillChar_JOH_IA32_2_b (var Dest; count: Integer; Value: Char);
-procedure FillChar_JOH_IA32_2_c (var Dest; count: Integer; Value: Char);
-procedure FillChar_JOH_IA32_2_d (var Dest; count: Integer; Value: Char);
-procedure FillChar_JOH_MMX_1_a (var Dest; count: Integer; Value: Char);
-procedure FillChar_JOH_MMX_1_b (var Dest; count: Integer; Value: Char);
-procedure FillChar_JOH_MMX_1_c (var Dest; count: Integer; Value: Char);
-procedure FillChar_JOH_MMX_1_d (var Dest; count: Integer; Value: Char);
-procedure FillChar_JOH_SSE_1_a (var Dest; count: Integer; Value: Char);
-procedure FillChar_JOH_SSE_1_b (var Dest; count: Integer; Value: Char);
-procedure FillChar_JOH_SSE_1_c (var Dest; count: Integer; Value: Char);
-procedure FillChar_JOH_SSE_1_d (var Dest; count: Integer; Value: Char);
-procedure FillChar_JOH_SSE2_1_a(var Dest; count: Integer; Value: Char);
-procedure FillChar_JOH_SSE2_1_b(var Dest; count: Integer; Value: Char);
-procedure FillChar_JOH_SSE2_1_c(var Dest; count: Integer; Value: Char);
-procedure FillChar_JOH_SSE2_1_d(var Dest; count: Integer; Value: Char);
-procedure FillChar_JOH_MMX_4_a(var Dest; count: Integer; Value: Char);
-procedure FillChar_JOH_MMX_4_b(var Dest; count: Integer; Value: Char);
-procedure FillChar_JOH_MMX_4_c(var Dest; count: Integer; Value: Char);
-procedure FillChar_JOH_MMX_4_d(var Dest; count: Integer; Value: Char);
+procedure FillChar_JOH_PAS_1_a (var Dest; count: NativeInt; Value: AnsiChar);
+procedure FillChar_JOH_PAS_1_b (var Dest; count: NativeInt; Value: AnsiChar);
+procedure FillChar_JOH_PAS_1_c (var Dest; count: NativeInt; Value: AnsiChar);
+procedure FillChar_JOH_PAS_1_d (var Dest; count: NativeInt; Value: AnsiChar);
+procedure FillChar_JOH_IA32_3_a (var Dest; count: NativeInt; Value: AnsiChar);
+procedure FillChar_JOH_IA32_3_b (var Dest; count: NativeInt; Value: AnsiChar);
+procedure FillChar_JOH_IA32_3_c (var Dest; count: NativeInt; Value: AnsiChar);
+procedure FillChar_JOH_IA32_3_d (var Dest; count: NativeInt; Value: AnsiChar);
+procedure FillChar_JOH_IA32_1_a(var Dest; count: NativeInt; Value: AnsiChar);
+procedure FillChar_JOH_IA32_1_b(var Dest; count: NativeInt; Value: AnsiChar);
+procedure FillChar_JOH_IA32_1_c(var Dest; count: NativeInt; Value: AnsiChar);
+procedure FillChar_JOH_IA32_1_d(var Dest; count: NativeInt; Value: AnsiChar);
+procedure FillChar_JOH_IA32_2_a (var Dest; count: NativeInt; Value: AnsiChar);
+procedure FillChar_JOH_IA32_2_b (var Dest; count: NativeInt; Value: AnsiChar);
+procedure FillChar_JOH_IA32_2_c (var Dest; count: NativeInt; Value: AnsiChar);
+procedure FillChar_JOH_IA32_2_d (var Dest; count: NativeInt; Value: AnsiChar);
+procedure FillChar_JOH_MMX_1_a (var Dest; count: NativeInt; Value: AnsiChar);
+procedure FillChar_JOH_MMX_1_b (var Dest; count: NativeInt; Value: AnsiChar);
+procedure FillChar_JOH_MMX_1_c (var Dest; count: NativeInt; Value: AnsiChar);
+procedure FillChar_JOH_MMX_1_d (var Dest; count: NativeInt; Value: AnsiChar);
+procedure FillChar_JOH_SSE_1_a (var Dest; count: NativeInt; Value: AnsiChar);
+procedure FillChar_JOH_SSE_1_b (var Dest; count: NativeInt; Value: AnsiChar);
+procedure FillChar_JOH_SSE_1_c (var Dest; count: NativeInt; Value: AnsiChar);
+procedure FillChar_JOH_SSE_1_d (var Dest; count: NativeInt; Value: AnsiChar);
+procedure FillChar_JOH_SSE2_1_a(var Dest; count: NativeInt; Value: AnsiChar);
+procedure FillChar_JOH_SSE2_1_b(var Dest; count: NativeInt; Value: AnsiChar);
+procedure FillChar_JOH_SSE2_1_c(var Dest; count: NativeInt; Value: AnsiChar);
+procedure FillChar_JOH_SSE2_1_d(var Dest; count: NativeInt; Value: AnsiChar);
+procedure FillChar_JOH_MMX_4_a(var Dest; count: NativeInt; Value: AnsiChar);
+procedure FillChar_JOH_MMX_4_b(var Dest; count: NativeInt; Value: AnsiChar);
+procedure FillChar_JOH_MMX_4_c(var Dest; count: NativeInt; Value: AnsiChar);
+procedure FillChar_JOH_MMX_4_d(var Dest; count: NativeInt; Value: AnsiChar);
 {$ENDIF}
 
 implementation
 
 uses
-  SysUtils;
+  System.SysUtils;
 
 {$IFDEF WIN32}
 
-procedure FillChar_JOH_PAS_1_a(var Dest; count: Integer; Value: Char);
+procedure FillChar_JOH_PAS_1_a(var Dest; count: NativeInt; Value: AnsiChar);
 var {Size = 132 Byte}
   I, J, K : Integer;
   P       : PByte;
@@ -93,7 +93,7 @@ begin
       until I = 0;
 end;
 
-procedure FillChar_JOH_PAS_1_b(var Dest; count: Integer; Value: Char);
+procedure FillChar_JOH_PAS_1_b(var Dest; count: NativeInt; Value: AnsiChar);
 var {Size = 132 Byte}
   I, J, K : Integer;
   P       : PByte;
@@ -141,7 +141,7 @@ begin
       until I = 0;
 end;
 
-procedure FillChar_JOH_PAS_1_c(var Dest; count: Integer; Value: Char);
+procedure FillChar_JOH_PAS_1_c(var Dest; count: NativeInt; Value: AnsiChar);
 var {Size = 132 Byte}
   I, J, K : Integer;
   P       : PByte;
@@ -189,7 +189,7 @@ begin
       until I = 0;
 end;
 
-procedure FillChar_JOH_PAS_1_d(var Dest; count: Integer; Value: Char);
+procedure FillChar_JOH_PAS_1_d(var Dest; count: NativeInt; Value: AnsiChar);
 var {Size = 132 Byte}
   I, J, K : Integer;
   P       : PByte;
@@ -237,7 +237,7 @@ begin
       until I = 0;
 end;
 
-procedure FillChar_JOH_IA32_3_a(var Dest; count: Integer; Value: Char);
+procedure FillChar_JOH_IA32_3_a(var Dest; count: NativeInt; Value: AnsiChar);
 asm {Size = 90 Bytes}
   cmp   edx, 12
   mov   ch, cl            {Copy Value into both Bytes of CX}
@@ -277,7 +277,7 @@ asm {Size = 90 Bytes}
 @@Done:
 end;
 
-procedure FillChar_JOH_IA32_3_b(var Dest; count: Integer; Value: Char);
+procedure FillChar_JOH_IA32_3_b(var Dest; count: NativeInt; Value: AnsiChar);
 asm {Size = 90 Bytes}
   cmp   edx, 12
   mov   ch, cl            {Copy Value into both Bytes of CX}
@@ -317,7 +317,7 @@ asm {Size = 90 Bytes}
 @@Done:
 end;
 
-procedure FillChar_JOH_IA32_3_c(var Dest; count: Integer; Value: Char);
+procedure FillChar_JOH_IA32_3_c(var Dest; count: NativeInt; Value: AnsiChar);
 asm {Size = 90 Bytes}
   cmp   edx, 12
   mov   ch, cl            {Copy Value into both Bytes of CX}
@@ -357,7 +357,7 @@ asm {Size = 90 Bytes}
 @@Done:
 end;
 
-procedure FillChar_JOH_IA32_3_d(var Dest; count: Integer; Value: Char);
+procedure FillChar_JOH_IA32_3_d(var Dest; count: NativeInt; Value: AnsiChar);
 asm {Size = 90 Bytes}
   cmp   edx, 12
   mov   ch, cl            {Copy Value into both Bytes of CX}
@@ -397,7 +397,7 @@ asm {Size = 90 Bytes}
 @@Done:
 end;
 
-procedure FillChar_JOH_IA32_1_a(var Dest; count: Integer; Value: Char);
+procedure FillChar_JOH_IA32_1_a(var Dest; count: NativeInt; Value: AnsiChar);
 asm {Size = 161 Bytes}
   cmp   edx, 32
   mov   ch, cl                    {Copy Value into both Bytes of CX}
@@ -459,7 +459,7 @@ asm {Size = 161 Bytes}
 @@Done:
 end;
 
-procedure FillChar_JOH_IA32_1_b(var Dest; count: Integer; Value: Char);
+procedure FillChar_JOH_IA32_1_b(var Dest; count: NativeInt; Value: AnsiChar);
 asm {Size = 161 Bytes}
   cmp   edx, 32
   mov   ch, cl                    {Copy Value into both Bytes of CX}
@@ -521,7 +521,7 @@ asm {Size = 161 Bytes}
 @@Done:
 end;
 
-procedure FillChar_JOH_IA32_1_c(var Dest; count: Integer; Value: Char);
+procedure FillChar_JOH_IA32_1_c(var Dest; count: NativeInt; Value: AnsiChar);
 asm {Size = 161 Bytes}
   cmp   edx, 32
   mov   ch, cl                    {Copy Value into both Bytes of CX}
@@ -583,7 +583,7 @@ asm {Size = 161 Bytes}
 @@Done:
 end;
 
-procedure FillChar_JOH_IA32_1_d(var Dest; count: Integer; Value: Char);
+procedure FillChar_JOH_IA32_1_d(var Dest; count: NativeInt; Value: AnsiChar);
 asm {Size = 161 Bytes}
   cmp   edx, 32
   mov   ch, cl                    {Copy Value into both Bytes of CX}
@@ -645,7 +645,7 @@ asm {Size = 161 Bytes}
 @@Done:
 end;
 
-procedure FillChar_JOH_IA32_2_a(var Dest; count: Integer; Value: Char);
+procedure FillChar_JOH_IA32_2_a(var Dest; count: NativeInt; Value: AnsiChar);
 asm {Size = 153 Bytes}
   cmp   edx, 32
   mov   ch, cl                    {Copy Value into both Bytes of CX}
@@ -705,7 +705,7 @@ asm {Size = 153 Bytes}
 @@Done:
 end;
 
-procedure FillChar_JOH_IA32_2_b(var Dest; count: Integer; Value: Char);
+procedure FillChar_JOH_IA32_2_b(var Dest; count: NativeInt; Value: AnsiChar);
 asm {Size = 153 Bytes}
   cmp   edx, 32
   mov   ch, cl                    {Copy Value into both Bytes of CX}
@@ -765,7 +765,7 @@ asm {Size = 153 Bytes}
 @@Done:
 end;
 
-procedure FillChar_JOH_IA32_2_c(var Dest; count: Integer; Value: Char);
+procedure FillChar_JOH_IA32_2_c(var Dest; count: NativeInt; Value: AnsiChar);
 asm {Size = 153 Bytes}
   cmp   edx, 32
   mov   ch, cl                    {Copy Value into both Bytes of CX}
@@ -825,7 +825,7 @@ asm {Size = 153 Bytes}
 @@Done:
 end;
 
-procedure FillChar_JOH_IA32_2_d(var Dest; count: Integer; Value: Char);
+procedure FillChar_JOH_IA32_2_d(var Dest; count: NativeInt; Value: AnsiChar);
 asm {Size = 153 Bytes}
   cmp   edx, 32
   mov   ch, cl                    {Copy Value into both Bytes of CX}
@@ -885,7 +885,7 @@ asm {Size = 153 Bytes}
 @@Done:
 end;
 
-procedure FillChar_JOH_MMX_1_a(var Dest; count: Integer; Value: Char);
+procedure FillChar_JOH_MMX_1_a(var Dest; count: NativeInt; Value: AnsiChar);
 asm {Size = 149 Bytes}
   cmp       edx, 32
   mov       ch, cl                {Copy Value into both Bytes of CX}
@@ -941,7 +941,7 @@ asm {Size = 149 Bytes}
 @@Done:
 end;
 
-procedure FillChar_JOH_MMX_1_b(var Dest; count: Integer; Value: Char);
+procedure FillChar_JOH_MMX_1_b(var Dest; count: NativeInt; Value: AnsiChar);
 asm {Size = 149 Bytes}
   cmp       edx, 32
   mov       ch, cl                {Copy Value into both Bytes of CX}
@@ -997,7 +997,7 @@ asm {Size = 149 Bytes}
 @@Done:
 end;
 
-procedure FillChar_JOH_MMX_1_c(var Dest; count: Integer; Value: Char);
+procedure FillChar_JOH_MMX_1_c(var Dest; count: NativeInt; Value: AnsiChar);
 asm {Size = 149 Bytes}
   cmp       edx, 32
   mov       ch, cl                {Copy Value into both Bytes of CX}
@@ -1053,7 +1053,7 @@ asm {Size = 149 Bytes}
 @@Done:
 end;
 
-procedure FillChar_JOH_MMX_1_d(var Dest; count: Integer; Value: Char);
+procedure FillChar_JOH_MMX_1_d(var Dest; count: NativeInt; Value: AnsiChar);
 asm {Size = 149 Bytes}
   cmp       edx, 32
   mov       ch, cl                {Copy Value into both Bytes of CX}
@@ -1109,7 +1109,7 @@ asm {Size = 149 Bytes}
 @@Done:
 end;
 
-procedure FillChar_JOH_SSE_1_a(var Dest; count: Integer; Value: Char);
+procedure FillChar_JOH_SSE_1_a(var Dest; count: NativeInt; Value: AnsiChar);
 asm {Size = 161 Bytes}
   cmp       edx, 32
   mov       ch, cl                {Copy Value into both Bytes of CX}
@@ -1170,7 +1170,7 @@ asm {Size = 161 Bytes}
 @@Done:
 end;
 
-procedure FillChar_JOH_SSE_1_b(var Dest; count: Integer; Value: Char);
+procedure FillChar_JOH_SSE_1_b(var Dest; count: NativeInt; Value: AnsiChar);
 asm {Size = 161 Bytes}
   cmp       edx, 32
   mov       ch, cl                {Copy Value into both Bytes of CX}
@@ -1231,7 +1231,7 @@ asm {Size = 161 Bytes}
 @@Done:
 end;
 
-procedure FillChar_JOH_SSE_1_c(var Dest; count: Integer; Value: Char);
+procedure FillChar_JOH_SSE_1_c(var Dest; count: NativeInt; Value: AnsiChar);
 asm {Size = 161 Bytes}
   cmp       edx, 32
   mov       ch, cl                {Copy Value into both Bytes of CX}
@@ -1292,7 +1292,7 @@ asm {Size = 161 Bytes}
 @@Done:
 end;
 
-procedure FillChar_JOH_SSE_1_d(var Dest; count: Integer; Value: Char);
+procedure FillChar_JOH_SSE_1_d(var Dest; count: NativeInt; Value: AnsiChar);
 asm {Size = 161 Bytes}
   cmp       edx, 32
   mov       ch, cl                {Copy Value into both Bytes of CX}
@@ -1353,7 +1353,7 @@ asm {Size = 161 Bytes}
 @@Done:
 end;
 
-procedure FillChar_JOH_SSE2_1_a(var Dest; count: Integer; Value: Char);
+procedure FillChar_JOH_SSE2_1_a(var Dest; count: NativeInt; Value: AnsiChar);
 asm {Size = 161 Bytes}
   cmp       edx, 32
   mov       ch, cl                {Copy Value into both Bytes of CX}
@@ -1413,7 +1413,7 @@ asm {Size = 161 Bytes}
 @@Done:
 end;
 
-procedure FillChar_JOH_SSE2_1_b(var Dest; count: Integer; Value: Char);
+procedure FillChar_JOH_SSE2_1_b(var Dest; count: NativeInt; Value: AnsiChar);
 asm {Size = 161 Bytes}
   cmp       edx, 32
   mov       ch, cl                {Copy Value into both Bytes of CX}
@@ -1473,7 +1473,7 @@ asm {Size = 161 Bytes}
 @@Done:
 end;
 
-procedure FillChar_JOH_SSE2_1_c(var Dest; count: Integer; Value: Char);
+procedure FillChar_JOH_SSE2_1_c(var Dest; count: NativeInt; Value: AnsiChar);
 asm {Size = 161 Bytes}
   cmp       edx, 32
   mov       ch, cl                {Copy Value into both Bytes of CX}
@@ -1533,7 +1533,7 @@ asm {Size = 161 Bytes}
 @@Done:
 end;
 
-procedure FillChar_JOH_SSE2_1_d(var Dest; count: Integer; Value: Char);
+procedure FillChar_JOH_SSE2_1_d(var Dest; count: NativeInt; Value: AnsiChar);
 asm {Size = 161 Bytes}
   cmp       edx, 32
   mov       ch, cl                {Copy Value into both Bytes of CX}
@@ -1593,7 +1593,7 @@ asm {Size = 161 Bytes}
 @@Done:
 end;
 
-procedure FillChar_JOH_MMX_4_b(var Dest; count: Integer; Value: Char);
+procedure FillChar_JOH_MMX_4_b(var Dest; count: NativeInt; Value: AnsiChar);
 asm
   cmp       edx, 32
   mov       ch, cl                {Copy Value into both Bytes of CX}
@@ -1646,7 +1646,7 @@ asm
 @@Done:
 end; 
 
-procedure FillChar_JOH_MMX_4_a(var Dest; count: Integer; Value: Char);
+procedure FillChar_JOH_MMX_4_a(var Dest; count: NativeInt; Value: AnsiChar);
 asm
   cmp       edx, 32
   mov       ch, cl                {Copy Value into both Bytes of CX}
@@ -1699,7 +1699,7 @@ asm
 @@Done:
 end;
 
-procedure FillChar_JOH_MMX_4_c(var Dest; count: Integer; Value: Char);
+procedure FillChar_JOH_MMX_4_c(var Dest; count: NativeInt; Value: AnsiChar);
 asm
   cmp       edx, 32
   mov       ch, cl                {Copy Value into both Bytes of CX}
@@ -1752,7 +1752,7 @@ asm
 @@Done:
 end;
 
-procedure FillChar_JOH_MMX_4_d(var Dest; count: Integer; Value: Char);
+procedure FillChar_JOH_MMX_4_d(var Dest; count: NativeInt; Value: AnsiChar);
 asm
   cmp       edx, 32
   mov       ch, cl                {Copy Value into both Bytes of CX}
