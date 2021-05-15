@@ -306,6 +306,8 @@ begin
   raise Exception.Create('Please override the iteration count for '+ClassName);
 end;
 
+{$O-}
+
 procedure TNexusBenchmark.RunBenchmark;
 var
   PrimeIndex, i: Integer;

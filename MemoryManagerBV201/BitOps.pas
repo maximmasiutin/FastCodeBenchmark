@@ -34,9 +34,13 @@ implementation
 
 function NumBits(X: Cardinal): Cardinal; assembler;
 asm
+  {$ifdef UNIX}
+  mov eax, edi
+  {$else}
   {$IFDEF Win64}
   mov eax, ecx
   {$ENDIF}
+  {$endif UNIX}
   bsr eax, eax
   setnz cl
   movzx ecx, cl

@@ -143,71 +143,71 @@ you'll get a message that you should change the source code.
 {$IFDEF MM_BUCKETMM}
   {Robert Houdart's BucketMM}
   MemoryManager_Name = 'BucketMM';
-  PassValidations = True;
+  PassValidations = False;
   FastCodeQualityLabel = False;
   DllExtension = 'BUC';
 {$ENDIF}
 {$IFDEF MM_BUCKETMM_ASM}
   {Robert Houdart's BucketBasmMM}
   MemoryManager_Name = 'BucketMM_Asm';
-  PassValidations = True;
+  PassValidations = False;
   FastCodeQualityLabel = False;
   DllExtension = 'BCA';
 {$ENDIF}
 {$IFDEF MM_BUCKETMMDKC_ASM}
   {Robert Houdart's BucketBasmMM}
   MemoryManager_Name = 'BucketMMDKC_Asm';
-  PassValidations = True;
+  PassValidations = False;
   FastCodeQualityLabel = False;
   DllExtension = 'BCA';
 {$ENDIF}
 {$IFDEF MM_DKCIA32MM}
   {Dennis Kjaer Christensen Slowcode challenge entry v0.12}
   MemoryManager_Name = 'DKCIA32MM';
-  PassValidations = True;
+  PassValidations = False;
   FastCodeQualityLabel = False;
   DllExtension = 'DKC';
 {$ENDIF}
 {$IFDEF MM_EWCMM}
   {Eric Carman's EWCMM}
   MemoryManager_Name = 'EWCMM';
-  PassValidations = True;
+  PassValidations = False;
   FastCodeQualityLabel = False;
   DllExtension = 'EWC';
 {$ENDIF}
 {$IFDEF MM_FASTMM2}
   {Pierre le Riche's FastMM v2.xx}
   MemoryManager_Name = 'FastMM2';
-  PassValidations = True;
+  PassValidations = False;
   FastCodeQualityLabel = False;
   DllExtension = 'FA2';
 {$ENDIF}
 {$IFDEF MM_FASTMM3}
   {Pierre le Riche's FastMM v3.xx}
   MemoryManager_Name = 'FastMM3';
-  PassValidations = True;
+  PassValidations = False;
   FastCodeQualityLabel = False;
   DllExtension = 'FA3';
 {$ENDIF}
 {$IFDEF MM_FASTMM4}
   {Pierre le Riche's FastMM v4.xx}
   MemoryManager_Name = 'FastMM4';
-  PassValidations = True;
-  FastCodeQualityLabel = True;
+  PassValidations = False;
+  FastCodeQualityLabel = False;
   DllExtension = 'FA4';
 {$ENDIF}
 {$IFDEF MM_FASTMM4_16}
   {Pierre le Riche's FastMM v4.xx}
   MemoryManager_Name = 'FastMM4_16';
-  PassValidations = True;
-  FastCodeQualityLabel = True;
+  PassValidations = False;
+  FastCodeQualityLabel = False;
   DllExtension = 'FA4_16';
 {$ENDIF}
 {$IFDEF MM_HEAPMM}
   {Vladimir Kladov's HeapMM}
   { disabled... identical to WINMEM }
   MemoryManager_Name = 'HeapMM';
-  PassValidations = True;
+  PassValidations = False;
   FastCodeQualityLabel = False;
   DllExtension = 'HPM';
 {$ENDIF}
@@ -215,7 +215,7 @@ you'll get a message that you should change the source code.
   {Carsten Zeumer's LocalHeapMM (Uses the windows heap)}
   { disabled... identical to WINMEM }
   MemoryManager_Name = 'LocalHeapMM';
-  PassValidations = True;
+  PassValidations = False;
   FastCodeQualityLabel = False;
   DllExtension = 'LHM';
 {$ENDIF}
@@ -229,14 +229,14 @@ you'll get a message that you should change the source code.
 {$IFDEF MM_NEXUSMM}
   {NexusDB Memory Manager}
   MemoryManager_Name = 'NexusMM';
-  PassValidations = True;
+  PassValidations = False;
   FastCodeQualityLabel = False;
   DllExtension = 'NEX';
 {$ENDIF}
 {$IFDEF MM_PSDMM}
   {PSDMemoryManager v1.0}
   MemoryManager_Name = 'PSDMM';
-  PassValidations = True;
+  PassValidations = False;
   FastCodeQualityLabel = False;
   DllExtension = 'PSD';
 {$ENDIF}
@@ -250,28 +250,28 @@ you'll get a message that you should change the source code.
 {$IFDEF MM_RECYCLERMM}
   {Eric Grange's RecyclerMM}
   MemoryManager_Name = 'RecyclerMM';
-  PassValidations = True;
+  PassValidations = False;
   FastCodeQualityLabel = False;
   DllExtension = 'REC';
 {$ENDIF}
 {$IFDEF MM_RTLMM}
   { Borland Delphi RTL Memory Manager }
   MemoryManager_Name = 'RTLMM';
-  PassValidations = True;
+  PassValidations = False;
   FastCodeQualityLabel = False;
   DllExtension = 'RTL';
 {$ENDIF}
 {$IFDEF MM_TOPMM}
   {Ivo Top's TopMM}
   MemoryManager_Name = 'TopMM';
-  PassValidations = True; // warning: in its current version TopMM fails the DLL Validation
+  PassValidations = False; // warning: in its current version TopMM fails the DLL Validation
   FastCodeQualityLabel = False;
   DllExtension = 'TOP';
 {$ENDIF}
 {$IFDEF MM_WINMEM}
 	{Mike Lischke's WinMem (Uses the windows heap)}
   MemoryManager_Name = 'WinMem';
-  PassValidations = True;
+  PassValidations = False;
   FastCodeQualityLabel = False;
   DllExtension = 'WIN';
 {$ENDIF}

@@ -10,7 +10,7 @@ var
 implementation
 
 uses
-  Windows, BitOps;
+  Windows, BitOps, SysUtils;
 
 const
   PrimeNumberValuesWords: packed array [0..6541] of Word = (
@@ -752,7 +752,7 @@ const
 function PopCnt16(A: Word): Word; assembler; forward;
 function PopCnt32(A: Cardinal): Cardinal; assembler; forward;
 {$IFDEF WIN64}
-function PopCnt64(A: Cardinal): Cardinal; assembler; forward;
+function PopCnt64(A: Uint64): Uint64; assembler; forward;
 {$ENDIF}
 
 
@@ -760,28 +760,49 @@ function PopCnt64(A: Cardinal): Cardinal; assembler; forward;
 {$IFDEF WIN64}
 function PopCnt16(A: Word): Word; assembler;
 asm
+  xor eax, eax
+{$ifdef unix}
+  popcnt      ax,di
+{$else}
   db $66, $F3, $0F, $B8, $C1 // popcnt      ax,cx
+{$endif}
 end;
 
 function PopCnt32(A: Cardinal): Cardinal; assembler;
 asm
+{$ifdef unix}
+  popcnt      eax,edi
+{$else}
   db $F3, $0F, $B8, $C1  // popcnt      eax,ecx
+{$endif}
 end;
 
-function PopCnt64(A: Cardinal): Cardinal; assembler;
+function PopCnt64(A: Uint64): UInt64; assembler;
 asm
+{$ifdef unix}
+  popcnt      rax,rdi
+{$else}
   db $F3, $48, $0F, $B8, $C1 // popcnt      rax,rcx
+{$endif}
 end;
 
 {$ELSE}
 function PopCnt16(A: Word): Word; assembler;
 asm
-  db $66, $F3, $0F, $B8, $C1 // popcnt      ax,cx
+{$ifdef unix}
+  popcnt      ax,di
+{$else}
+  db $66, $F3, $0F, $B8, $C0 // popcnt ax,ax
+{$endif}
 end;
 
 function PopCnt32(A: Cardinal): Cardinal; assembler;
 asm
-  db $F3, $0F, $B8, $C1  // popcnt      eax,ecx
+{$ifdef unix}
+  popcnt      eax,edi
+{$else}
+   db $F3, $0F, $B8, $C0         // popcnt eax,eax
+{$endif}
 end;
 
 {$ENDIF}
@@ -801,21 +822,16 @@ procedure FindGoodPrimes;
       pc := Byte(PopCnt16(w));
     end;
     nb := Byte(NumBits(w));
-//    PrimePopCnt[i] := pc;
-//    PrimeNumBits[i] := nb;
-    //if nb >= 7 then
+    opc_min := MulDiv(nb, 8, 20);
+    opc_max := MulDiv(nb, 12, 20);
+    if (pc > opc_min) and
+       (pc < opc_max) then
     begin
-      opc_min := MulDiv(nb, 8, 20);
-      opc_max := MulDiv(nb, 12, 20);
-      if (pc > opc_min) and
-         (pc < opc_max) then
-      begin
-        SetLength(VeryGoodPrimes, Length(VeryGoodPrimes)+1);
-        VeryGoodPrimes[Length(VeryGoodPrimes)-1] := w;
-      end else
-      begin
-        w := w;
-      end;
+      SetLength(VeryGoodPrimes, Length(VeryGoodPrimes)+1);
+      VeryGoodPrimes[Length(VeryGoodPrimes)-1] := w;
+    end else
+    begin
+      w := w;
     end;
   end;
 
@@ -823,6 +839,21 @@ var
   i: Integer;
   w: Cardinal;
 begin
+  if (PopCnt16(65407) <> 15) or
+     (PopCnt32(72647) <> 10) or
+     (PopCnt32(65537) <> 2) or
+     (PopCnt32(65535) <> 16) or
+{$ifdef WIN64}
+     (PopCnt64(3825123056546413051) <> 36)or
+{$endif}
+
+     (PopCnt16(65535) <> 16)
+     then
+  begin
+    raise Exception.Create('PopCnt implementation error');
+  end;
+  
+
   for i := Low(PrimeNumberValuesWords) to High(PrimeNumberValuesWords) do
   begin
     w := PrimeNumberValuesWords[i];
