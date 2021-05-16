@@ -5,7 +5,7 @@ program FastcodeMMChallengeBV;
 Fastcode Memory Manager Benchmark and Validation Tool 
 Support for the Win64 platform added by Maxim Masiutin <maxim@masiutin.com>
 
-Version 3.0.1
+Version 3.0.2
 
 Copyright (C) 2003-2013 Dennis Kjaer Christensen and contributors. All rights reserved
 Copyright (C) 2017-2021 Maxim Masiutin. All rights reserved

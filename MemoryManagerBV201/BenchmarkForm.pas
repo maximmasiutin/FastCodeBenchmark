@@ -13,6 +13,7 @@ uses
 
 const
   WM_POSTPROCESSING = WM_USER + 1;
+  WMU_EXTRAVALIDATION = WM_USER + 2;
 
 type
   {The benchmark form}
@@ -89,6 +90,7 @@ type
     procedure SaveSummary;
     procedure ValidationProgress(const CurrentValidation, Failed: string);
     procedure WMPOSTPROCESSING(var msg: TMessage); message WM_POSTPROCESSING;
+    procedure WMUExtraValidation(var msg: TMessage); message WMU_EXTRAVALIDATION;
 
     {Runs a benchmark and returns its relative speed}
     procedure RunBenchmark(ABenchmarkClass: TFastcodeMMBenchmarkClass);
@@ -133,146 +135,111 @@ const
   RESULTS_MEM     = 3;
   RESULTS_TIME    = 4;
 
-{
-PassValidations indicates whether the MM passes all normal validations
-FastCodeQualityLabel indicates whether the MM passes the normal AND the extra validations
-If you execute a validation run and the results do not match the hardcoded values,
-you'll get a message that you should change the source code.
-}
-
+{$IFDEF MM_FASTMM4AVX}
+  {Robert Houdart's BucketMM}
+  MemoryManager_Name = 'FastMM4-AVX';
+  DllExtension = 'AVX';
+{$ENDIF}
 {$IFDEF MM_BUCKETMM}
   {Robert Houdart's BucketMM}
   MemoryManager_Name = 'BucketMM';
-  PassValidations = False;
-  FastCodeQualityLabel = False;
   DllExtension = 'BUC';
 {$ENDIF}
 {$IFDEF MM_BUCKETMM_ASM}
   {Robert Houdart's BucketBasmMM}
   MemoryManager_Name = 'BucketMM_Asm';
-  PassValidations = False;
-  FastCodeQualityLabel = False;
   DllExtension = 'BCA';
 {$ENDIF}
 {$IFDEF MM_BUCKETMMDKC_ASM}
   {Robert Houdart's BucketBasmMM}
   MemoryManager_Name = 'BucketMMDKC_Asm';
-  PassValidations = False;
-  FastCodeQualityLabel = False;
   DllExtension = 'BCA';
 {$ENDIF}
 {$IFDEF MM_DKCIA32MM}
   {Dennis Kjaer Christensen Slowcode challenge entry v0.12}
   MemoryManager_Name = 'DKCIA32MM';
-  PassValidations = False;
-  FastCodeQualityLabel = False;
   DllExtension = 'DKC';
 {$ENDIF}
 {$IFDEF MM_EWCMM}
   {Eric Carman's EWCMM}
   MemoryManager_Name = 'EWCMM';
-  PassValidations = False;
-  FastCodeQualityLabel = False;
   DllExtension = 'EWC';
 {$ENDIF}
 {$IFDEF MM_FASTMM2}
   {Pierre le Riche's FastMM v2.xx}
   MemoryManager_Name = 'FastMM2';
-  PassValidations = False;
-  FastCodeQualityLabel = False;
   DllExtension = 'FA2';
 {$ENDIF}
 {$IFDEF MM_FASTMM3}
   {Pierre le Riche's FastMM v3.xx}
   MemoryManager_Name = 'FastMM3';
-  PassValidations = False;
-  FastCodeQualityLabel = False;
   DllExtension = 'FA3';
+{$ENDIF}
+{$IFDEF MM_FASTMM5}
+  {Pierre le Riche's FastMM v5.xx}
+  MemoryManager_Name = 'FastMM45';
+  DllExtension = 'FA5';
 {$ENDIF}
 {$IFDEF MM_FASTMM4}
   {Pierre le Riche's FastMM v4.xx}
   MemoryManager_Name = 'FastMM4';
-  PassValidations = False;
-  FastCodeQualityLabel = False;
   DllExtension = 'FA4';
 {$ENDIF}
 {$IFDEF MM_FASTMM4_16}
   {Pierre le Riche's FastMM v4.xx}
   MemoryManager_Name = 'FastMM4_16';
-  PassValidations = False;
-  FastCodeQualityLabel = False;
   DllExtension = 'FA4_16';
 {$ENDIF}
 {$IFDEF MM_HEAPMM}
   {Vladimir Kladov's HeapMM}
   { disabled... identical to WINMEM }
   MemoryManager_Name = 'HeapMM';
-  PassValidations = False;
-  FastCodeQualityLabel = False;
   DllExtension = 'HPM';
 {$ENDIF}
 {$IFDEF MM_LOCALHEAP}
   {Carsten Zeumer's LocalHeapMM (Uses the windows heap)}
   { disabled... identical to WINMEM }
   MemoryManager_Name = 'LocalHeapMM';
-  PassValidations = False;
-  FastCodeQualityLabel = False;
   DllExtension = 'LHM';
 {$ENDIF}
 {$IFDEF MM_MULTIMM}
   {Robert Lee's HPMM}
   MemoryManager_Name = 'MultiMM';
-  PassValidations = False;
-  FastCodeQualityLabel = False;
   DllExtension = 'MMM';
 {$ENDIF}
 {$IFDEF MM_NEXUSMM}
   {NexusDB Memory Manager}
   MemoryManager_Name = 'NexusMM';
-  PassValidations = False;
-  FastCodeQualityLabel = False;
   DllExtension = 'NEX';
 {$ENDIF}
 {$IFDEF MM_PSDMM}
   {PSDMemoryManager v1.0}
   MemoryManager_Name = 'PSDMM';
-  PassValidations = False;
-  FastCodeQualityLabel = False;
   DllExtension = 'PSD';
 {$ENDIF}
 {$IFDEF MM_QMEMORY}
   {Andrew Driazgov's QMemory}
   MemoryManager_Name = 'QMemory';
-  PassValidations = False;
-  FastCodeQualityLabel = False;
   DllExtension = 'QMM';
 {$ENDIF}
 {$IFDEF MM_RECYCLERMM}
   {Eric Grange's RecyclerMM}
   MemoryManager_Name = 'RecyclerMM';
-  PassValidations = False;
-  FastCodeQualityLabel = False;
   DllExtension = 'REC';
 {$ENDIF}
 {$IFDEF MM_RTLMM}
   { Borland Delphi RTL Memory Manager }
   MemoryManager_Name = 'RTLMM';
-  PassValidations = False;
-  FastCodeQualityLabel = False;
   DllExtension = 'RTL';
 {$ENDIF}
 {$IFDEF MM_TOPMM}
   {Ivo Top's TopMM}
   MemoryManager_Name = 'TopMM';
-  PassValidations = False; // warning: in its current version TopMM fails the DLL Validation
-  FastCodeQualityLabel = False;
   DllExtension = 'TOP';
 {$ENDIF}
 {$IFDEF MM_WINMEM}
 	{Mike Lischke's WinMem (Uses the windows heap)}
   MemoryManager_Name = 'WinMem';
-  PassValidations = False;
-  FastCodeQualityLabel = False;
   DllExtension = 'WIN';
 {$ENDIF}
 
@@ -416,27 +383,6 @@ begin
   MemoValidation.Lines.Clear;
 
   PageControl1.ActivePage := TabSheetBenchmarkResults;
-
-  if FastCodeQualityLabel then
-  begin
-    ExtraValidateButton.Font.Color := clGreen;
-    ExtraValidateButton.Caption := 'FastCode Quality Label';
-  end
-  else
-  begin
-    ExtraValidateButton.Font.Color := clRed;
-    ExtraValidateButton.Caption := 'No FastCode Quality Label';
-  end;
-  if PassValidations then
-  begin
-    ValidateButton.Font.Color := clGreen;
-    ValidateButton.Caption := 'Passes Validations';
-  end
-  else
-  begin
-    ValidateButton.Font.Color := clRed;
-    ValidateButton.Caption := 'Does not Pass Validations';
-  end;
 
   if ParamCount > 0 then
     PostMessage(Handle, WM_POSTPROCESSING, 0, 0)
@@ -602,9 +548,9 @@ begin
    MemoValidation.Color := clLime;
    MemoValidation.Lines.Clear;
    PageControl1.ActivePage := TabSheetValidation;
-    Enabled := False;
-    Application.ProcessMessages;
-    Enabled := True;
+   Enabled := False;
+   Application.ProcessMessages;
+   Enabled := True;
    // execute Validation
    if not (FValidationHasBeenRun or FExtraValidationHasBeenRun)then
      AddValidationToLog;
@@ -613,7 +559,9 @@ begin
      FailedValidation := FMMValidation.ExtraValidate;
      FExtraValidationFailures := FailedValidation;
      FExtraValidationHasBeenRun := True;
-     // Application.ProcessMessages;
+     Enabled := False;
+     Application.ProcessMessages;
+     Enabled := True;
      UpdateValidationInLog;
    end
    else
@@ -621,7 +569,9 @@ begin
      FailedValidation := FMMValidation.Validate;
      FValidationFailures := FailedValidation;
      FValidationHasBeenRun := True;
-     // Application.ProcessMessages;
+     Enabled := False;
+     Application.ProcessMessages;
+     Enabled := True;
      UpdateValidationInLog;
    end;
 
@@ -630,9 +580,26 @@ begin
    begin
      MemoValidation.Color := clGreen;
      MemoValidation.Lines.Add('Passed All Validations!');
+     if Sender = ExtraValidateButton then
+     begin
+       ExtraValidateButton.Font.Color := clGreen;
+       ExtraValidateButton.Caption := 'FastCode Quality Label';
+     end else
+     begin
+       ValidateButton.Font.Color := clGreen;
+       ValidateButton.Caption := 'Passed Validations';
+       if ExtraValidateButton.Font.Color <> clGreen then
+       begin
+         PostMessage(Handle, WMU_EXTRAVALIDATION, 0, 0);
+       end;
+     end;
    end
    else
    begin
+     ExtraValidateButton.Font.Color := clRed;
+     ExtraValidateButton.Caption := 'Failed to get the FastCode Quality Label';
+     ValidateButton.Font.Color := clRed;
+     ValidateButton.Caption := 'Did not Pass Validations';
      MemoValidation.Color := clRed;
      MemoValidation.Lines.Add('Failed Validations: ' + FailedValidation);
    end;
@@ -1150,6 +1117,12 @@ begin
 end;
 
 // ----------------------------------------------------------------------------
+procedure TfBenchmark.WMUExtraValidation(var msg: TMessage);
+begin
+  ExtraValidateButton.Click;
+end;
+
+
 procedure TfBenchmark.WMPOSTPROCESSING(var msg: TMessage);
 begin
   if FindCmdLineSwitch('SmokeTest', ['-', '/'], True) then

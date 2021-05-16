@@ -1,5 +1,9 @@
 FastCode Memory Manager Benchmark and Validation tool
-Version 3.0.1
+Version 3.0.2
+
+16-May-2021 (3.0.2)
+-------------------
+Validation suites might not work properly
 
 17-Jan-2021 (3.0.1)
 -------------------

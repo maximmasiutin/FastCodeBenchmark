@@ -1,9 +1,9 @@
-unit MMValidation;
+﻿unit MMValidation;
 
 interface
 
 uses
-  Windows, SysUtils, Classes, Math;
+  SysUtils, Classes, Math;
 
 type
   TValidateFunction = function: Boolean of object;
@@ -63,6 +63,7 @@ type
     function Validate47: Boolean;
     function Validate48: Boolean;
     function Validate49: Boolean;
+    function Validate50: Boolean;
   private
     procedure DoValidate(ValidateFunction: TValidateFunction; const ValidationName: string);
   public
@@ -82,11 +83,14 @@ end;
 implementation
 
 uses
+  WinApi.Windows,
   BenchmarkForm, BenchmarkUtilities, PrimeNumbers;
 
+(*
 {$IFDEF WIN64}
 {$define SkipGlobalMemoryStatusCheck}
 {$ENDIF}
+*)
 
 {$ifdef SkipGlobalMemoryStatusCheck}
 procedure GlobalMemoryStatus(var lpBuffer: TMemoryStatus); inline;
@@ -113,7 +117,7 @@ begin
 {$IFDEF WIN64}
   Sleep(50); { 1/20th of a second should be enough}
 {$ELSE}
-  Sleep(10000); { 10 seconds }
+  Sleep(1000); { 1 second }
 {$ENDIF}
 end;
 
@@ -122,7 +126,6 @@ end;
 function TMMValidation.Validate: string;
 begin
   FFailedList := '';
-
   DoValidate({$IFDEF FPC}@{$ENDIF}Validate1, 'Validate1');
   DoValidate({$IFDEF FPC}@{$ENDIF}Validate2, 'Validate2');
   DoValidate({$IFDEF FPC}@{$ENDIF}Validate3, 'Validate3');
@@ -142,7 +145,6 @@ begin
   DoValidate({$IFDEF FPC}@{$ENDIF}Validate20, 'Validate20');
   DoValidate({$IFDEF FPC}@{$ENDIF}Validate21, 'Validate21');
   DoValidate({$IFDEF FPC}@{$ENDIF}Validate22, 'Validate22');
-  DoValidate({$IFDEF FPC}@{$ENDIF}Validate24, 'Validate24');
   DoValidate({$IFDEF FPC}@{$ENDIF}Validate25, 'Validate25');
   DoValidate({$IFDEF FPC}@{$ENDIF}Validate26, 'Validate26');
   DoValidate({$IFDEF FPC}@{$ENDIF}Validate28, 'Validate28');
@@ -238,14 +240,19 @@ end;
 function TMMValidation.ExtraValidate: string;
 begin
   FFailedList := '';
-
+  DoValidate({$IFDEF FPC}@{$ENDIF}Validate13, 'Validate13');
   DoValidate({$IFDEF FPC}@{$ENDIF}Validate15, 'Validate15');
   DoValidate({$IFDEF FPC}@{$ENDIF}Validate16, 'Validate16');
   DoValidate({$IFDEF FPC}@{$ENDIF}Validate18, 'Validate18');
   DoValidate({$IFDEF FPC}@{$ENDIF}Validate20, 'Validate20');
+  DoValidate({$IFDEF FPC}@{$ENDIF}Validate24, 'Validate24');
   DoValidate({$IFDEF FPC}@{$ENDIF}Validate27, 'Validate27');
+  DoValidate({$IFDEF FPC}@{$ENDIF}Validate29, 'Validate29');
+  DoValidate({$IFDEF FPC}@{$ENDIF}Validate30, 'Validate30');
+  DoValidate({$IFDEF FPC}@{$ENDIF}Validate31, 'Validate31');
   DoValidate({$IFDEF FPC}@{$ENDIF}Validate32, 'Validate32');
-
+  DoValidate({$IFDEF FPC}@{$ENDIF}Validate33, 'Validate33');
+  DoValidate({$IFDEF FPC}@{$ENDIF}Validate50, 'Validate50');
   Result := FFailedList;
 end;
 
@@ -297,6 +304,7 @@ const
  BYTESTOALLOCATE = 1;//1 byte
 
 begin
+ FillChar(MemoryStatus, SizeOf(MemoryStatus), 0);
  GlobalMemoryStatus(MemoryStatus);
  try
   Result := True;
@@ -315,6 +323,8 @@ const
  BYTESTOALLOCATE = 1;//1 byte
 
 begin
+ Result := False;
+ FillChar(MemoryStatus, SizeOf(MemoryStatus), 0);
  GlobalMemoryStatus(MemoryStatus);
  try
   Result := True;
@@ -339,6 +349,8 @@ const
  BYTESTOALLOCATEMAX = 2;//2 byte
 
 begin
+ Result := False;
+ FillChar(MemoryStatus, SizeOf(MemoryStatus), 0);
  GlobalMemoryStatus(MemoryStatus);
  try
   Result := True;
@@ -369,6 +381,8 @@ const
  BYTESTOALLOCATEMAX = 32000;//32 KB
 
 begin
+ Result := False;
+ FillChar(MemoryStatus, SizeOf(MemoryStatus), 0);
  GlobalMemoryStatus(MemoryStatus);
  try
   Result := True;
@@ -385,7 +399,7 @@ begin
        end;
       Inc(PChr);
      end;
-    FreeMem(pMem);
+    FreeMem(pMem, BYTESTOALLOCATEMAX);
    end;
  except
   Result := False;
@@ -402,6 +416,8 @@ const
  NOOFITERATIONS = 100000;
 
 begin
+ Result := False;
+ FillChar(MemoryStatus, SizeOf(MemoryStatus), 0);
  GlobalMemoryStatus(MemoryStatus);
  try
   Result := True;
@@ -428,6 +444,8 @@ const
  NOOFITERATIONS = 5000000;
 
 begin
+ Result := False;
+ FillChar(MemoryStatus, SizeOf(MemoryStatus), 0);
  GlobalMemoryStatus(MemoryStatus);
  try
   Result := True;
@@ -438,7 +456,7 @@ begin
       //Allocate
       GetMem(pMem, BYTESTOALLOCATE);
       //Free
-      FreeMem(pMem);
+      FreeMem(pMem, BYTESTOALLOCATE);
      end;
    end;
  except
@@ -465,6 +483,7 @@ begin
   Result := True;
   for I2 := Low(PointerArray) to High(PointerArray) do
    begin
+    FillChar(MemoryStatus, SizeOf(MemoryStatus), 0);
     GlobalMemoryStatus(MemoryStatus);
     if MemoryStatus.dwAvailVirtual >= BYTESTOALLOCATE then
      begin
@@ -487,7 +506,7 @@ begin
   for I3 := Low(PointerArray) to High(PointerArray) do
    begin
     pMem := PointerArray[I3];
-    FreeMem(pMem);
+    FreeMem(pMem, BYTESTOALLOCATE);
     PointerArray[I3] := nil;
    end;
  except
@@ -511,6 +530,7 @@ begin
   Result := True;
   for I2 := 1 to Length(PointerArray) do
    begin
+    FillChar(MemoryStatus, SizeOf(MemoryStatus), 0);
     GlobalMemoryStatus(MemoryStatus);
     if MemoryStatus.dwAvailVirtual >= BYTESTOALLOCATE then
      begin
@@ -533,7 +553,7 @@ begin
   for I3 := 1 to Length(PointerArray) do
    begin
     pMem := PointerArray[I3];
-    FreeMem(pMem);
+    FreeMem(pMem, BYTESTOALLOCATE);
     PointerArray[I3] := nil;
    end;
  except
@@ -547,6 +567,7 @@ const
   CIterations = 200;
 var
  Prime, I1, I2, I3, J1, J2, BytesToAllocate : Cardinal;
+ BytesToAllocate_SIZET: WinApi.Windows.SIZE_T;
  pMem : Pointer;
  NI1, NI2: NativeInt;
  A: NativeUint;
@@ -569,8 +590,10 @@ begin
     end;
     for I2 := 1 to Length(PointerArray) do
      begin
+      FillChar(MemoryStatus, SizeOf(MemoryStatus), 0);
       GlobalMemoryStatus(MemoryStatus);
-      if MemoryStatus.dwAvailVirtual >= BytesToAllocate then
+      BytesToAllocate_SIZET := BytesToAllocate;
+      if MemoryStatus.dwAvailVirtual >= BytesToAllocate_SIZET then
        begin
         //Allocate all pointers
         GetMem(pMem, BytesToAllocate);
@@ -594,7 +617,7 @@ begin
     for I3 := 1 to Length(PointerArray) do
      begin
       pMem := PointerArray[I3];
-      FreeMem(pMem);
+      FreeMem(pMem, BytesToAllocate);
       PointerArray[I3] := nil;
      end;
    end;
@@ -614,6 +637,7 @@ const
  BYTESTOALLOCATE = 1*1000*1000;//1 MB
 
 begin
+ FillChar(MemoryStatus, SizeOf(MemoryStatus), 0);
  GlobalMemoryStatus(MemoryStatus);
  try
   Result := True;
@@ -639,7 +663,8 @@ function TMMValidation.Validate11 : Boolean;
 const
   CIterations = 32*1000;
 var
- I, J, K, L, NoOfStrings  : Cardinal;
+ I, J, K, L, NoOfStrings: Cardinal;
+ I_SIZET: WinApi.Windows.SIZE_T;
  SomeArray : array of Cardinal;
  StringArray : array[1..523{PrimeNumber}] of Ansistring;
  TempS : AnsiString;
@@ -659,8 +684,10 @@ begin
     //Grow a string with an 'A'
     StringArray[(I mod NoOfStrings) + 1] := StringArray[(I mod Cardinal(Length(StringArray)))+1] + 'A';
     //Grow SomeArray if place for it
+    FillChar(MemoryStatus, SizeOf(MemoryStatus), 0);
     GlobalMemoryStatus(MemoryStatus);
-    if MemoryStatus.dwAvailVirtual >= I+1 then
+    I_SIZET := I;
+    if MemoryStatus.dwAvailVirtual > I_SIZET then
      SetLength(SomeArray, I+1);
     SomeArray[I] := I;
     //Validate that SomeArray data are not changed
@@ -704,6 +731,7 @@ var
  SomeArray : array of array of Cardinal;
  MemoryStatus : TMemoryStatus;
  I1, I2, I3, I4, I5, IMax : Cardinal;
+ I_SIZET: WinApi.Windows.SIZE_T;
 begin
  Result := True;
  if ShortRun then
@@ -711,6 +739,7 @@ begin
  else
    IMax := CSquareSideLengthCardinalLongRun;
 
+ FillChar(MemoryStatus, SizeOf(MemoryStatus), 0);
  GlobalMemoryStatus(MemoryStatus);
  try
   //Grow array
@@ -718,7 +747,8 @@ begin
   SomeArray[0,0] := 0;
   for I1 := 2 to IMax do
    begin
-    if MemoryStatus.dwAvailVirtual >= I1*I1 then
+    I_SIZET := I1*I1;
+    if MemoryStatus.dwAvailVirtual >= I_SIZET then
      begin
       SetLength(SomeArray, I1, I1);
       //Old data preserved? (0's in first iteration)
@@ -777,8 +807,10 @@ var
  SomeArray : packed array of packed array of Word;
  MemoryStatus : TMemoryStatus;
  I1, I2, I3, I4, I5, IMax : Cardinal;
+ I_SIZET: WinAPI.Windows.SIZE_T;
 begin
  Result := True;
+ FillChar(MemoryStatus, SizeOf(MemoryStatus), 0);
  GlobalMemoryStatus(MemoryStatus);
  if ShortRun then
    IMax := CSquareSideLengthWordShortRun
@@ -790,7 +822,8 @@ begin
   SomeArray[0,0] := GetWordByXY_40(0, 0, IMax);
   for I1 := 2 to IMax do
    begin
-    if MemoryStatus.dwAvailVirtual >= I1*I1 then
+    I_SIZET := I1*I1;
+    if MemoryStatus.dwAvailVirtual >= I_SIZET then
      begin
       SetLength(SomeArray, I1, I1);
       //Old data preserved? (0's in first iteration)
@@ -846,10 +879,14 @@ var
  IMax : Cardinal;
  X, Y: Cardinal;
  I: Integer;
-J: Integer;
+ J: Integer;
+ MemBegin, MemEnd: WinAPI.Windows.Size_T;
 begin
  Result := True;
+ SleepAfterMemoryConsumingTest;
+ FillChar(MemoryStatus, SizeOf(MemoryStatus), 0);
  GlobalMemoryStatus(MemoryStatus);
+ MemBegin := MemoryStatus.dwAvailVirtual;
  if ShortRun then
    IMax := CSquareSideLengthWordShortRun
  else
@@ -911,6 +948,12 @@ begin
  except
   Result := False;
  end;
+ SleepAfterMemoryConsumingTest;
+ FillChar(MemoryStatus, SizeOf(MemoryStatus), 0);
+ GlobalMemoryStatus(MemoryStatus);
+ MemEnd := MemoryStatus.dwAvailVirtual;
+ if MemEnd > MemBegin then
+   Sleep(0);
 end;
 
 
@@ -928,9 +971,13 @@ var
  SomeArray : array of array of Cardinal;
  MemoryStatus : TMemoryStatus;
  I1, I2, I3, I4, I5, IMax : Cardinal;
+ MemBegin, MemEnd: WinApi.Windows.Size_T;
 begin
  Result := True;
+ SleepAfterMemoryConsumingTest;
+ FillChar(MemoryStatus, SizeOf(MemoryStatus), 0);
  GlobalMemoryStatus(MemoryStatus);
+ MemBegin := MemoryStatus.dwAvailVirtual;
  IMax := CSquareSideLengthCardinal;
  try
   //Grow array
@@ -969,6 +1016,12 @@ begin
  except
   Result := False;
  end;
+ SleepAfterMemoryConsumingTest;
+ FillChar(MemoryStatus, SizeOf(MemoryStatus), 0);
+ GlobalMemoryStatus(MemoryStatus);
+ MemBegin := MemoryStatus.dwAvailVirtual;
+ if MemEnd > MemBegin then
+   Sleep(0);
 end;
 
 // stress test... pushing the MM to an "Out of Memory" by allocating 16 kB pointers
@@ -991,6 +1044,7 @@ var
  Pointers: PPointers;
  n : integer;
 begin
+ Result := False;
  New(Pointers);
  try
    n := 0;
@@ -1019,7 +1073,7 @@ begin
    while n > 0 do
     begin
      Dec(n);
-     FreeMem(Pointers^[n]);
+     FreeMem(Pointers^[n], BlockSize);
     end;
  finally
    Dispose(Pointers);
@@ -1034,17 +1088,20 @@ var
  MemoryStatus : TMemoryStatus;
  BytesToAllocate, I: Cardinal;
  StartAddress : Pointer;
+ SizeT: WinApi.Windows.Size_T;
 const
  BYTESTOALLOCATEMIN = 70 * 1024;//70 Kbyte
  BYTESTOALLOCATEMAX = 80 * 1024;//80 Kbyte
 
 begin
+ FillChar(MemoryStatus, SizeOf(MemoryStatus), 0);
  GlobalMemoryStatus(MemoryStatus);
  try
   Result := True;
   for BytesToAllocate := BYTESTOALLOCATEMIN to BYTESTOALLOCATEMAX do
    begin
-    if MemoryStatus.dwAvailVirtual >= BytesToAllocate then
+    SizeT := BytesToAllocate;
+    if MemoryStatus.dwAvailVirtual >= SizeT then
      begin
       //Allocate
       SetLength(SomeArray, BytesToAllocate);
@@ -1069,58 +1126,77 @@ end;
 function TMMValidation.Validate15: boolean;
 var
  Ptr: Pointer;
-
+const
+  CSize = 10;
 begin
+ Result := False;
  {Allocate a block}
- GetMem(Ptr, 10);
+ GetMem(Ptr, CSize);
  {Free it}
- FreeMem(Ptr);
+ FreeMem(Ptr, CSize);
  {Try to free it again and see whether the MM catches the error}
  try
-  FreeMem(Ptr);
+  FreeMem(Ptr, CSize);
   Result := False;
  except
-  Result := True;
+   on E: EInvalidPointer do
+     Result := True; // when we are trying to release a memory twice, we should get EInvalidPointer
+   else
+     Result := False;
  end;
 end;
 
 function TMMValidation.Validate16: boolean;
 const
-  CIterations = 100;
+  CPrimes : array[0..64] of Word = (
+    131,137,149,157,163,179,193,211,227,241,257,277,283,293,307,331,359,389,443,
+    449,487,541,619,631,733,739,877,881,967,1061,1259,1277,1499,1511,1801,1811,
+    1984,2176,2273,2281,2287,2293,2297,2309,2311,2333,2339,2341,2347,2351,2357,
+    2371,2377,2381,2383,2389,2393,2399,2411,2417,2423,2437,2441,2447,2459);
+  CIterationsIn  = 3;
+  CIterationsOut = 2;
 var
-  i: integer;
+  i, j, k, SIZE_TO_ALLOCATE: integer;
   t1: pointer;
   t2: pointer;
-const
-  TRY_TIMES = CIterations;
-  SIZE_TO_ALLOCATE = 127{prime};
 begin
-  i := TRY_TIMES;
-  while (i <> 0) do
+  Result := False;
+  for k := 0 to CIterationsOut-1 do
   begin
-    dec(i);
-    try
-      GetMem(t1, SIZE_TO_ALLOCATE);
-      FreeMem(t1);
-      FreeMem(t1);
-      Result := False;
-      exit;
-    except
-    end;
-
-    GetMem(t1, SIZE_TO_ALLOCATE);
-    GetMem(t2, SIZE_TO_ALLOCATE);
-    if (t1 = t2) then
+    for j := Low(CPrimes) to High(CPrimes) do
     begin
-      result := false;
-      exit;
+      SIZE_TO_ALLOCATE := CPrimes[j];
+      i := CIterationsIn;
+      while (i <> 0) do
+      begin
+        dec(i);
+        GetMem(t1, SIZE_TO_ALLOCATE);
+        FreeMem(t1, SIZE_TO_ALLOCATE);
+        try
+          FreeMem(t1, SIZE_TO_ALLOCATE); // try to free two times -- it should give an exception!
+          Result := False;
+          Exit;
+        except
+             on E: EInvalidPointer do
+               Result := True; // when we are trying to release a memory twice, we should get EInvalidPointer
+             else
+               Result := False;
+        end;
+
+        t1 := nil;
+        t2 := nil;
+        GetMem(t1, SIZE_TO_ALLOCATE);
+        GetMem(t2, SIZE_TO_ALLOCATE);
+        if (t1 = t2) then
+        begin
+          result := false;
+          exit;
+        end;
+        FreeMem(t1, SIZE_TO_ALLOCATE);
+        FreeMem(t2, SIZE_TO_ALLOCATE);
+      end;
     end;
-
-    FreeMem(t1);
-    FreeMem(t2);
   end;
-
-  Result := True;
 end;
 
 var
@@ -1173,6 +1249,7 @@ const
   BYTESTOALLOCATEMAX = BYTESTOALLOCATE*4;
 begin
   SomePointer := nil;
+  FillChar(MemoryStatus, SizeOf(MemoryStatus), 0);
   GlobalMemoryStatus(MemoryStatus);
   try
     if MemoryStatus.dwAvailVirtual >= BYTESTOALLOCATE then
@@ -1259,6 +1336,7 @@ var
  BYTESTOALLOCATEMIN: Cardinal;
  PrimeIndex: Integer;
  CFillByte: Byte;
+ InitialSizeT: WinAPI.WIndows.Size_T;
 const
  CIterationCount = 12;
  CFillStep = 4093;
@@ -1270,7 +1348,9 @@ begin
  Result := True;
  if ShortRun then MMax := BYTESTOALLOCATEMAX_SHORT_RUN else MMax := BYTESTOALLOCATEMAX_LONG_RUN;
  PrimeIndex := Low(VeryGoodPrimes);
+ FillChar(MemoryStatus, SizeOf(MemoryStatus), 0);
  GlobalMemoryStatus(MemoryStatus);
+ InitialSizeT := MemoryStatus.dwAvailVirtual;
  for Iter := 1 to CIterationCount do
  try
   BYTESTOALLOCATEMIN := VeryGoodPrimes[PrimeIndex];
@@ -1284,7 +1364,7 @@ begin
   BytesToAllocate := BYTESTOALLOCATEMIN;
   while BytesToAllocate <= MMax do
    begin
-    if MemoryStatus.dwAvailVirtual >= BytesToAllocate then
+    if InitialSizeT >= BytesToAllocate then
      begin
       //Allocate
       SetLength(SomeArray, BytesToAllocate);
@@ -1340,6 +1420,7 @@ var
  MemoryStatus : TMemoryStatus;
  pInt : PPointer;
  RefData : Pointer;
+ SizeT: WinApi.WIndows.SIZE_T;
 const
  BYTESTOALLOCATEMAX = 2500;//2.5 Kbyte per pointer max
  RUNNOMAX = CIterations;
@@ -1380,8 +1461,10 @@ begin
 
 
 
+      FillChar(MemoryStatus, SizeOf(MemoryStatus), 0);
       GlobalMemoryStatus(MemoryStatus);
-      if MemoryStatus.dwAvailVirtual >= BytesToAllocate then
+      SizeT := BytesToAllocate;
+      if MemoryStatus.dwAvailVirtual >= SizeT then
        begin
         //Allocate all pointers
         GetMem(pMem, BytesToAllocate);
@@ -1445,7 +1528,7 @@ begin
     for I3 := Low(PointerArray) to High(PointerArray) do
      begin
       pMem := PointerArray[I3];
-      FreeMem(pMem);
+      FreeMem(pMem, BytesToAllocate);
       PointerArray[I3] := nil;
      end;
    end;
@@ -1459,6 +1542,7 @@ var
  SomeArray : array of Byte;
  MemoryStatus : TMemoryStatus;
  C: Cardinal;
+ SizeT: WinAPI.Windows.Size_T;
 const
  BYTESTOALLOCATE_LONG = 1024*1024*1024;//1G
  BYTESTOALLOCATE_SHORT = 5*1024*1024;//5M
@@ -1472,10 +1556,12 @@ begin
     C := BYTESTOALLOCATE_LONG;
   end;
 
+ FillChar(MemoryStatus, SizeOf(MemoryStatus), 0);
  GlobalMemoryStatus(MemoryStatus);
  try
   Result := True;
-  if MemoryStatus.dwAvailVirtual >= C then
+  SizeT := C;
+  if MemoryStatus.dwAvailVirtual >= SizeT then
    SetLength(SomeArray, C);
  except
   Result := False;
@@ -1498,6 +1584,7 @@ var
   PrimeIdx: Integer;
   Executed, Skipped: Integer;
   Total: LONG;
+  SizeT: WinAPI.Windows.Size_T;
 const
   CSkipPrimeOnShortRun = 3; // a prime number, skip each N-th run on a short run
   SMALLALLOCSIZEMIN = 1;//1 byte
@@ -1537,8 +1624,10 @@ begin
           Total := InterlockedAdd(TotalAllocatedByValidate21, BigAllocSize+SmallAllocSize);
           if Total < MaxAllowedByValidate21 then
           begin
+            FillChar(MemoryStatus, SizeOf(MemoryStatus), 0);
             GlobalMemoryStatus(MemoryStatus);
-            if MemoryStatus.dwAvailVirtual >= BigAllocSize+SmallAllocSize then
+            SizeT := BigAllocSize+SmallAllocSize;
+            if MemoryStatus.dwAvailVirtual >= SizeT then
             begin
               SetLength(SomeArray, SmallAllocSize);
               for I1 := 0 to SmallAllocSize-1 do
@@ -1588,6 +1677,7 @@ var
  BytesToAllocate, I2, I3, OldBytesToAllocate : Cardinal;
  StartAddress: Pointer;
  IterationCounter: Int64;
+ SizeT: WinAPI.Windows.Size_T;
 const
  BYTESTOALLOCATESTEPSIZE = 2;
  BYTESTOALLOCATEMIN = 5;//5 byte
@@ -1609,8 +1699,10 @@ begin
     begin
       if Odd(IterationCounter) then Continue;
     end;
+    FillChar(MemoryStatus, SizeOf(MemoryStatus), 0);
     GlobalMemoryStatus(MemoryStatus);
-    if MemoryStatus.dwAvailVirtual >= BytesToAllocate then
+    SizeT := BytesToAllocate;
+    if MemoryStatus.dwAvailVirtual >= SizeT then
      begin
       //Reallocate
       SetLength(SomeArray, BytesToAllocate);
@@ -1655,7 +1747,7 @@ function TMMValidation.Validate23 : Boolean;
 var
  MemoryStatus : TMemoryStatus;
  PointerArray : array of Pointer;
- I, IntitialFreeMemory, EndFreeMemory : Integer;
+ I, IntitialFreeMemlory, EndFreeMemory : Integer;
  AllocSize : Integer;
  AllocSizeFP : Double;
 const
@@ -1714,79 +1806,96 @@ var
  PointerArray : packed array of Pointer;
  SizeArray : packed array of Cardinal;
  I: Integer;
- FreeMemoryRun1, FreeMemoryLastRun : NativeUInt;
+ FreeMemoryRun1, FreeMemoryLastRun : WinAPI.Windows.Size_T;
  AllocSize, RunNo : Integer;
  AllocSizeFP : Double;
  Total: ULONG;
+ RunAgain, FirstRun: Boolean;
 const
  NOOFPOINTERS = 1000000;
  ALLOCGROWSTEPSIZE : Double = 0.001;
-// SLEEPTIMEAFTERFREE = 10;//Seconds to free
  SLACK = 100*1024;
 
 begin
- try
-  FreeMemoryRun1 := 0;//For compiler
-  for RunNo := 1 to 2 do
-   begin
-    Result := True;
-    //Allocate
-    SetLength(PointerArray, NOOFPOINTERS);
-    SetLength(SizeArray, NOOFPOINTERS);
-
-    for I:= 0 to Length(PointerArray)-1 do
-    begin
-      PointerArray[I] := nil;
-      SizeArray[I] := 0;
-    end;
-
-    AllocSizeFP := 1;
-    for I:= 0 to Length(PointerArray)-1 do
+ FirstRun := True;
+ repeat
+   RunAgain := False;
+   try
+    FreeMemoryRun1 := 0;//For compiler
+    for RunNo := 1 to 2 do
      begin
-      AllocSizeFP := AllocSizeFP + ALLOCGROWSTEPSIZE;
-      AllocSize := Round(AllocSizeFP);
-      Total := InterlockedAdd(TotalAllocatedByValidate24, AllocSize);
-      if Total < MaxAllowedToAllocateForValidate24 then
+      Result := True;
+      //Allocate
+      SetLength(PointerArray, NOOFPOINTERS);
+      SetLength(SizeArray, NOOFPOINTERS);
+
+      for I:= 0 to Length(PointerArray)-1 do
       begin
-        SizeArray[I] := AllocSize;
-        GetMem(PointerArray[I], AllocSize);
-      end else
-      begin
-        InterlockedAdd(TotalAllocatedByValidate24, -AllocSize);
-      end;
-     end;
-    //Free
-    for I:= 0 to Length(PointerArray)-1 do
-    begin
-      if PointerArray[I] <> nil then
-      begin
-        AllocSize := SizeArray[I];
-        InterlockedAdd(TotalAllocatedByValidate24, -AllocSize);
-        FreeMem(PointerArray[I], AllocSize);
         PointerArray[I] := nil;
         SizeArray[I] := 0;
       end;
-    end;
-    SetLength(PointerArray, 0);
-    SetLength(SizeArray, 0);
-    //Give a little time to free
-//    Sleep(SLEEPTIMEAFTERFREE*1000);
-    GlobalMemoryStatus(MemoryStatus);
-    if RunNo = 1 then
-    begin
-     FreeMemoryRun1 := MemoryStatus.dwAvailVirtual
-    end
-    else
-     begin
-      FreeMemoryLastRun := MemoryStatus.dwAvailVirtual;
-      //Did memory usage increase?
-      if FreeMemoryLastRun < (FreeMemoryRun1 - SLACK) then
-       Result := False;
+
+      AllocSizeFP := 1;
+      for I:= 0 to Length(PointerArray)-1 do
+       begin
+        AllocSizeFP := AllocSizeFP + ALLOCGROWSTEPSIZE;
+        AllocSize := Round(AllocSizeFP);
+        Total := InterlockedAdd(TotalAllocatedByValidate24, AllocSize);
+        if Total < MaxAllowedToAllocateForValidate24 then
+        begin
+          SizeArray[I] := AllocSize;
+          GetMem(PointerArray[I], AllocSize);
+        end else
+        begin
+          InterlockedAdd(TotalAllocatedByValidate24, -AllocSize);
+        end;
+       end;
+      //Free
+      for I:= 0 to Length(PointerArray)-1 do
+      begin
+        if PointerArray[I] <> nil then
+        begin
+          AllocSize := SizeArray[I];
+          InterlockedAdd(TotalAllocatedByValidate24, -AllocSize);
+          FreeMem(PointerArray[I], AllocSize);
+          PointerArray[I] := nil;
+          SizeArray[I] := 0;
+        end;
+      end;
+      SetLength(PointerArray, 0); Finalize(PointerArray);
+      SetLength(SizeArray, 0); Finalize(SizeArray);
+      FillChar(MemoryStatus, SizeOf(MemoryStatus), 0);
+      //Give a little time to free
+      SleepAfterMemoryConsumingTest;
+      GlobalMemoryStatus(MemoryStatus);
+      if RunNo = 1 then
+      begin
+       FreeMemoryRun1 := MemoryStatus.dwAvailVirtual
+      end
+      else
+       begin
+        FreeMemoryLastRun := MemoryStatus.dwAvailVirtual;
+        //Did memory usage increase?
+        if FreeMemoryLastRun < (FreeMemoryRun1 - SLACK) then
+        begin
+          Result := False;
+          if not FirstRun then Break;
+          FirstRun := False;
+          SleepAfterMemoryConsumingTest;
+          GlobalMemoryStatus(MemoryStatus);
+          FreeMemoryRun1 := MemoryStatus.dwAvailVirtual;
+          RunAgain := True;
+        end else
+        begin
+          Result := True;
+          Break;
+        end;
+       end;
      end;
+   except
+    Result := False;
    end;
- except
-  Result := False;
- end;
+ until not RunAgain;
 end;
 
 //Based on Validate11 but validating big array downsize combined with many small strings resize
@@ -1806,6 +1915,7 @@ const
  SHRINKFACTOR : Double = 0.95;
 begin
  Result := True;
+ FillChar(MemoryStatus, SizeOf(MemoryStatus), 0);
  GlobalMemoryStatus(MemoryStatus);
  try
   SomeArraySize := SOMEARRAYMAXSIZE;
@@ -1948,6 +2058,7 @@ const
  BYTESTOALLOCATE = 100*1024*1024 div Validate25Divizor;//100 MB
 
 begin
+ FillChar(MemoryStatus, SizeOf(MemoryStatus), 0);
  GlobalMemoryStatus(MemoryStatus);
  try
   Result := True;
@@ -1970,6 +2081,7 @@ const
  STEPSIZE = 1024;
 
 begin
+ FillChar(MemoryStatus, SizeOf(MemoryStatus), 0);
  GlobalMemoryStatus(MemoryStatus);
  try
   Result := True;
@@ -2004,6 +2116,7 @@ begin
   Result := True;
   for RunNo := 1 to RUNNOMAX do
    begin
+    FillChar(MemoryStatus, SizeOf(MemoryStatus), 0);
     GlobalMemoryStatus(MemoryStatus);
     Size := ThreadGetValue(MAXSIZE);
     if MemoryStatus.dwAvailVirtual >= Size then
@@ -2030,6 +2143,7 @@ begin
   SetLength(StringArray, NOOFSTRINGS);
   for StringNo := 0 to NOOFSTRINGS-1 do
    begin
+    FillChar(MemoryStatus, SizeOf(MemoryStatus), 0);
     GlobalMemoryStatus(MemoryStatus);
     Size := ThreadGetValue(MAXSIZE);
     if MemoryStatus.dwAvailVirtual >= Size then
@@ -2081,6 +2195,7 @@ begin
    begin
     for StringNo := 0 to NOOFSTRINGS-1 do
      begin
+      FillChar(MemoryStatus, SizeOf(MemoryStatus), 0);
       GlobalMemoryStatus(MemoryStatus);
       Size := Cardinal(ThreadGetValue(MAXSIZE - MINSIZE)) + MINSIZE;
       if MemoryStatus.dwAvailVirtual >= Size then
@@ -2145,6 +2260,7 @@ begin
    begin
     for StringNo := 0 to NOOFSTRINGS-1 do
      begin
+      FillChar(MemoryStatus, SizeOf(MemoryStatus), 0);
       GlobalMemoryStatus(MemoryStatus);
       Size := Cardinal(ThreadGetValue(MAXSIZE - MINSIZE)) + MINSIZE;
       if MemoryStatus.dwAvailVirtual >= Size then
@@ -2357,12 +2473,14 @@ function TMMValidation.Validate29: Boolean;
 var
  Pointers : array[0..20000] of Pointer;
  n : integer;
+const
+  cMemSize = 163840;
 begin
  n := 0;
  try
   repeat
    //Allocate 16 kB pointer
-   GetMem(Pointers[n], 163840);
+   GetMem(Pointers[n], cMemSize);
    PAnsiChar(Pointers[n])[4] := 'A';
    Inc(n);
   until n > High(Pointers);
@@ -2377,7 +2495,7 @@ begin
  while n > 0 do
   begin
    Dec(n);
-   FreeMem(Pointers[n]);
+   FreeMem(Pointers[n], cMemSize);
   end;
 end;
 
@@ -2385,19 +2503,26 @@ end;
 // see whether we get an EOutOfMemory (OK) or something else (WRONG)
 
 function TMMValidation.Validate30: Boolean;
+const
+  ArraySize = 100000;
 var
- Pointers : array[0..100000] of Pointer;
+ Pointers : array[0..ArraySize] of Pointer;
+ Sizes   : array[0..ArraySize] of Integer;
  n : integer;
-
+const
+  cAllocLow = 32*1024;
+  cAllocHigh = 512*1024*1024;
 begin
  n := 0;
  try
-  GetMem(Pointers[n], 512*1024*1024);
+  GetMem(Pointers[n], CAllocHigh);
+  Sizes[n] := CAllocHigh;
   PAnsiChar(Pointers[n])[4] := 'A';
   Inc(n);
   repeat
    //Allocate 32 kB pointer
-   GetMem(Pointers[n], 32*1024);
+   GetMem(Pointers[n], cAllocLow);
+   Sizes[n] := cAllocLow;
    PAnsiChar(Pointers[n])[4] := 'A';
    Inc(n);
   until n > High(Pointers);
@@ -2412,7 +2537,7 @@ begin
  while n > 0 do
   begin
    Dec(n);
-   FreeMem(Pointers[n]);
+   FreeMem(Pointers[n], Sizes[n]);
   end;
 end;
 
@@ -2444,7 +2569,7 @@ var
 begin
  New(Pointers);
  try
- n := 0;
+   n := 0;
    try
     GetMem(Pointers^[n], CBlockSizeBig);
     PAnsiChar(Pointers^[n])[0] := 'A';
@@ -2533,6 +2658,7 @@ begin
     for I2 := Low(PointerArray) to High(PointerArray) do
     begin
       BytesToAllocate := MMGetValue(BYTESTOALLOCATEMAX-1)+4;//Always allocate >= 4 byte
+      FillChar(MemoryStatus, SizeOf(MemoryStatus), 0);
       GlobalMemoryStatus(MemoryStatus);
       if MemoryStatus.dwAvailVirtual >= BytesToAllocate then
       begin
@@ -2579,7 +2705,10 @@ begin
      end;
    end;
  except
-  Result := False;
+   on E: EOutOfMemory do
+     Result := True;  // that's the right exception...
+   else
+     Result := False; // all other exceptions are wrong...
  end;
 end;
 
@@ -2657,6 +2786,7 @@ const
  BYTESTOALLOCATEMAX = 2 * 1024 * 1024;//2 Mbyte
 
 begin
+ FillChar(MemoryStatus, SizeOf(MemoryStatus), 0);
  GlobalMemoryStatus(MemoryStatus);
  try
   Result := True;
@@ -2693,6 +2823,7 @@ const
  BYTESTOALLOCATEMAX : Cardinal = 2 * 1024 * 1024;//2 Mbyte
 
 begin
+ FillChar(MemoryStatus, SizeOf(MemoryStatus), 0);
  GlobalMemoryStatus(MemoryStatus);
  try
   Result := True;
@@ -2729,6 +2860,7 @@ const
  BYTESTOALLOCATEMAX : Cardinal = 123457 {prime};
 
 begin
+ FillChar(MemoryStatus, SizeOf(MemoryStatus), 0);
  GlobalMemoryStatus(MemoryStatus);
  try
   Result := True;
@@ -2768,6 +2900,7 @@ const
  BYTESTOALLOCATEMAX : Cardinal = 2 * 1024 * 1024;//2 Mbyte
 
 begin
+ FillChar(MemoryStatus, SizeOf(MemoryStatus), 0);
  GlobalMemoryStatus(MemoryStatus);
  try
   Result := True;
@@ -3172,6 +3305,69 @@ begin
 end;
 
 
+function TMMValidation.Validate50: Boolean;
+type
+  TPointerArray = array[0..1024*1024-1] of PPointerArray;
+  PPointerArray = ^TPointerArray;
+const
+  BlockSize = 1069;
+var
+  i, j, jm, r, c: Integer;
+  ba: PByteArray;
+  pa: PPointerArray;
+begin
+  Result := False;
+  pa := nil;
+  r := 0;
+  c := 0;
+  try
+    GetMem(pa, SizeOf(TPointerArray));
+    r := Low(TPointerArray);
+    while r <= High(TPointerArray) do
+    begin
+      GetMem(pa^[r], SizeOf(TPointerArray));
+      c := Low(TPointerArray);
+      while c <= High(TPointerArray) do
+      begin
+        GetMem(ba, BlockSize);
+        pa^[r]^[c] := ba;
+        i := 0;
+        while i < BlockSize do
+        begin
+          Inc(ba^[i]);
+          Inc(i, 61);
+        end;
+        Inc(c);
+      end;
+      Inc(r);
+    end;
+  except
+    Result := True;
+  end;
+  try
+    for i := 0 to r do
+    begin
+      if i = r then
+      begin
+        jm := c;
+      end else
+      begin
+        jm := High(TPointerArray)
+      end;
+      for j := 0 to jm do
+      begin
+        ba := pa^[i]^[j];
+        FreeMem(ba, BlockSize);
+      end;
+      FreeMem(pa^[i], SizeOf(TPointerArray));
+    end;
+    FreeMem(pa, SizeOf(TPointerArray));
+  except
+    Result := False;
+  end;
+end;
+
+
 
 const
   ValidationSuitesPerThread = 6;
@@ -3237,7 +3433,7 @@ var
 
 var
   T: TMMValidationThread;
-  Prime, wr: Cardinal;
+  ValSuitesLen, Prime, wr: Cardinal;
   I, ThreadsPrepared: Integer;
   D: LONG;
 
@@ -3264,7 +3460,6 @@ begin
   AddSuite({$IFDEF FPC}@{$ENDIF}Validate20);
   AddSuite({$IFDEF FPC}@{$ENDIF}Validate21);
   AddSuite({$IFDEF FPC}@{$ENDIF}Validate22);
-  AddSuite({$IFDEF FPC}@{$ENDIF}Validate24);
   AddSuite({$IFDEF FPC}@{$ENDIF}Validate26);
   AddSuite({$IFDEF FPC}@{$ENDIF}Validate32);
   AddSuite({$IFDEF FPC}@{$ENDIF}Validate34);
@@ -3281,15 +3476,17 @@ begin
   AddSuite({$IFDEF FPC}@{$ENDIF}Validate47);
   AddSuite({$IFDEF FPC}@{$ENDIF}Validate48);
   i := Low(VeryGoodPrimes);
+  ValSuitesLen := Length(ValidationSuites);
   repeat
     Prime := VeryGoodPrimes[i];
     Inc(i);
-    if Prime < Length(ValidationSuites) then Continue;
+    if Prime < ValSuitesLen then Continue;
     Break;
   until False;
-  while Length(ValidationSuites) < Prime do
+  while ValSuitesLen < Prime do
   begin
     AddSuite(nil);
+    ValSuitesLen := Length(ValidationSuites);
   end;
 
    SetLength(ValidationSuiteFreq, Length(ValidationSuites));
@@ -3387,6 +3584,7 @@ begin
   Result := True;
   for I := Low(arrays) to High(arrays) do
   begin
+    FillChar(MemoryStatus, SizeOf(MemoryStatus), 0);
     GlobalMemoryStatus(MemoryStatus);
     if MemoryStatus.dwAvailVirtual >= BYTESTOALLOCATE then
     begin
