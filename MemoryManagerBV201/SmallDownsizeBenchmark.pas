@@ -7,9 +7,14 @@ uses
 
 const
   {The number of pointers}
-  NumPointers = 10000000;
+  NumPointers =
+   {$IFDEF WIN64}
+  10000000
+   {$ELSE}
+   5000000
+   {$ENDIF}
+  ;
 type
-
   TSmallDownsizeBenchAbstract = class(TFastcodeMMBenchmark)
   protected
     FPointers: array[0..NumPointers - 1] of PAnsiChar;
@@ -39,6 +44,8 @@ type
 
 implementation
 
+uses
+  FastMM4, SysUtils;
 
 { TSmallDownsizeBenchAbstract }
 
@@ -107,6 +114,7 @@ var
   CurValue: Int64;
   k: Integer;
 begin
+  try
   {Call the inherited handler}
   inherited;
   CurValue := Prime;
@@ -142,6 +150,13 @@ begin
   {What we end with should be close to the peak usage}
   UpdateUsageStatistics;
   {Free the pointers}
+  except
+    on E: Exception do
+    begin
+      E.Message := Format('%s, TotalAllocated=%d, Free=%d', [E.Message, FastMM4.FastGetHeapStatus.TotalAllocated, FastMM4.FastGetHeapStatus.TotalFree]);
+      raise;
+    end;
+  end;
 end;
 
 { TTinyDownsizeBench }
