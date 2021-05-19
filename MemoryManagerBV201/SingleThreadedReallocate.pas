@@ -22,7 +22,7 @@ type
 implementation
 
 const
-  IterationsCount = 140;
+  IterationsCount = {$IFNDEF DEBUG}140{$ELSE}17{$ENDIF};
 
 
 { TSingleThreadReallocateBenchmark }
@@ -54,7 +54,7 @@ end;
 procedure TSingleThreadReallocateVariousBlocksBenchmark.RunBenchmark;
 const
   Prime = 29;
-  PointerCount = 450000;
+  PointerCount = 150000;
 type
   PPointers = ^TPointers;
   TPointers = array[0..PointerCount - 1] of Pointer;

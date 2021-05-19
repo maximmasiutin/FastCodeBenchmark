@@ -34,6 +34,7 @@ type
     class function GetNumPointers: Integer; override;
     class function GetBlockSizeDelta: Integer; override;
     class function GetBenchmarkName: string; override;
+    class function Is32BitSpecial: Boolean; override;
   end;
 
 
@@ -171,7 +172,7 @@ end;
 
 class function TReallocBenchMedium.GetIterationCount: Integer;
 begin
-  Result := 75000*1000;
+  Result := 25000*1000;
 end;
 
 class function TReallocBenchMedium.GetNumPointers: Integer;
@@ -189,7 +190,7 @@ end;
 
 class function TReallocBenchTiny.GetIterationCount: Integer;
 begin
-  Result := 300000*1000;
+  Result := 50000*1000;
 end;
 
 class function TReallocBenchTiny.GetNumPointers: Integer;
@@ -216,7 +217,12 @@ end;
 
 class function TReallocBenchLarge.GetNumPointers: Integer;
 begin
-  Result := 2153 {prime};
+  Result := {$IFDEF WIN32}257{$ELSE}2153{$ENDIF} {prime};
+end;
+
+class function TReallocBenchLarge.Is32BitSpecial: Boolean;
+begin
+  Result := True;
 end;
 
 end.

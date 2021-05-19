@@ -971,13 +971,11 @@ var
  SomeArray : array of array of Cardinal;
  MemoryStatus : TMemoryStatus;
  I1, I2, I3, I4, I5, IMax : Cardinal;
- MemBegin, MemEnd: WinApi.Windows.Size_T;
 begin
  Result := True;
  SleepAfterMemoryConsumingTest;
  FillChar(MemoryStatus, SizeOf(MemoryStatus), 0);
  GlobalMemoryStatus(MemoryStatus);
- MemBegin := MemoryStatus.dwAvailVirtual;
  IMax := CSquareSideLengthCardinal;
  try
   //Grow array
@@ -1019,9 +1017,6 @@ begin
  SleepAfterMemoryConsumingTest;
  FillChar(MemoryStatus, SizeOf(MemoryStatus), 0);
  GlobalMemoryStatus(MemoryStatus);
- MemBegin := MemoryStatus.dwAvailVirtual;
- if MemEnd > MemBegin then
-   Sleep(0);
 end;
 
 // stress test... pushing the MM to an "Out of Memory" by allocating 16 kB pointers
@@ -1146,6 +1141,9 @@ begin
  end;
 end;
 
+var
+   TRRR: Integer;
+
 function TMMValidation.Validate16: boolean;
 const
   CPrimes : array[0..64] of Word = (
@@ -1170,6 +1168,7 @@ begin
       while (i <> 0) do
       begin
         dec(i);
+        Inc(TRRR);
         GetMem(t1, SIZE_TO_ALLOCATE);
         FreeMem(t1, SIZE_TO_ALLOCATE);
         try
@@ -2505,9 +2504,14 @@ end;
 function TMMValidation.Validate30: Boolean;
 const
   ArraySize = 100000;
+type
+  TPointers = array[0..ArraySize] of Pointer;
+  PPointers = ^TPointers;
+  TSizes = array[0..ArraySize] of Integer;
+  PSizes = ^TSizes;
 var
- Pointers : array[0..ArraySize] of Pointer;
- Sizes   : array[0..ArraySize] of Integer;
+ Pointers : PPointers;
+ Sizes   : PSizes;
  n : integer;
 const
   cAllocLow = 32*1024;
@@ -2515,17 +2519,19 @@ const
 begin
  n := 0;
  try
-  GetMem(Pointers[n], CAllocHigh);
+  GetMem(Pointers, SizeOf(TPointers));
+  GetMem(Sizes, SizeOf(TSizes));
+  GetMem(Pointers^[n], CAllocHigh);
   Sizes[n] := CAllocHigh;
-  PAnsiChar(Pointers[n])[4] := 'A';
+  PAnsiChar(Pointers^[n])[4] := 'A';
   Inc(n);
   repeat
    //Allocate 32 kB pointer
-   GetMem(Pointers[n], cAllocLow);
+   GetMem(Pointers^[n], cAllocLow);
    Sizes[n] := cAllocLow;
-   PAnsiChar(Pointers[n])[4] := 'A';
+   PAnsiChar(Pointers^[n])[4] := 'A';
    Inc(n);
-  until n > High(Pointers);
+  until n > High(Pointers^);
   Result := True;  // no exception at all, and using more than 100000 * 32kB + 512 MB = 3.7 GB...interesting !
  except
   on E: EOutOfMemory do  // that's the right exception...
@@ -2537,8 +2543,10 @@ begin
  while n > 0 do
   begin
    Dec(n);
-   FreeMem(Pointers[n], Sizes[n]);
+   FreeMem(Pointers^[n], Sizes[n]);
   end;
+  FreeMem(Pointers, SizeOf(TPointers));
+  FreeMem(Sizes, SizeOf(TSizes));
 end;
 
 // stress test... pushing the MM to an "Out of Memory" by allocating 24 kB pointers
@@ -3334,7 +3342,7 @@ begin
         i := 0;
         while i < BlockSize do
         begin
-          Inc(ba^[i]);
+          ba^[i] := not ba^[i];
           Inc(i, 61);
         end;
         Inc(c);

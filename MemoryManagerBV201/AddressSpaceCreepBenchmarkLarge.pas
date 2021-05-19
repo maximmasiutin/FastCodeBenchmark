@@ -7,7 +7,13 @@ uses
 
 const
   {The number of pointers}
-  NumPointers = 100000;
+  AddressSpaceCreepBenchmarkLargeNumPointers =
+  {$IFDEF WIN64}
+  100000
+  {$ELSE}
+   20000
+  {$ENDIF}
+  ;
   {The maximum block size}
   MaxBlockSize = 70000;
 
@@ -15,7 +21,7 @@ type
 
   TAddressSpaceCreepBenchLarge = class(TFastcodeMMBenchmark)
   protected
-    FPointers: array[0..NumPointers - 1] of PAnsiChar;
+    FPointers: array[0..AddressSpaceCreepBenchmarkLargeNumPointers - 1] of PAnsiChar;
   public
     constructor CreateBenchmark; override;
     destructor Destroy; override;
@@ -23,6 +29,7 @@ type
     class function GetBenchmarkName: string; override;
     class function GetBenchmarkDescription: string; override;
     class function GetCategory: TBenchmarkCategory; override;
+    class function Is32BitSpecial: Boolean; override;
   end;
 
 implementation
@@ -54,6 +61,11 @@ end;
 class function TAddressSpaceCreepBenchLarge.GetCategory: TBenchmarkCategory;
 begin
   Result := bmSingleThreadAllocAndFree;
+end;
+
+class function TAddressSpaceCreepBenchLarge.Is32BitSpecial: Boolean;
+begin
+  Result := True;
 end;
 
 procedure TAddressSpaceCreepBenchLarge.RunBenchmark;

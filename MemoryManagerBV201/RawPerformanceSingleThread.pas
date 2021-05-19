@@ -27,7 +27,7 @@ uses
   SysUtils;
 
 const
-  IterationCount = 9;
+  IterationCount = {$IFNDEF DEBUG}9{$ELSE}3{$ENDIF};
 
 
 procedure TRawPerformanceSingleThread.Execute;

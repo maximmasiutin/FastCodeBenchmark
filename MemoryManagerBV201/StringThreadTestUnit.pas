@@ -49,10 +49,9 @@ type
      class function NumThreads: Integer; override;
    end;
 
-   TStringThreadTest64 = class(TStringThreadTestAbstract)
+   TStringThreadTest63 = class(TStringThreadTestAbstract)
      class function NumThreads: Integer; override;
    end;
-
 
    TManyThreadsTest = class(TFastcodeMMBenchmark)
    protected
@@ -75,15 +74,19 @@ implementation
 uses
   Math, StringThread, windows, sysutils, Classes, PrimeNumbers;
 
+const
+  cMaxThreads = 1250;
+
 var
+  ThreadMaxReachedEvent: THandle;
   RunningThreads: Integer;
-  ThreadError, ValidationError, ThreadMaxReached, ZeroThreadsReached: Boolean;
+  ThreadError, ValidationError, ZeroThreadsReached: Boolean;
 
 procedure InitTest;
 begin
    RunningThreads := 0;
    ZeroThreadsReached := False;
-   ThreadMaxReached := False;
+   ThreadMaxReachedEvent := CreateEvent(nil, True, True, nil);
    ThreadError := False;
 end;
 
@@ -132,15 +135,20 @@ var
   T: TStringThreadEx;
   Handles: PWOHandleArray;
   wr, wrc: Cardinal;
+  MaxThreadsAllowed: Integer;
 begin
    inherited;
    InitTest;
    PrimeIndex := Low(VeryGoodPrimes);
    New(Handles);
    tc := NumThreads;
+
+   MaxThreadsAllowed := Min(MAXIMUM_WAIT_OBJECTS, 64);
+   Assert(tc <= MaxThreadsAllowed, 'Maximum '+IntToStr(MaxThreadsAllowed)+' simultaneously running threads in TStringThreadTest');
+
    ic := (cIterations div tc)+1;
    Threads := TList.Create;
-   for I := 1 to tc do // Create a loose new thread that does stringactions
+   for I := 1 to tc do // Create a loose new thread that does string actions
    begin
      T := TStringThreadEx.Create(ic, 2000, 4096, False);
      T.FPrime := VeryGoodPrimes[PrimeIndex];
@@ -165,10 +173,14 @@ begin
      T.Suspended := False;
    end;
 
+   if (Threads.Count >= MAXIMUM_WAIT_OBJECTS) then
+   begin
+     raise Exception.Create('Too many threads in TStringThreadTestAbstract.RunBenchmark');
+   end;
    wr := WaitForMultipleObjects(Threads.Count, Handles, True, INFINITE);
    wrc := WAIT_OBJECT_0+Threads.Count;
 {$WARN COMPARISON_FALSE OFF}
-   if (wr < WAIT_OBJECT_0) or (wr > wrc) then
+   if (wr < WAIT_OBJECT_0) or (wr > wrc) or (wr >= MAXIMUM_WAIT_OBJECTS) then
    begin
      raise Exception.Create('WaitForMultipleObjects failed on TStringThreadTestAbstract.RunBenchmark');
    end;
@@ -209,7 +221,13 @@ var
 begin
    RT := InterlockedExchangeAdd({$IFDEF WIN32}@{$ENDIF} RunningThreads, 1);
    ZeroThreadsReached := False;
-   ThreadMaxReached := RT > 1250;
+   if RT > cMaxThreads then
+   begin
+     ResetEvent(ThreadMaxReachedEvent)
+   end else
+   begin
+     SetEvent(ThreadMaxReachedEvent)
+   end;
 end;
 
 procedure DecRunningThreads;
@@ -217,8 +235,14 @@ var
    RT: Integer;
 begin
    RT := InterlockedExchangeAdd({$IFDEF WIN32}@{$ENDIF} RunningThreads, -1);
-   ThreadMaxReached := RT > 1250;
    ZeroThreadsReached := RT = 1; // Old value is 1, so new value is zero
+   if RT > cMaxThreads then
+   begin
+     ResetEvent(ThreadMaxReachedEvent)
+   end else
+   begin
+     SetEvent(ThreadMaxReachedEvent)
+   end;
 end;
 
 { TManyThreadsTest }
@@ -246,12 +270,21 @@ begin
   Result := 0.8;
 end;
 
-procedure TManyThreadsTest.RunBenchmark;
+type
+  TManyThreadsOrchestratorThread = class(TThread)
+    procedure Execute; override;
+  end;
+
+
+
+procedure TManyThreadsOrchestratorThread.Execute;
+
 var
   I: Integer;
   E: THandle;
   PrimeIdx: Integer;
-  ThreadList: TList;
+  CreatedThreadList: TList;
+  RunningThreadList: TList;
 
   procedure AddThread(T: TStringThreadEx);
   begin
@@ -262,58 +295,104 @@ var
     begin
       PrimeIdx := Low(VeryGoodPrimes);
     end;
-    ThreadList.Add(T);
+    CreatedThreadList.Add(T);
   end;
+
+  procedure ResumeThreads;
+  var
+    T: TStringThreadEx;
+    I: Integer;
+  begin
+    for I := 0 to CreatedThreadList.Count-1 do
+    begin
+      T := TStringThreadEx(CreatedThreadList[i]);
+      CreatedThreadList[i] := nil;
+      RunningThreadList.Add(T);
+      T.Suspended := False;
+    end;
+    CreatedThreadList.Pack;
+  end;
+
 
 var
   T: TStringThreadEx;
   wr: Cardinal;
+
+
+begin
+   E := CreateEvent(nil, False, False, nil);
+   try
+     PrimeIdx := Low(VeryGoodPrimes);
+     CreatedThreadList := TList.Create;
+     RunningThreadList := TList.Create;
+
+     // Launch a lot of threads
+     for I := 1 to 100 do
+     begin
+       AddThread(TStringThreadEx.Create(1000, 10, 512, False));
+       AddThread(TStringThreadEx.Create(10, 2, 4096, False));
+       AddThread(TStringThreadEx.Create(10, 2, 1024*1024, False));
+     end;
+     // Launch a lot of threads keeping threadmax in account
+     for I := 1 to 500 do
+     begin
+       AddThread(TStringThreadEx.Create(100, 1, 512, False));
+       AddThread(TStringThreadEx.Create(100, 100, 512, False));
+       AddThread(TStringThreadEx.Create(100, 1, 512, False));
+       // prevent from running too many threads
+       wr := WaitForSingleObject(ThreadMaxReachedEvent, INFINITE);
+       case wr of
+         WAIT_OBJECT_0:
+           ResumeThreads;
+          // now we can continue creating new threads
+         else
+           raise Exception.Create(SysErrorMessage(GetLastError));
+       end;
+     end;
+     ResumeThreads;
+     repeat
+       wr := WaitForSingleObject(E, INFINITE);
+       if wr = WAIT_OBJECT_0 then
+       begin
+         for I := RunningThreadList.Count-1 downto 0 do
+         begin
+           T := TStringThreadEx(RunningThreadList[i]);
+           if T.IsTerminated then
+           begin
+             T.WaitFor;
+             T.Free;
+             T := nil;
+             RunningThreadList[i] := nil;
+           end;
+         end;
+         RunningThreadList.Pack;
+       end else
+       begin
+         raise Exception.Create('TManyThreadsTest.RunBenchmark -- failed');
+       end;
+     until RunningThreadList.Count = 0;
+     RunningThreadList.Free; RunningThreadList := nil;
+     CreatedThreadList.Free; CreatedThreadList := nil;
+   finally
+     CloseHandle(E);
+   end;
+end;
+
+
+procedure TManyThreadsTest.RunBenchmark;
+var
+  T: TManyThreadsOrchestratorThread;
 begin
    inherited;
    InitTest;
-   PrimeIdx := Low(VeryGoodPrimes);
-   ThreadList := TList.Create;
-   E := CreateEvent(nil, False, False, nil);
-   // Launch a lot of threads
-   for I := 1 to 100 do
-   begin
-     AddThread(TStringThreadEx.Create(1000, 10, 512, False));
-     AddThread(TStringThreadEx.Create(10, 2, 4096, False));
-     AddThread(TStringThreadEx.Create(10, 2, 1024*1024, False));
-   end;
-   // Launch a lot of threads keeping threadmax in account
-   for I := 1 to 500 do
-   begin
-     AddThread(TStringThreadEx.Create(100, 1, 512, False));
-     AddThread(TStringThreadEx.Create(100, 100, 512, False));
-     AddThread(TStringThreadEx.Create(100, 1, 512, False));
-   end;
-   for I := 0 to ThreadList.Count-1 do
-   begin
-     T := TStringThreadEx(ThreadList[i]);
-     T.Suspended := False;
-   end;
-   repeat
-     wr := WaitForSingleObject(E, INFINITE);
-     if wr = WAIT_OBJECT_0 then
-     begin
-       for I := ThreadList.Count-1 downto 0 do
-       begin
-         T := TStringThreadEx(ThreadList[i]);
-         if T.IsTerminated then
-         begin
-           T.WaitFor;
-           T.Free;
-           ThreadList[i] := nil;
-         end;
-       end;
-       ThreadList.Pack;
-     end else
-     begin
-       raise Exception.Create('TManyThreadsTest.RunBenchmark -- failed');
-     end;
-   until ThreadList.Count = 0;
-   CloseHandle(E);
+
+   T := TManyThreadsOrchestratorThread.Create(True);
+   T.Priority := tpHighest;
+   T.Resume;
+   T.WaitFor;
+   T.Free;
+   T := nil;
+
    {Update the peak address space usage}
    UpdateUsageStatistics;
    // Done
@@ -372,12 +451,13 @@ begin
   Result := 31;
 end;
 
-{ TStringThreadTest64 }
+{ TStringThreadTest63 }
 
-class function TStringThreadTest64.NumThreads: Integer;
+class function TStringThreadTest63.NumThreads: Integer;
 begin
-  Result := 64;
+  Result := 63;
 end;
+
 
 end.
 

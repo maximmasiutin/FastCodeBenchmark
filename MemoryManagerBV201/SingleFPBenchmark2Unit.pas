@@ -50,20 +50,29 @@ begin
                     + X.ImaginaryPart + Y.ImaginaryPart;
 end;
 
+const
+  cIterations = 10;
+
 procedure TSingleFPThread2.Execute;
+const
+ ARRAYSIZEINCREMENT = 1000;
 var
- I1, I2, I5: Integer;
+ I1, I2, I5, K: Integer;
  Src1Array1 : array of TRegtangularComplexS;
  Src2Array1 : array of TRegtangularComplexS;
  ResultArray1 : array of TRegtangularComplexS;
  BenchArraySize, PrevArraySize : Integer;
-const
- MINBENCHARRAYSIZE : Integer = 1000;
- MAXBENCHARRAYSIZE : Integer = 100000;
- ARRAYSIZEINCREMENT = 1000;
- NOOFRUNS : Integer = 20;
+var
+ MINBENCHARRAYSIZE : Integer;
+ MAXBENCHARRAYSIZE : Integer;
+ NOOFRUNS: Integer;
 
 begin
+ for k := 0 to cIterations-1 do
+ begin
+ MINBENCHARRAYSIZE := 1000;
+ MAXBENCHARRAYSIZE := 100000;
+ NOOFRUNS := 20;
  PrevArraySize := 0;
  BenchArraySize := MINBENCHARRAYSIZE;
  while BenchArraySize < MAXBENCHARRAYSIZE do
@@ -90,6 +99,7 @@ begin
     end;
    PrevArraySize := BenchArraySize;
    inc(BenchArraySize, ARRAYSIZEINCREMENT);
+  end;
   end;
 end;
 

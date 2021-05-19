@@ -5,6 +5,11 @@ object fBenchmark: TfBenchmark
   ClientHeight = 561
   ClientWidth = 865
   Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'Tahoma'
+  Font.Style = []
   OldCreateOrder = False
   Position = poScreenCenter
   OnClose = FormClose
@@ -161,6 +166,10 @@ object fBenchmark: TfBenchmark
     object TabSheetBenchmarkResults: TTabSheet
       Caption = 'Benchmark Results'
       ImageIndex = 1
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object ListViewResults: TListView
         Left = 0
         Top = 36
@@ -242,6 +251,10 @@ object fBenchmark: TfBenchmark
     object TabSheetValidation: TTabSheet
       Caption = 'Validation Results'
       ImageIndex = 3
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object MemoValidation: TMemo
         Left = 0
         Top = 0
@@ -255,6 +268,10 @@ object fBenchmark: TfBenchmark
     object TabSheetProgress: TTabSheet
       Caption = 'Progress'
       ImageIndex = 2
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object mResults: TMemo
         Left = 0
         Top = 0
@@ -295,6 +312,10 @@ object fBenchmark: TfBenchmark
     object TabSheetCPU: TTabSheet
       Caption = 'Environment'
       ImageIndex = 4
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object MemoCPU: TMemo
         Left = 0
         Top = 0
@@ -326,7 +347,7 @@ object fBenchmark: TfBenchmark
     Left = 4
     Top = 280
     Bitmap = {
-      494C0101070009003C0010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+      494C010107000900040010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000002000000001002000000000000020
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000

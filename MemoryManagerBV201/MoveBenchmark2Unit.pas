@@ -13,6 +13,7 @@ type
     class function GetBenchmarkDescription: string; override;
     class function GetSpeedWeight: Double; override;
     class function GetCategory: TBenchmarkCategory; override;
+    class function Is32BitSpecial: Boolean; override;
   end;
 
 implementation
@@ -138,6 +139,11 @@ end;
 class function TMoveThreads2.GetSpeedWeight: Double;
 begin
   Result := 0.9;
+end;
+
+class function TMoveThreads2.Is32BitSpecial: Boolean;
+begin
+  Result := True;
 end;
 
 procedure TMoveThreads2.RunBenchmark;

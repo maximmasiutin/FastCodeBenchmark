@@ -20,7 +20,7 @@ implementation
 uses SysUtils;
 
 const
-  IterationCount = 145;
+  IterationCount = 1450;
 
 type
 

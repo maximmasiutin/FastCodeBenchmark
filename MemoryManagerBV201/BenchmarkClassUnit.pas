@@ -56,6 +56,7 @@ type
 
     class function IsThreadedSpecial: Boolean; virtual;
 
+    class function Is32BitSpecial: Boolean; virtual;
 
     {The peak usage measured since the last reset}
     property PeakAddressSpaceUsage: NativeUInt read FPeakAddressSpaceUsage;
@@ -166,6 +167,11 @@ begin
   Result := False;
 end;
 
+class function TFastcodeMMBenchmark.Is32BitSpecial: Boolean;
+begin
+  Result := False;
+end;
+
 class function TFastcodeMMBenchmark.GetBenchmarkWeight: Double;
 begin
   Result := 1;
@@ -249,8 +255,8 @@ begin
   AddBenchMark(TNexusBenchmark12Threads);
   AddBenchMark(TNexusBenchmark16Threads);
   AddBenchMark(TNexusBenchmark31Threads);
-  AddBenchMark(TNexusBenchmark64Threads);
-{$IFDEF NEXUS_UP_TO_512}
+{$IFDEF WIN64}
+  AddBenchMark(TNexusBenchmark63Threads);
   AddBenchMark(TNexusBenchmark128Threads);
   AddBenchMark(TNexusBenchmark256Threads);
   AddBenchMark(TNexusBenchmark512Threads);
@@ -262,7 +268,9 @@ begin
   AddBenchMark(TRawPerformanceMultiThread12);
   AddBenchMark(TRawPerformanceMultiThread16);
   AddBenchMark(TRawPerformanceMultiThread31);
-  AddBenchMark(TRawPerformanceMultiThread64);
+  AddBenchMark(TRawPerformanceMultiThread63);
+  AddBenchMark(TRawPerformanceMultiThread128);
+  AddBenchMark(TRawPerformanceMultiThread256);
   AddBenchMark(TManyThreadsTest);
   AddBenchMark(TStringThreadTest2);
   AddBenchMark(TStringThreadTest4);
@@ -270,7 +278,7 @@ begin
   AddBenchMark(TStringThreadTest12);
   AddBenchMark(TStringThreadTest16);
   AddBenchMark(TStringThreadTest31);
-  AddBenchMark(TStringThreadTest64);
+  AddBenchMark(TStringThreadTest63);
   AddBenchMark(TeLinkBenchmark);
   AddBenchMark(TeLinkComServerBenchmark);
   AddBenchMark(TWebbrokerReplayBenchmark);

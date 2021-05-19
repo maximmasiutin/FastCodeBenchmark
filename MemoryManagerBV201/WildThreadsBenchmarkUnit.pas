@@ -14,6 +14,7 @@ type
     class function GetBenchmarkName: string; override;
     class function GetBenchmarkDescription: string; override;
     class function GetCategory: TBenchmarkCategory; override;
+    class function Is32BitSpecial: Boolean; override;
   end;
 
 implementation
@@ -22,7 +23,7 @@ uses
   SysUtils;
 
 const
-  cNumThreads = 96;
+  cNumThreads = {$IFDEF WIN32}31{$ELSE}196{$ENDIF};
 
 var
   ReadyThreadsCount: Integer;
@@ -87,6 +88,11 @@ end;
 class function TWildThreads.GetCategory: TBenchmarkCategory;
 begin
   Result := bmMultiThreadAllocAndFree;
+end;
+
+class function TWildThreads.Is32BitSpecial: Boolean;
+begin
+  Result := True;
 end;
 
 procedure TWildThreads.RunBenchmark;
@@ -167,7 +173,6 @@ begin
   until threads.Count = 0;
 
   SetThreadPriority(GetCurrentThread, THREAD_PRIORITY_NORMAL);
-
 
   threads.Free;
   CloseHandle(e);

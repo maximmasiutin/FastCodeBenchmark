@@ -18,9 +18,6 @@ uses
 type
 
   TNexusBenchmark = class(TFastcodeMMBenchmark)
-  protected
-    FSemaphore: THandle;
-    FThreads: TList;
   public
     constructor CreateBenchmark; override;
     destructor Destroy; override;
@@ -82,19 +79,21 @@ type
     class function IterationCount: integer; override;
   end;
 
-  TNexusBenchmark64Threads = class(TNexusBenchmarkThread)
+{$IFDEF WIN64}
+  TNexusBenchmark63Threads = class(TNexusBenchmarkThread)
   public
     class function NumThreads: integer; override;
     class function RunByDefault: boolean; override;
     class function IterationCount: integer; override;
+    class function Is32BitSpecial: Boolean; override;
   end;
 
-{$IFDEF NEXUS_UP_TO_512}
   TNexusBenchmark128Threads = class(TNexusBenchmarkThread)
   public
     class function NumThreads: integer; override;
     class function RunByDefault: boolean; override;
     class function IterationCount: integer; override;
+    class function Is32BitSpecial: Boolean; override;
   end;
 
   TNexusBenchmark256Threads = class(TNexusBenchmarkThread)
@@ -102,6 +101,7 @@ type
     class function NumThreads: integer; override;
     class function RunByDefault: boolean; override;
     class function IterationCount: integer; override;
+    class function Is32BitSpecial: Boolean; override;
   end;
 
   TNexusBenchmark512Threads = class(TNexusBenchmarkThread)
@@ -109,6 +109,7 @@ type
     class function NumThreads: integer; override;
     class function RunByDefault: boolean; override;
     class function IterationCount: integer; override;
+    class function Is32BitSpecial: Boolean; override;
   end;
 {$ENDIF}
 
@@ -118,22 +119,35 @@ uses
   PrimeNumbers;
 
 const
-  NexusIterationDivider = 1;
+  NexusIterationDivider = {$IFNDEF DEBUG}1{$ELSE}17{$ENDIF};
 
 
-  MaxItems = 5;
+  MaxItems = 5{$IFNDEF FPC}+2{$ENDIF};
   TestClass : array [1..MaxItems] of TClass =
 
     (TStringlist, TObject, Tlist, TBits,
 
+    {$IFNDEF FPC}
     // FreePascal cannot create very big number of TCollection/TCollectionItem
-    {TCollectionItem, TCollection,}
+    TCollectionItem, TCollection,
+    {$ENDIF}
 
     TStream);
 
 type
+  TOrchestratorThread = class(TThread)
+  private
+    FBenchmark: TNexusBenchmark;
+    FSemaphore: THandle;
+    FThreads: TList;
+    NumThreads: Integer;
+    procedure Execute; override;
+    destructor Destroy; override;
+  end;
+
   TTestThread = class(TThread)
   protected
+    Orchestrator: TOrchestratorThread;
     CurValue: Int64;
     Prime: Integer;
     FBenchmark: TNexusBenchmark;
@@ -161,108 +175,113 @@ var
   L: TList;
   SL: TStringList;
 begin
-  // direct memory allocation
-  L := TList.Create;
-
   try
-    for i := 0 to FBenchmark.IterationCount-1 do   // RH replaced 1 * 1000 * 1000 by FBenchmark.IterationCount
-    begin
-      Inc(CurValue, Prime);
-      j := (CurValue mod (16*1024))+1;
-
-      GetMem(p, j);
-      k:=0;
-      while k<j do begin
-        pAnsiChar(p)[k]:=#13;
-        inc(k,4*1024);
-      end;
-      if j>5 then
-        pAnsiChar(p)[j-1]:=#13;
-      L.Add(p);
-      //PLR - Reduced the count from 4K to 2K to lower memory usage
-      Inc(CurValue, Prime);
-      j := (CurValue mod (2 * 1024));
-      if j < L.Count then begin
-        p := L[j];
-        L.Delete(j);
-        FreeMem(p);
-      end;
-
-      //PLR - Added to measure usage every 64K iterations
-      if i and $ffff = 0 then
-        FBenchmark.UpdateUsageStatistics;
-
-    end;
-    for i := Pred(L.Count) downto 0 do
-    begin
-      FreeMem(L[i]);
-    end;
-  finally
-    L.Free;
+    // direct memory allocation
     L := nil;
-  end;
-  // component creation
-  L := TList.Create;
-  try
-    for i := 0 to FBenchmark.IterationCount-1 do   // RH replaced 1 * 1000 * 1000 by FBenchmark.IterationCount
-    begin
-      Inc(CurValue, Prime);
-      j := CurValue mod MaxItems;
-      L.Add(TestClass[j+1].Create());
-      //PLR - Reduced the count from 4K to 2K to lower memory usage
-      Inc(CurValue, Prime);
-      j := CurValue mod (2 * 1024);
-      if j < L.Count then
+    try
+      L := TList.Create;
+      for i := 0 to FBenchmark.IterationCount-1 do   // RH replaced 1 * 1000 * 1000 by FBenchmark.IterationCount
       begin
-        TComponent(L[j]).Free;
-        L.Delete(j);
+        Inc(CurValue, Prime);
+        j := (CurValue mod (16*1024))+1;
+
+        GetMem(p, j);
+        k:=0;
+        while k<j do begin
+          pAnsiChar(p)[k]:=#13;
+          inc(k,4*1024);
+        end;
+        if j>5 then
+          pAnsiChar(p)[j-1]:=#13;
+        L.Add(p);
+        //PLR - Reduced the count from 4K to 2K to lower memory usage
+        Inc(CurValue, Prime);
+        j := (CurValue mod (2 * 1024));
+        if j < L.Count then begin
+          p := L[j];
+          L.Delete(j);
+          FreeMem(p);
+        end;
+
+        //PLR - Added to measure usage every 64K iterations
+        if i and $ffff = 0 then
+          FBenchmark.UpdateUsageStatistics;
+
       end;
-
-      //PLR - Added to measure usage every 64K iterations
-      if i and $ffff = 0 then
-        FBenchmark.UpdateUsageStatistics;
-
+      for i := Pred(L.Count) downto 0 do
+      begin
+        FreeMem(L[i]);
+      end;
+    finally
+      L.Free;
+      L := nil;
     end;
-    for i := Pred(L.Count) downto 0 do
-    begin
-      TComponent(L[i]).Free;
-    end;
-  finally
-    L.Free;
+    // component creation
     L := nil;
-  end;
-  // strings and stringlist
-  SL := TStringList.Create;
-  try
-    for i := 0 to FBenchmark.IterationCount-1 do   // RH replaced 1 * 1000 * 1000 by FBenchmark.IterationCount
-    begin
-      aString:='';
-      Inc(CurValue, Prime);
-      jm := CurValue mod 250;
-      for j := 0 to jm do
-      begin    // Iterate
-        aString:=aString+'A';
-      end;    // for
-      SL.Add(aString);
-
-      //PLR - Added to measure usage every 4K iterations
-      if i and $fff = 0 then
-        FBenchmark.UpdateUsageStatistics;
-
-      //PLR - Reduced the count from 4K to 2K to lower memory usage
-      Inc(CurValue, Prime);
-      j := CurValue mod (2 * 1024);
-      if j < SL.Count then
+    try
+      L := TList.Create;
+      for i := 0 to FBenchmark.IterationCount-1 do   // RH replaced 1 * 1000 * 1000 by FBenchmark.IterationCount
       begin
-        SL.Delete(j);
+        Inc(CurValue, Prime);
+        j := CurValue mod MaxItems;
+        L.Add(TestClass[j+1].Create());
+        //PLR - Reduced the count from 4K to 2K to lower memory usage
+        Inc(CurValue, Prime);
+        j := CurValue mod (2 * 1024);
+        if j < L.Count then
+        begin
+          TComponent(L[j]).Free;
+          L.Delete(j);
+        end;
+
+        //PLR - Added to measure usage every 64K iterations
+        if i and $ffff = 0 then
+          FBenchmark.UpdateUsageStatistics;
+
       end;
+      for i := Pred(L.Count) downto 0 do
+      begin
+        TComponent(L[i]).Free;
+      end;
+    finally
+      L.Free;
+      L := nil;
     end;
-  finally
-    SL.Free;
+    // strings and stringlist
     SL := nil;
+    try
+      SL := TStringList.Create;
+      for i := 0 to FBenchmark.IterationCount-1 do   // RH replaced 1 * 1000 * 1000 by FBenchmark.IterationCount
+      begin
+        aString:='';
+        Inc(CurValue, Prime);
+        jm := CurValue mod 250;
+        for j := 0 to jm do
+        begin    // Iterate
+          aString:=aString+'A';
+        end;    // for
+        SL.Add(aString);
+
+        //PLR - Added to measure usage every 4K iterations
+        if i and $fff = 0 then
+          FBenchmark.UpdateUsageStatistics;
+
+        //PLR - Reduced the count from 4K to 2K to lower memory usage
+        Inc(CurValue, Prime);
+        j := CurValue mod (2 * 1024);
+        if j < SL.Count then
+        begin
+          SL.Delete(j);
+        end;
+      end;
+    finally
+      SL.Free;
+      SL := nil;
+    end;
+    {Notify that the thread is done}
+  finally
+    ReleaseSemaphore(Orchestrator.FSemaphore, 1, nil);
   end;
-  {Notify that the thread is done}
-  ReleaseSemaphore(FBenchmark.FSemaphore, 1, nil);
 end;
 
 { TNexusBenchmark }
@@ -270,19 +289,17 @@ end;
 constructor TNexusBenchmark.CreateBenchmark;
 begin
   inherited;
-  FSemaphore := CreateSemaphore(nil, 0, 9999, nil);
 end;
 
 destructor TNexusBenchmark.Destroy;
 begin
-  CloseHandle(FSemaphore);
   inherited;
 end;
 
 class function TNexusBenchmark.GetBenchmarkDescription: string;
 begin
   Result := 'The benchmark taken from www.nexusdb.com. Memory usage was '
-    + 'slightly reduced to accommodate machines with 256MB RAM with up to 8 threads.';
+    + 'slightly reduced to accommodate machines with 256MB RAM with up to 8 threads and more.';
 end;
 
 class function TNexusBenchmark.GetBenchmarkName: string;
@@ -306,21 +323,25 @@ begin
   raise Exception.Create('Please override the iteration count for '+ClassName);
 end;
 
-{$O-}
+destructor TOrchestratorThread.Destroy;
+begin
+  CloseHandle(FSemaphore);
+  FSemaphore := 0;
+  inherited;
+end;
 
-procedure TNexusBenchmark.RunBenchmark;
+procedure TOrchestratorThread.Execute;
 var
   PrimeIndex, i: Integer;
   T: TTestThread;
 begin
-  {Call the inherited method to reset the peak usage}
-  inherited;
   PrimeIndex := Low(VeryGoodPrimes);
   {Create the threads}
   for i := 1 to NumThreads do
   begin
     if FThreads = nil then FThreads := TList.Create;
-    T := TTestThread.Create(Self);
+    T := TTestThread.Create(FBenchmark);
+    T.Orchestrator := Self;
     T.Prime := VeryGoodPrimes[PrimeIndex];
     Inc(PrimeIndex); if PrimeIndex > High(VeryGoodPrimes) then PrimeIndex := Low(VeryGoodPrimes);
     FThreads.Add(T);
@@ -335,7 +356,11 @@ begin
 
   {Wait for threads to finish}
   for i := 1 to NumThreads do
+  begin
     WaitForSingleObject(FSemaphore, INFINITE);
+  end;
+
+  {Terminate the threads}
   for i := 0 to FThreads.Count-1 do
   begin
     T := TTestThread(FThreads[i]);
@@ -349,11 +374,30 @@ begin
   for i := 0 to FThreads.Count-1 do
   begin
     T := TTestThread(FThreads[i]);
+    FThreads[i] := nil;
     T.Free;
   end;
   FThreads.Clear;
   FThreads.Free;
   FThreads := nil;
+end;
+
+procedure TNexusBenchmark.RunBenchmark;
+var
+  T: TOrchestratorThread;
+begin
+  {Call the inherited method to reset the peak usage}
+  inherited;
+  T := TOrchestratorThread.Create(True);
+  T.FBenchmark := Self;
+  T.FSemaphore := CreateSemaphore(nil, 0, 9999, nil);
+  T.NumThreads := NumThreads;
+  T.Priority := tpHighest;
+  T.Resume;
+  T.WaitFor;
+  T.Terminate;
+  T.Free;
+  T := nil;
 end;
 
 { TNexusBenchmark1Thread }
@@ -418,7 +462,7 @@ end;
 
 class function TNexusBenchmark12Threads.RunByDefault: boolean;
 begin
-  Result := {$IFDEF WIN32}False{$ELSE}True{$ENDIF};
+  Result := True;
 end;
 
 { TNexusBenchmark16Threads }
@@ -435,7 +479,7 @@ end;
 
 class function TNexusBenchmark16Threads.RunByDefault: boolean;
 begin
-  Result := {$IFDEF WIN32}False{$ELSE}True{$ENDIF};
+  Result := True;
 end;
 
 { TNexusBenchmark31Threads }
@@ -452,29 +496,39 @@ end;
 
 class function TNexusBenchmark31Threads.RunByDefault: boolean;
 begin
-  Result := {$IFDEF WIN32}False{$ELSE}True{$ENDIF};
+  Result := True;
 end;
+
+{$IFDEF WIN64}
 
 { TNexusBenchmark64Threads }
 
-class function TNexusBenchmark64Threads.IterationCount: integer;
+class function TNexusBenchmark63Threads.Is32BitSpecial: Boolean;
+begin
+  Result := True;
+end;
+
+class function TNexusBenchmark63Threads.IterationCount: integer;
 begin
   Result := (200 * 1000) div NexusIterationDivider;
 end;
 
-class function TNexusBenchmark64Threads.NumThreads: integer;
+class function TNexusBenchmark63Threads.NumThreads: integer;
 begin
-  Result := 64;
+  Result := 63;
 end;
 
-class function TNexusBenchmark64Threads.RunByDefault: boolean;
+class function TNexusBenchmark63Threads.RunByDefault: boolean;
 begin
-  Result := {$IFDEF WIN32}False{$ELSE}True{$ENDIF};
+  Result := True;
 end;
-
-{$IFDEF NEXUS_UP_TO_512}
 
 { TNexusBenchmark128Threads }
+
+class function TNexusBenchmark128Threads.Is32BitSpecial: Boolean;
+begin
+  Result := True;
+end;
 
 class function TNexusBenchmark128Threads.IterationCount: integer;
 begin
@@ -488,10 +542,15 @@ end;
 
 class function TNexusBenchmark128Threads.RunByDefault: boolean;
 begin
-  Result := {$IFDEF WIN32}False{$ELSE}True{$ENDIF};
+  Result := True;
 end;
 
 { TNexusBenchmark256Threads }
+
+class function TNexusBenchmark256Threads.Is32BitSpecial: Boolean;
+begin
+  Result := True;
+end;
 
 class function TNexusBenchmark256Threads.IterationCount: integer;
 begin
@@ -505,10 +564,15 @@ end;
 
 class function TNexusBenchmark256Threads.RunByDefault: boolean;
 begin
-  Result := {$IFDEF WIN32}False{$ELSE}True{$ENDIF};
+  Result := True;
 end;
 
 { TNexusBenchmark512Threads }
+
+class function TNexusBenchmark512Threads.Is32BitSpecial: Boolean;
+begin
+  Result := True;
+end;
 
 class function TNexusBenchmark512Threads.IterationCount: integer;
 begin
@@ -522,7 +586,7 @@ end;
 
 class function TNexusBenchmark512Threads.RunByDefault: boolean;
 begin
-  Result := {$IFDEF WIN32}False{$ELSE}True{$ENDIF};
+  Result := True;
 end;
 
 {$ENDIF}

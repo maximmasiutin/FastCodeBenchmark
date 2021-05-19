@@ -40,7 +40,7 @@ var
 const
   MINSIZE = 500;
   MAXSIZE = 1500;
-  RepeatCount = 20;
+  RepeatCount = 103 {prime};
   CMaxValue = 101 {prime};
 begin
   FCurValue := FPrime;

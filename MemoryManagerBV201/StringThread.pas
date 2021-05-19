@@ -28,8 +28,7 @@ type
    public
      FPrime: Integer;
      FEventHandle: THandle;
-     constructor Create(AIterations: Integer; AItems: Integer;
-       AItemSize:Integer;AValidate: Boolean); reintroduce;
+     constructor Create(AIterations: Integer; AItems: Integer; AItemSize: Integer; AValidate: Boolean); reintroduce;
      procedure Execute; override;
      function IsTerminated: Boolean;
    end;
@@ -45,15 +44,15 @@ implementation
 
 uses StringThreadTestUnit;
 
-constructor TStringThreadEx.Create(AIterations: Integer; AItems: Integer; AItemSize:Integer;AValidate: Boolean);
+constructor TStringThreadEx.Create(AIterations: Integer; AItems: Integer; AItemSize: Integer; AValidate: Boolean);
 begin
    inherited Create(True);
+   Priority := tpLower;
    FreeOnTerminate := False;
-   IncRunningThreads;
    FStringItems := AItems;
    FValidate := AValidate;
    FIterations := AIterations;
-   FSize:=AItemSize;
+   FSize:= AItemSize;
 end;
 
 function TStringThreadEx.IsTerminated: Boolean;
@@ -67,15 +66,20 @@ var
   I: Integer;
 begin
   try
-    for I := 0 to FIterations - 1 do StringAction;
-  except
-   // Notify TestUnit we had a failure
-    NotifyThreadError;
-  end;
-  DecRunningThreads;
-  if FEventHandle <> 0 then
-  begin
-    SetEvent(FEventHandle);
+    IncRunningThreads;
+    try
+      for I := 0 to FIterations - 1 do StringAction;
+    except
+     // Notify TestUnit we had a failure
+      NotifyThreadError;
+    end;
+  finally
+    Terminate;
+    DecRunningThreads;
+    if FEventHandle <> 0 then
+    begin
+      SetEvent(FEventHandle);
+    end;
   end;
 end;
 

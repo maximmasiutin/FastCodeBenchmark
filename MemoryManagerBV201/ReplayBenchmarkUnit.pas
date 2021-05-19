@@ -305,7 +305,7 @@ end;
 
 class function TReplayBenchmark.RunByDefault: boolean;
 begin
-  Result := False;
+  Result := True;
 end;
 
 procedure TReplayBenchmark.RunBenchmark;
@@ -437,13 +437,14 @@ end;
 procedure TMultiThreadReplayBenchmark.RunBenchmark;
 var
   i, rc, slot : Integer;
+  MaxThreadsAllowed: Integer;
   WT : TReplayThread;
   ThreadArray : array[0..63] of TReplayThread;
   HandleArray : TWOHandleArray;
 begin
   inherited;
-  
-  Assert(RunningThreads <= 64, 'Maximum 64 simultaneously running threads in TMultiThreadReplayBenchmark');
+  MaxThreadsAllowed := Min(MAXIMUM_WAIT_OBJECTS, 64);
+  Assert(RunningThreads <= MaxThreadsAllowed, 'Maximum '+IntToStr(MaxThreadsAllowed)+' simultaneously running threads in TMultiThreadReplayBenchmark');
   {create threads to start with}
   for i := 0 to RunningThreads - 1 do
   begin
@@ -460,7 +461,16 @@ begin
   {loop to replace terminated threads}
   for i := RunningThreads + 1 to ThreadCount do
   begin
+    if RunningThreads >= MAXIMUM_WAIT_OBJECTS then
+    begin
+      raise Exception.Create('Too many threads in TMultiThreadReplayBenchmark');
+    end;
     rc := WaitForMultipleObjects(RunningThreads, @HandleArray, False, INFINITE);
+    if (rc < WAIT_OBJECT_0) or (rc >= MAXIMUM_WAIT_OBJECTS) then
+    begin
+      MessageDlg(SysErrorMessage(GetLastError), mtError, [mbOK], 0);
+      Exit;
+    end;
     slot := rc - WAIT_OBJECT_0;
     if (slot < 0) or (slot >= RunningThreads) then
     begin
@@ -477,7 +487,7 @@ begin
   rc := WaitForMultipleObjects(RunningThreads, @HandleArray, True, INFINITE);
   for i := 0 to RunningThreads - 1 do
     ThreadArray[i].Free;
-  if rc < WAIT_OBJECT_0 then
+  if (rc < WAIT_OBJECT_0) or (rc >= MAXIMUM_WAIT_OBJECTS) then
     MessageDlg(SysErrorMessage(GetLastError), mtError, [mbOK], 0);
 end;
 
@@ -734,7 +744,7 @@ end;
 
 class function TDocumentClassificationBenchmark.RunByDefault: boolean;
 begin
-  Result := True;
+  Result := False;
 end;
 
 end.

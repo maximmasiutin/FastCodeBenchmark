@@ -6,7 +6,22 @@ uses
   Classes, BenchmarkClassUnit, Math;
 
 const
-   cNB_LIST_ITEMS = 1200000;
+   LinkedListBenchmark_cNB_LIST_ITEMS =
+   {$IFDEF WIN64}
+   1200000
+   {$ELSE}
+    600000
+   {$ENDIF}
+   ;
+
+   LinkedListBenchmark_Iter = 
+   {$IFDEF WIN64}
+    2
+   {$ELSE}
+    17
+   {$ENDIF}
+   ;
+
 
 type
 
@@ -19,6 +34,7 @@ type
     class function GetBenchmarkDescription: string; override;
     class function GetSpeedWeight: Double; override;
     class function GetCategory: TBenchmarkCategory; override;
+    class function Is32BitSpecial: Boolean; override;
   end;
 
 implementation
@@ -57,6 +73,11 @@ begin
   Result := 0.8;
 end;
 
+class function TLinkedListBench.Is32BitSpecial: Boolean;
+begin
+  Result := True;
+end;
+
 type
    TExternalRefObject1 = class
       Padding : array [0..50] of Integer;
@@ -88,12 +109,14 @@ end;
 
 procedure TLinkedListBench.RunBenchmark;
 var
-   i : Integer;
+   j, i : Integer;
    list : TLinkedList;
    current : PLinkedListItem;
    NextValue: Integer;
 begin
-   inherited;
+ inherited;
+ for j := 0 to LinkedListBenchmark_Iter-1 do
+ begin
    // allocate the list
    NextValue := 199; // prime
    list:=TLinkedList.Create;
@@ -103,7 +126,7 @@ begin
    current^.ExternalRef:=TExternalRefObject1.Create;
    list.First:=current;
    list.Last:=list.First;
-   for i:=2 to cNB_LIST_ITEMS do begin
+   for i:=2 to LinkedListBenchmark_cNB_LIST_ITEMS do begin
       New(current);
       current^.Next:=nil;
       list.Last^.Next:=current;
@@ -144,6 +167,8 @@ begin
       current:=list.First;
    end;
    list.Free;
+   list := nil;
+  end;
 end;
 
 end.

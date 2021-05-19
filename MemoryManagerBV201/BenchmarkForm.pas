@@ -1,7 +1,5 @@
 unit BenchmarkForm;
 
-{$DEFINE MM_FASTMM4}
-
 interface
 
 uses
@@ -135,7 +133,7 @@ const
   RESULTS_MEM     = 3;
   RESULTS_TIME    = 4;
 
-{$IFDEF MM_FASTMM4AVX}
+{$IFDEF MM_FASTMM4_AVX}
   {Robert Houdart's BucketMM}
   MemoryManager_Name = 'FastMM4-AVX';
   DllExtension = 'AVX';
@@ -181,9 +179,11 @@ const
   DllExtension = 'FA5';
 {$ENDIF}
 {$IFDEF MM_FASTMM4}
+{$IFNDEF MM_FASTMM4_AVX}
   {Pierre le Riche's FastMM v4.xx}
   MemoryManager_Name = 'FastMM4';
   DllExtension = 'FA4';
+{$ENDIF}
 {$ENDIF}
 {$IFDEF MM_FASTMM4_16}
   {Pierre le Riche's FastMM v4.xx}
@@ -247,6 +247,9 @@ const
 implementation
 
 uses
+  {$IFDEF MM_FASTMM4}
+  FastMM4,
+  {$ENDIF}
   Vcl.Clipbrd,
 	FragmentationTestUnit, NexusDBBenchmarkUnit, ReallocMemBenchmark,
 	DownsizeTestUnit, ReplayBenchmarkUnit, WildThreadsBenchmarkUnit,
@@ -355,7 +358,7 @@ begin
     Item.Data := Pointer(i);
     if Assigned(LBenchmark) then
     begin
-      Item.Checked := LBenchmark.RunByDefault;
+      Item.Checked := LBenchmark.RunByDefault and not LBenchmark.Is32BitSpecial;
       Item.Caption := LBenchmark.GetBenchmarkName;
       LWeight := LBenchmark.GetSpeedWeight;
       Item.SubItems.Add(BenchmarkCategoryNames[LBenchmark.GetCategory]);
@@ -516,6 +519,14 @@ begin
       Enabled := True;
       {Run the benchmark}
       RunBenchmark(BenchMarks[i]);
+
+      {$IFDEF MM_FASTMM4}
+      {$IFDEF DEBUG}
+      Sleep(1000);
+      FastMM4.ScanMemoryPoolForCorruptions;
+      {$ENDIF}
+      {$ENDIF}
+
       {Wait one second}
       Sleep(1000);
     end;
@@ -931,7 +942,7 @@ end;
 procedure TfBenchmark.ListViewBenchmarksSelectItem(Sender: TObject; Item: TListItem; Selected: Boolean);
 var
   LBenchmarkClass: TFastcodeMMBenchmarkClass;
-
+  s: string;
 begin
   //Set the benchmark description
   if (Item <> nil) and Selected then
@@ -939,7 +950,12 @@ begin
     LBenchmarkClass := Benchmarks[NativeInt(Item.Data)];
     if Assigned(LBenchmarkClass) then
     begin
-      mBenchmarkDescription.Text := LBenchmarkClass.GetBenchmarkDescription;
+      s := LBenchmarkClass.GetBenchmarkDescription;
+      if LBenchmarkClass.Is32BitSpecial then
+      begin
+        s := Trim(s)+' Please do not compare execution times of 32-bit and 64-bit variants of this benhmars since they use different data sets.';
+      end;
+      mBenchmarkDescription.Text := s;
     end;
   end;
 end;

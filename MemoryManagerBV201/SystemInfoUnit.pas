@@ -131,7 +131,18 @@ begin
 
     PP := @(Threads[0]);
     P := PP;
-    D := WaitForMultipleObjects(Length(Threads), P, True, 1000) - WAIT_OBJECT_0;
+    if Length(Threads) >= MAXIMUM_WAIT_OBJECTS then
+    begin
+      raise Exception.Create('Too many threds in SystemInfoUnit');
+    end;
+
+    D := WaitForMultipleObjects(Length(Threads), P, True, 1000);
+    if (D < WAIT_OBJECT_0) or (D >= MAXIMUM_WAIT_OBJECTS) then
+    begin
+      raise Exception.Create('WaitForMultipleObjects failed on SystemInfoUnit');
+    end;
+
+    D := D - WAIT_OBJECT_0;
     LT := Low(Threads);
     HT := High(Threads);
 {$WARN COMPARISON_TRUE OFF}

@@ -7,15 +7,18 @@ uses
 
 const
   {The number of pointers}
-  NumPointers = 3000000;
+  BlockSizeSpreadBenchNumPointers = 3000000;
   {The maximum block size}
-  MaxBlockSize = 25;
+  BlockSizeSpreadBenchMaxBlockSize = 25;
+
+  BlockSizeSpreadBenchIterationsCount = {$IFNDEF DEBUG}60{$ELSE}3{$ENDIF};
+
 
 type
 
   TBlockSizeSpreadBench = class(TFastcodeMMBenchmark)
   protected
-    FPointers: array[0..NumPointers - 1] of PAnsiChar;
+    FPointers: array[0..BlockSizeSpreadBenchNumPointers - 1] of PAnsiChar;
   public
     constructor CreateBenchmark; override;
     destructor Destroy; override;
@@ -27,8 +30,6 @@ type
 
 implementation
 
-const
-  IterationsCount = 60;
 
 { TSmallResizeBench }
 
@@ -69,13 +70,13 @@ begin
   {Call the inherited handler}
   inherited;
   NextValue := Prime;
-  for n := 1 to IterationsCount do     // loop added to have more than 1000 MTicks for this benchmark
+  for n := 1 to BlockSizeSpreadBenchIterationsCount do     // loop added to have more than 1000 MTicks for this benchmark
   begin
     {Do the benchmark}
-    for i := 0 to high(FPointers) do
+    for i := Low(FPointers) to High(FPointers) do
     begin
       {Get the initial block size, assume object sizes are 4-byte aligned}
-      LSize := (1 + (MaxBlockSize+NextValue) mod NextValue) * 4;
+      LSize := (1 + (BlockSizeSpreadBenchMaxBlockSize+NextValue) mod NextValue) * 4;
       Inc(NextValue, Prime);
       GetMem(FPointers[i], LSize);
       FPointers[i][0] := #13;

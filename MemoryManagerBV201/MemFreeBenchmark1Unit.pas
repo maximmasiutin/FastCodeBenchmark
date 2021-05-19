@@ -13,6 +13,7 @@ type
     class function GetBenchmarkDescription: string; override;
     class function GetSpeedWeight: Double; override;
     class function GetCategory: TBenchmarkCategory; override;
+    class function Is32BitSpecial: Boolean; override;
   end;
 
 implementation
@@ -38,6 +39,8 @@ const
  ALLOCGROWSTEPSIZE = 0.0000006;
 {$IFDEF WIN32}
  SLEEPTIMEAFTERFREE = 10;//Seconds to free
+{$ELSE}
+ SLEEPTIMEAFTERFREE = 1;//Seconds to free
 {$ENDIF}
 begin
  //Allocate
@@ -56,10 +59,8 @@ begin
     FreeMem(PointerArray[I]);
  end;
  SetLength(PointerArray, 0);
-{$IFDEF WIN32}
  //Give a little time to free
  Sleep(SLEEPTIMEAFTERFREE*1000);
-{$ENDIF}
  FBenchmark.UpdateUsageStatistics;
 end;
 
@@ -82,6 +83,11 @@ end;
 class function TMemFreeThreads1.GetSpeedWeight: Double;
 begin
   Result := 0.0;
+end;
+
+class function TMemFreeThreads1.Is32BitSpecial: Boolean;
+begin
+  Result := True;
 end;
 
 procedure TMemFreeThreads1.RunBenchmark;

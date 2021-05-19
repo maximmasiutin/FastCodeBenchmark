@@ -46,7 +46,15 @@ type
     class function NumThreads: Integer; override;
   end;
 
-  TRawPerformanceMultiThread64 = class(TRawPerformanceMultiThreadAbstract)
+  TRawPerformanceMultiThread63 = class(TRawPerformanceMultiThreadAbstract)
+    class function NumThreads: Integer; override;
+  end;
+
+  TRawPerformanceMultiThread128 = class(TRawPerformanceMultiThreadAbstract)
+    class function NumThreads: Integer; override;
+  end;
+
+  TRawPerformanceMultiThread256 = class(TRawPerformanceMultiThreadAbstract)
     class function NumThreads: Integer; override;
   end;
 
@@ -70,7 +78,7 @@ procedure TRawPerformanceThread.Execute;
 const
   POINTERS = 2039;  // take prime just below 2048  (scaled down 8x from single-thread)
   MAXCHUNK = 1024;  // take power of 2
-  REPEATCOUNT = 140;
+  REPEATCOUNT = {$IFNDEF DEBUG}140{$ELSE}17{$ENDIF};
 var
   ToJ, i, j, n, Size, LIndex: Cardinal;
   s: array [0..POINTERS - 1] of string;
@@ -165,20 +173,6 @@ begin
   Finalize(Threads);
 end;
 
-{ TRawPerformanceMultiThread8 }
-
-class function TRawPerformanceMultiThread8.NumThreads: Integer;
-begin
-  Result := 8;
-end;
-
-{ TRawPerformanceMultiThread64 }
-
-class function TRawPerformanceMultiThread64.NumThreads: Integer;
-begin
-  Result := 64;
-end;
-
 { TRawPerformanceMultiThread2 }
 
 class function TRawPerformanceMultiThread2.NumThreads: Integer;
@@ -191,6 +185,13 @@ end;
 class function TRawPerformanceMultiThread4.NumThreads: Integer;
 begin
   Result := 4;
+end;
+
+{ TRawPerformanceMultiThread8 }
+
+class function TRawPerformanceMultiThread8.NumThreads: Integer;
+begin
+  Result := 8;
 end;
 
 { TRawPerformanceMultiThread12 }
@@ -213,5 +214,30 @@ class function TRawPerformanceMultiThread31.NumThreads: Integer;
 begin
   Result := 31;
 end;
+
+
+{ TRawPerformanceMultiThread63 }
+
+class function TRawPerformanceMultiThread63.NumThreads: Integer;
+begin
+  Result := 63;
+end;
+
+{ TRawPerformanceMultiThread128 }
+
+class function TRawPerformanceMultiThread128.NumThreads: Integer;
+begin
+  Result := 128;
+end;
+
+{ TRawPerformanceMultiThread128 }
+
+class function TRawPerformanceMultiThread256.NumThreads: Integer;
+begin
+  Result := 256;
+end;
+
+
+
 
 end.

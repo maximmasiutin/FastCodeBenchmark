@@ -18,6 +18,7 @@ type
     class function GetSpeedWeight: Double; override;
     class function IsThreadedSpecial: Boolean; override;
     class function GetNumThreads: Integer; virtual; abstract;
+    class function Is32BitSpecial: Boolean; override;
   end;
 
   TMultiThreadAllocateAndFreeBenchmark2 = class(TMultiThreadAllocateAndFreeBenchmarkAbstract)
@@ -165,6 +166,11 @@ begin
   Result := bmMultiThreadAllocAndFree;
 end;
 
+class function TMultiThreadAllocateAndFreeBenchmarkAbstract.Is32BitSpecial: Boolean;
+begin
+  Result := True;
+end;
+
 class function TMultiThreadAllocateAndFreeBenchmarkAbstract.IsThreadedSpecial: Boolean;
 begin
   Result := True;
@@ -177,7 +183,7 @@ end;
 
 procedure TMultiThreadAllocateAndFreeBenchmarkAbstract.RunBenchmark;
 const
-  CRepeatCountTotal = 90000;
+  CRepeatCountTotal = {$IFNDEF DEBUG}90000{$ELSE}257{$ENDIF};
 var
   PrimeIndex, n: Integer;
   LCreateAndFree: TCreateAndFreeThread;
@@ -195,7 +201,7 @@ begin
     LCreateAndFree := TCreateAndFreeThread.Create(True);
     LCreateAndFree.Priority := tpLower;
     LCreateAndFree.FPrime := VeryGoodPrimes[PrimeIndex];
-    LCreateAndFree.FRepeatCount := CRepeatCountTotal div LNumThreads;
+    LCreateAndFree.FRepeatCount := (CRepeatCountTotal div LNumThreads)+1;
     Inc(PrimeIndex); if PrimeIndex > High(VeryGoodPrimes) then PrimeIndex := Low(VeryGoodPrimes);
     LCreateAndFree.FreeOnTerminate := False;
     threads.Add(LCreateAndFree);
@@ -220,8 +226,10 @@ begin
     {Update usage statistics}
     UpdateUsageStatistics;
 {$IFDEF WIN32}
-    {Don't sleep on Win64 to influence the results}
-    sleep(10);
+    Sleep(10);
+{$ELSE}
+    {Don't sleep that much on Win64 to influence the results}
+    Sleep(2);
 {$ENDIF}
   until LFinished;
   {Free the threads}
@@ -266,8 +274,6 @@ class function TMultiThreadAllocateAndFreeBenchmark12.GetNumThreads: Integer;
 begin
   Result := 12;
 end;
-
-
 
 class function TMultiThreadAllocateAndFreeBenchmark16.GetNumThreads: Integer;
 begin

@@ -21,7 +21,7 @@ uses
   SysUtils;
 
 const
-  IterationCount = 5;
+  IterationCount = 50;
 
 type
 

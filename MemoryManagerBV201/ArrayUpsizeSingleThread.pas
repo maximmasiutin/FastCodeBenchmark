@@ -14,15 +14,26 @@ type
     class function GetBenchmarkName: string; override;
     class function GetBenchmarkDescription: string; override;
     class function GetCategory: TBenchmarkCategory; override;
+    class function Is32BitSpecial: Boolean; override;
   end;
 
 implementation
 
 uses
+{$IFDEF MM_FASTMM4}
+  FastMM4,
+{$ENDIF}
   SysUtils;
 
 const
-  IterationCount = 280000 * 1000;
+  IterationCount = 280000 *
+
+{$IFDEF WIN64}
+  1000
+{$ELSE}
+   50
+{$ENDIF}
+  ;
 
 
 { TArrayUpsizeSingleThread }
@@ -32,11 +43,22 @@ var
   i: Integer;
   x: array of Int64;
 begin
-  for i := 1 to IterationCount do begin
-    SetLength(x, i);
-    x[i - 1] := i;
+  try
+    for i := 1 to IterationCount do begin
+      SetLength(x, i);
+      x[i - 1] := i;
+    end;
+    UpdateUsageStatistics;
+  except
+    on E: Exception do
+    begin
+{$IFDEF MM_FASTMM4}
+      E.Message := Format('%s, TotalAllocated=%d, Free=%d', [E.Message, FastMM4.FastGetHeapStatus.TotalAllocated, FastMM4.FastGetHeapStatus.TotalFree]);
+{$ENDIF}
+      raise;
+    end;
   end;
-  UpdateUsageStatistics;
+
 end;
 
 class function TArrayUpsizeSingleThread.GetBenchmarkDescription: string;
@@ -54,6 +76,11 @@ end;
 class function TArrayUpsizeSingleThread.GetCategory: TBenchmarkCategory;
 begin
   Result := bmSingleThreadRealloc;
+end;
+
+class function TArrayUpsizeSingleThread.Is32BitSpecial: Boolean;
+begin
+  Result := True;
 end;
 
 procedure TArrayUpsizeSingleThread.RunBenchmark;

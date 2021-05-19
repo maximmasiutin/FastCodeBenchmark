@@ -7,7 +7,7 @@ uses
 
 const
   {The number of pointers}
-  NumPointers = 2000000;
+  NumPointers = 500000;
   {The maximum block size}
   MaxBlockSize = 32;
 
@@ -29,7 +29,7 @@ type
 implementation
 
 const
-  IterationsCount = 45;
+  IterationsCount = 50;
 
 { TSmallResizeBench }
 

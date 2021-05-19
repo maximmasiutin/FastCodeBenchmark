@@ -7,17 +7,23 @@ uses
 
 const
   {The number of pointers}
-  NumPointers =
+  NumPointersSmallDownsizeBenchmark =
+
    {$IFDEF WIN64}
   10000000
    {$ELSE}
    5000000
    {$ENDIF}
+
+   {$IFDEF DEBUG}
+   div 16
+   {$ENDIF}
+
   ;
 type
   TSmallDownsizeBenchAbstract = class(TFastcodeMMBenchmark)
   protected
-    FPointers: array[0..NumPointers - 1] of PAnsiChar;
+    FPointers: array[0..NumPointersSmallDownsizeBenchmark - 1] of PAnsiChar;
   public
     constructor CreateBenchmark; override;
     destructor Destroy; override;
@@ -26,6 +32,7 @@ type
     class function GetCategory: TBenchmarkCategory; override;
     class function GetBlockSizeBytes: Integer; virtual; abstract;
     class function GetIterationsCount: Integer; virtual; abstract;
+    class function Is32BitSpecial: Boolean; override;
   end;
 
   TTinyDownsizeBench = class(TSmallDownsizeBenchAbstract)
@@ -45,7 +52,10 @@ type
 implementation
 
 uses
-  FastMM4, SysUtils;
+{$IFDEF MM_FASTMM4}
+  FastMM4,
+{$ENDIF}
+  SysUtils;
 
 { TSmallDownsizeBenchAbstract }
 
@@ -106,6 +116,11 @@ begin
   Result := 0.2;
 end;
 
+class function TSmallDownsizeBenchAbstract.Is32BitSpecial: Boolean;
+begin
+  Result := True;
+end;
+
 procedure TSmallDownsizeBenchAbstract.RunBenchmark;
 const
   Prime = 41;
@@ -120,6 +135,9 @@ begin
   CurValue := Prime;
   {Do the benchmark}
   IterationsCount := GetIterationsCount;
+  {$IFDEF DEBUG}
+  IterationsCount := Max(1, IterationsCount div 4);
+  {$ENDIF}
   MaxBlockSize := GetBlockSizeBytes;
   for k := 1 to IterationsCount do
   begin
@@ -153,7 +171,9 @@ begin
   except
     on E: Exception do
     begin
+{$IFDEF MM_FASTMM4}
       E.Message := Format('%s, TotalAllocated=%d, Free=%d', [E.Message, FastMM4.FastGetHeapStatus.TotalAllocated, FastMM4.FastGetHeapStatus.TotalFree]);
+{$ENDIF}
       raise;
     end;
   end;
@@ -168,7 +188,7 @@ end;
 
 class function TTinyDownsizeBench.GetIterationsCount: Integer;
 begin
-  Result := 7;
+  Result := 4;
 end;
 
 end.
