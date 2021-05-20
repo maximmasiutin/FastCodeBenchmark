@@ -1,0 +1,84 @@
+<mmchallenge>
+<mmbench>
+<benchmarks>
+<benchmark version="1.0.0" compiler="Delphi 64-bit" MM="FASTMM4-AVX">
+<os> (NT.10.0.21382) </os>
+<result name="Fragmentation Test" time="20210520 03:49:32.502" mticks="11005" mem="117984" />
+<result name="ReallocMem Small (1-555b) benchmark" time="20210520 03:49:34.385" mticks="1205" mem="38348" />
+<result name="ReallocMem Medium (1-4039b) benchmark" time="20210520 03:49:37.740" mticks="3338" mem="92108" />
+<result name="ReallocMem Large (1-952224b) benchmark" time="20210520 03:49:47.004" mticks="11750" mem="1224332" />
+<result name="Block downsize" time="20210520 03:49:58.078" mticks="14293" mem="156556" />
+<result name="Small upsize benchmark" time="20210520 03:50:01.968" mticks="4012" mem="51276" />
+<result name="Tiny downsize benchmark" time="20210520 03:50:07.688" mticks="6680" mem="125452" />
+<result name="VerySmall downsize benchmark" time="20210520 03:50:17.613" mticks="12670" mem="125452" />
+<result name="Block size spread benchmark" time="20210520 03:50:31.053" mticks="17749" mem="438156" />
+<result name="Raw Performance 1 thread" time="20210520 03:50:45.799" mticks="19594" mem="110540" />
+<result name="Address space creep benchmark" time="20210520 03:50:55.752" mticks="12720" mem="508556" />
+<result name="Large block spread benchmark" time="20210520 03:51:05.776" mticks="12858" mem="308428" />
+<result name="Array Upsize 1 thread" time="20210520 03:51:16.702" mticks="14136" mem="2620748" />
+<result name="Address space creep (larger blocks)" time="20210520 03:51:27.285" mticks="13650" mem="3514380" />
+<result name="Single-threaded reallocate and use" time="20210520 03:51:31.198" mticks="4121" mem="432524" />
+<result name="Single-threaded tiny reallocate and use" time="20210520 03:51:37.329" mticks="7289" mem="47308" />
+<result name="Single-threaded allocate, use and free" time="20210520 03:51:47.981" mticks="13737" mem="598668" />
+<result name="Single Variables Access 6 arrays at a time" time="20210520 03:52:20.364" mticks="44765" mem="56460" />
+<result name="Single Variables Access 3 arrays at a time" time="20210520 03:52:55.153" mticks="48205" mem="58252" />
+<result name="Double Variables Access 3 arrays at a time" time="20210520 03:53:01.987" mticks="8292" mem="55180" />
+<result name="Double Variables Access 6 arrays at a time" time="20210520 03:53:09.227" mticks="8868" mem="55180" />
+<result name="Double Variables Access 18 arrays at a time" time="20210520 03:53:17.806" mticks="10801" mem="55180" />
+<result name="Move Benchmark1 2 arrays at a time" time="20210520 03:53:24.728" mticks="8428" mem="71564" />
+<result name="Move Benchmark2 4 arrays at a time" time="20210520 03:53:31.461" mticks="8130" mem="71564" />
+<result name="FillCharDoubleThread" time="20210520 03:53:34.770" mticks="3265" mem="59980" />
+<result name="SortIntegerArrayBenchmark" time="20210520 03:53:38.648" mticks="4074" mem="55180" />
+<result name="SortExtendedArrayBenchmark" time="20210520 03:53:42.344" mticks="3802" mem="62348" />
+<result name="QuickSortExtendedArrayBenchmark" time="20210520 03:53:45.884" mticks="3583" mem="62348" />
+<result name="Linked-list container benchmark" time="20210520 03:53:54.042" mticks="10149" mem="788876" />
+<result name="Multi-threaded (2) allocate, use and free" time="20210520 03:54:14.469" mticks="27699" mem="54156" />
+<result name="Multi-threaded (4) allocate, use and free" time="20210520 03:54:40.533" mticks="35754" mem="62604" />
+<result name="Multi-threaded (8) allocate, use and free" time="20210520 03:55:05.673" mticks="34428" mem="82060" />
+<result name="Multi-threaded (12) allocate, use and free" time="20210520 03:55:33.266" mticks="37944" mem="97420" />
+<result name="Multi-threaded (16) allocate, use and free" time="20210520 03:56:01.987" mticks="39556" mem="110476" />
+<result name="Multi-threaded (31) allocate, use and free" time="20210520 03:56:33.488" mticks="43530" mem="164236" />
+<result name="Multi-threaded (64) allocate, use and free" time="20210520 03:57:10.816" mticks="51842" mem="282508" />
+<result name="Multi-threaded (2) reallocate and use" time="20210520 03:57:27.235" mticks="21970" mem="62348" />
+<result name="Multi-threaded (4) reallocate and use" time="20210520 03:57:43.779" mticks="22163" mem="77196" />
+<result name="Multi-threaded (8) reallocate and use" time="20210520 03:58:01.887" mticks="24389" mem="113932" />
+<result name="Multi-threaded (12) reallocate and use" time="20210520 03:58:20.954" mticks="25748" mem="147468" />
+<result name="Multi-threaded (16) reallocate and use" time="20210520 03:58:40.638" mticks="26630" mem="170060" />
+<result name="Multi-threaded (31) reallocate and use" time="20210520 03:59:01.730" mticks="28660" mem="260300" />
+<result name="Multi-threaded (64) reallocate and use" time="20210520 03:59:23.773" mticks="30019" mem="457612" />
+<result name="QuickSortIntegerArrayBenchmark" time="20210520 03:59:31.881" mticks="10096" mem="52876" />
+<result name="QuickSortExtendedArrayBenchmark" time="20210520 03:59:35.459" mticks="3642" mem="60044" />
+<result name="NexusDB with 1 thread(s)" time="20210520 04:00:20.143" mticks="62364" mem="66700" />
+<result name="NexusDB with 2 thread(s)" time="20210520 04:01:11.135" mticks="71353" mem="84364" />
+<result name="NexusDB with 4 thread(s)" time="20210520 04:01:41.712" mticks="42198" mem="120972" />
+<result name="NexusDB with 8 thread(s)" time="20210520 04:02:03.092" mticks="29072" mem="192908" />
+<result name="NexusDB with 12 thread(s)" time="20210520 04:02:31.708" mticks="39392" mem="264844" />
+<result name="NexusDB with 16 thread(s)" time="20210520 04:02:51.890" mticks="27372" mem="335500" />
+<result name="NexusDB with 31 thread(s)" time="20210520 04:03:11.446" mticks="26468" mem="604300" />
+<result name="NexusDB with 63 thread(s)" time="20210520 04:03:37.676" mticks="35959" mem="1063052" />
+<result name="NexusDB with 128 thread(s)" time="20210520 04:03:57.214" mticks="26447" mem="1963916" />
+<result name="NexusDB with 256 thread(s)" time="20210520 04:04:31.579" mticks="47610" mem="3810956" />
+<result name="NexusDB with 512 thread(s)" time="20210520 04:05:08.552" mticks="51329" mem="6843276" />
+<result name="Transient threaded objects (196 threads)" time="20210520 04:06:45.578" mticks="137078" mem="257932" />
+<result name="Raw Performance 2 threads" time="20210520 04:07:08.614" mticks="31440" mem="70540" />
+<result name="Raw Performance 4 threads" time="20210520 04:07:30.201" mticks="29365" mem="89996" />
+<result name="Raw Performance 8 threads" time="20210520 04:07:49.660" mticks="26331" mem="127628" />
+<result name="Raw Performance 12 threads" time="20210520 04:08:09.529" mticks="26911" mem="165260" />
+<result name="Raw Performance 16 threads" time="20210520 04:08:29.162" mticks="26583" mem="202892" />
+<result name="Raw Performance 31 threads" time="20210520 04:08:51.281" mticks="30090" mem="341772" />
+<result name="Raw Performance 63 threads" time="20210520 04:09:17.493" mticks="35969" mem="626188" />
+<result name="Raw Performance 128 threads" time="20210520 04:10:02.721" mticks="63108" mem="1179660" />
+<result name="Raw Performance 256 threads" time="20210520 04:11:13.963" mticks="100277" mem="2237644" />
+<result name="ManyShortLivedThreads" time="20210520 04:11:15.497" mticks="724" mem="64396" />
+<result name="String2ThreadTest" time="20210520 04:11:36.884" mticks="29099" mem="64396" />
+<result name="String4ThreadTest" time="20210520 04:11:56.290" mticks="26249" mem="60300" />
+<result name="String8ThreadTest" time="20210520 04:12:17.693" mticks="29102" mem="60300" />
+<result name="String12ThreadTest" time="20210520 04:12:39.835" mticks="30149" mem="60300" />
+<result name="String16ThreadTest" time="20210520 04:13:02.433" mticks="30816" mem="60300" />
+<result name="String31ThreadTest" time="20210520 04:13:28.133" mticks="35261" mem="59020" />
+<result name="String63ThreadTest" time="20210520 04:13:54.903" mticks="36759" mem="60300" />
+<result name="Single-threaded AllocMem" time="20210520 04:14:05.528" mticks="13669" mem="405900" />
+</benchmark>
+</benchmarks>
+</mmbench>
+</mmchallenge>

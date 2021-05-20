@@ -63,7 +63,9 @@ type
     function Validate47: Boolean;
     function Validate48: Boolean;
     function Validate49: Boolean;
+{$IFNDEF WIN64}
     function Validate50: Boolean;
+{$ENDIF}
   private
     procedure DoValidate(ValidateFunction: TValidateFunction; const ValidationName: string);
   public
@@ -252,7 +254,9 @@ begin
   DoValidate({$IFDEF FPC}@{$ENDIF}Validate31, 'Validate31');
   DoValidate({$IFDEF FPC}@{$ENDIF}Validate32, 'Validate32');
   DoValidate({$IFDEF FPC}@{$ENDIF}Validate33, 'Validate33');
+{$IFNDEF WIN64}
   DoValidate({$IFDEF FPC}@{$ENDIF}Validate50, 'Validate50');
+{$ENDIF}
   Result := FFailedList;
 end;
 
@@ -880,13 +884,11 @@ var
  X, Y: Cardinal;
  I: Integer;
  J: Integer;
- MemBegin, MemEnd: WinAPI.Windows.Size_T;
 begin
  Result := True;
  SleepAfterMemoryConsumingTest;
  FillChar(MemoryStatus, SizeOf(MemoryStatus), 0);
  GlobalMemoryStatus(MemoryStatus);
- MemBegin := MemoryStatus.dwAvailVirtual;
  if ShortRun then
    IMax := CSquareSideLengthWordShortRun
  else
@@ -951,9 +953,6 @@ begin
  SleepAfterMemoryConsumingTest;
  FillChar(MemoryStatus, SizeOf(MemoryStatus), 0);
  GlobalMemoryStatus(MemoryStatus);
- MemEnd := MemoryStatus.dwAvailVirtual;
- if MemEnd > MemBegin then
-   Sleep(0);
 end;
 
 
@@ -1011,6 +1010,7 @@ begin
      //Stop test if no more memory available
      Exit;
    end;
+   Finalize(SomeArray);
  except
   Result := False;
  end;
@@ -3312,7 +3312,7 @@ begin
  end;
 end;
 
-
+{$IFNDEF WIN64}
 function TMMValidation.Validate50: Boolean;
 type
   TPointerArray = array[0..1024*1024-1] of PPointerArray;
@@ -3374,7 +3374,7 @@ begin
     Result := False;
   end;
 end;
-
+{$ENDIF}
 
 
 const
