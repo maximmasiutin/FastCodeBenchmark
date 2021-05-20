@@ -1,0 +1,175 @@
+<mmchallenge>
+<validations>
+<validation version="1.0.0" compiler="undefined" MM="FASTMM4">
+
+<os> (NT.10.0.21382) </os>
+<result> </result>
+<extraresult>PASS</extraresult>
+</validation>
+</validations>
+<mmbench>
+<benchmarks>
+<benchmark version="1.0.0" compiler="undefined" MM="FASTMM4">
+
+<os> (NT.10.0.21382) </os>
+<result name="ReallocMem Small (1-555b) benchmark" time="20210520 20:31:34.546" mticks="1122" mem="41976" />
+<result name="ReallocMem Small (1-555b) benchmark" time="20210520 20:31:36.468" mticks="1152" mem="41976" />
+<result name="ReallocMem Small (1-555b) benchmark" time="20210520 20:32:15.482" mticks="25300" mem="44896" />
+<result name="ReallocMem Small (1-555b) benchmark" time="20210520 20:32:18.664" mticks="1185" mem="44896" />
+<result name="ReallocMem Small (1-555b) benchmark" time="20210520 20:32:20.614" mticks="1124" mem="44896" />
+<result name="Block downsize" time="20210520 20:32:35.668" mticks="10886" mem="161824" />
+<result name="Block downsize" time="20210520 20:32:45.011" mticks="11242" mem="161824" />
+<result name="Block downsize" time="20210520 20:33:12.664" mticks="10926" mem="161824" />
+<result name="ReallocMem Small (1-555b) benchmark" time="20210520 20:34:18.876" mticks="1144" mem="46944" />
+</benchmark>
+<benchmark version="1.0.0" compiler="undefined" MM="FASTMM4">
+
+<os> (NT.10.0.21382) </os>
+<result name="ReallocMem Small (1-555b) benchmark" time="20210520 20:47:52.675" mticks="19298" mem="41824" />
+<result name="ReallocMem Small (1-555b) benchmark" time="20210520 20:47:56.410" mticks="1184" mem="44896" />
+<result name="ReallocMem Small (1-555b) benchmark" time="20210520 20:47:57.989" mticks="1166" mem="44896" />
+<result name="ReallocMem Small (1-555b) benchmark" time="20210520 20:47:59.548" mticks="1253" mem="44896" />
+<result name="ReallocMem Small (1-555b) benchmark" time="20210520 20:48:01.069" mticks="1191" mem="44896" />
+<result name="ReallocMem Small (1-555b) benchmark" time="20210520 20:48:05.468" mticks="1176" mem="44896" />
+<result name="ReallocMem Small (1-555b) benchmark" time="20210520 20:48:08.025" mticks="1156" mem="44896" />
+<result name="ReallocMem Small (1-555b) benchmark" time="20210520 20:48:11.191" mticks="1177" mem="44896" />
+<result name="Block downsize" time="20210520 20:48:22.413" mticks="10965" mem="161824" />
+<result name="Block downsize" time="20210520 20:48:32.353" mticks="11073" mem="161824" />
+<result name="Block downsize" time="20210520 20:48:41.585" mticks="10966" mem="161824" />
+<result name="Block downsize" time="20210520 20:55:22.730" mticks="512737" mem="162848" />
+<result name="Block downsize" time="20210520 20:55:41.223" mticks="11079" mem="162848" />
+<result name="Block downsize" time="20210520 20:57:34.383" mticks="10727" mem="159776" />
+</benchmark>
+<benchmark version="1.0.0" compiler="undefined" MM="FASTMM4">
+
+<os> (NT.10.0.21382) </os>
+<result name="ReallocMem Small (1-555b) benchmark" time="20210520 21:05:03.627" mticks="1127" mem="41972" />
+<result name="ReallocMem Small (1-555b) benchmark" time="20210520 21:05:05.863" mticks="1157" mem="41972" />
+<result name="ReallocMem Small (1-555b) benchmark" time="20210520 21:05:07.705" mticks="1119" mem="41972" />
+<result name="ReallocMem Small (1-555b) benchmark" time="20210520 21:05:09.266" mticks="1164" mem="41972" />
+<result name="ReallocMem Small (1-555b) benchmark" time="20210520 21:05:10.857" mticks="1142" mem="41972" />
+<result name="ReallocMem Small (1-555b) benchmark" time="20210520 21:05:12.738" mticks="1206" mem="41972" />
+<result name="Block downsize" time="20210520 21:05:22.864" mticks="10632" mem="158904" />
+</benchmark>
+<benchmark version="1.0.0" compiler="undefined" MM="FASTMM4">
+
+<os> (NT.10.0.21382) </os>
+<result name="ReallocMem Small (1-555b) benchmark" time="20210520 21:05:40.668" mticks="1131" mem="41824" />
+<result name="ReallocMem Small (1-555b) benchmark" time="20210520 21:05:42.511" mticks="1189" mem="41824" />
+<result name="ReallocMem Small (1-555b) benchmark" time="20210520 21:05:43.909" mticks="1138" mem="41824" />
+<result name="ReallocMem Small (1-555b) benchmark" time="20210520 21:05:45.389" mticks="1173" mem="41824" />
+<result name="ReallocMem Small (1-555b) benchmark" time="20210520 21:05:46.898" mticks="1154" mem="41824" />
+<result name="ReallocMem Small (1-555b) benchmark" time="20210520 21:05:48.454" mticks="1191" mem="41824" />
+<result name="Block downsize" time="20210520 21:05:59.395" mticks="10760" mem="158752" />
+<result name="Block downsize" time="20210520 21:06:08.721" mticks="10797" mem="160800" />
+</benchmark>
+<benchmark version="1.0.0" compiler="undefined" MM="FASTMM4">
+
+<os> (NT.10.0.21382) </os>
+<result name="ReallocMem Small (1-555b) benchmark" time="20210520 21:06:26.958" mticks="1267" mem="41824" />
+<result name="ReallocMem Small (1-555b) benchmark" time="20210520 21:06:30.913" mticks="1238" mem="41824" />
+<result name="ReallocMem Small (1-555b) benchmark" time="20210520 21:06:32.857" mticks="1175" mem="41824" />
+<result name="ReallocMem Small (1-555b) benchmark" time="20210520 21:06:34.625" mticks="1199" mem="41824" />
+<result name="ReallocMem Small (1-555b) benchmark" time="20210520 21:06:36.229" mticks="1139" mem="41824" />
+<result name="Block downsize" time="20210520 21:06:46.994" mticks="10682" mem="158752" />
+</benchmark>
+<benchmark version="1.0.0" compiler="undefined" MM="FASTMM4">
+
+<os> (NT.10.0.21382) </os>
+<result name="ReallocMem Small (1-555b) benchmark" time="20210520 21:07:27.297" mticks="1098" mem="41824" />
+<result name="ReallocMem Small (1-555b) benchmark" time="20210520 21:07:30.612" mticks="1157" mem="41824" />
+<result name="ReallocMem Small (1-555b) benchmark" time="20210520 21:07:32.437" mticks="1103" mem="41824" />
+<result name="ReallocMem Small (1-555b) benchmark" time="20210520 21:07:37.028" mticks="1149" mem="41824" />
+<result name="ReallocMem Small (1-555b) benchmark" time="20210520 21:07:38.866" mticks="1130" mem="41824" />
+<result name="Block downsize" time="20210520 21:07:51.127" mticks="10766" mem="158752" />
+</benchmark>
+<benchmark version="1.0.0" compiler="undefined" MM="FASTMM4">
+
+<os> (NT.10.0.21382) </os>
+<result name="ReallocMem Small (1-555b) benchmark" time="20210520 21:09:20.706" mticks="1143" mem="41976" />
+<result name="ReallocMem Small (1-555b) benchmark" time="20210520 21:09:22.964" mticks="1194" mem="41976" />
+<result name="ReallocMem Small (1-555b) benchmark" time="20210520 21:09:25.204" mticks="1118" mem="41976" />
+<result name="ReallocMem Small (1-555b) benchmark" time="20210520 21:09:27.538" mticks="1149" mem="41824" />
+</benchmark>
+<benchmark version="1.0.0" compiler="undefined" MM="FASTMM4">
+
+<os> (NT.10.0.21382) </os>
+<result name="Fragmentation Test" time="20210520 21:25:23.955" mticks="10998" mem="121312" />
+<result name="ReallocMem Small (1-555b) benchmark" time="20210520 21:25:25.799" mticks="1135" mem="41676" />
+<result name="ReallocMem Medium (1-4039b) benchmark" time="20210520 21:25:29.145" mticks="3309" mem="92108" />
+<result name="ReallocMem Large (1-952224b) benchmark" time="20210520 21:25:38.401" mticks="11750" mem="1222540" />
+<result name="Block downsize" time="20210520 21:25:46.691" mticks="10305" mem="156556" />
+<result name="Small upsize benchmark" time="20210520 21:25:50.221" mticks="3476" mem="51276" />
+<result name="Tiny downsize benchmark" time="20210520 21:25:55.798" mticks="6465" mem="125452" />
+<result name="VerySmall downsize benchmark" time="20210520 21:26:05.499" mticks="12349" mem="125452" />
+<result name="Block size spread benchmark" time="20210520 21:26:18.777" mticks="17494" mem="438156" />
+<result name="Raw Performance 1 thread" time="20210520 21:26:33.833" mticks="20033" mem="110540" />
+<result name="Address space creep benchmark" time="20210520 21:26:43.690" mticks="12571" mem="509836" />
+<result name="Large block spread benchmark" time="20210520 21:26:53.474" mticks="12488" mem="308428" />
+<result name="Array Upsize 1 thread" time="20210520 21:27:04.073" mticks="13678" mem="2290124" />
+<result name="Address space creep (larger blocks)" time="20210520 21:27:14.825" mticks="13879" mem="3514380" />
+<result name="Single-threaded reallocate and use" time="20210520 21:27:18.624" mticks="3960" mem="423564" />
+<result name="Single-threaded tiny reallocate and use" time="20210520 21:27:24.623" mticks="7097" mem="47308" />
+<result name="Single-threaded allocate, use and free" time="20210520 21:27:34.920" mticks="13248" mem="598668" />
+<result name="Single Variables Access 6 arrays at a time" time="20210520 21:28:06.594" mticks="43727" mem="53132" />
+<result name="Single Variables Access 3 arrays at a time" time="20210520 21:28:40.901" mticks="47514" mem="57868" />
+<result name="Double Variables Access 3 arrays at a time" time="20210520 21:28:47.541" mticks="8001" mem="55180" />
+<result name="Double Variables Access 6 arrays at a time" time="20210520 21:28:54.482" mticks="8421" mem="55180" />
+<result name="Double Variables Access 18 arrays at a time" time="20210520 21:29:01.529" mticks="8596" mem="55180" />
+<result name="Move Benchmark1 2 arrays at a time" time="20210520 21:29:08.407" mticks="8321" mem="71564" />
+<result name="Move Benchmark2 4 arrays at a time" time="20210520 21:29:15.093" mticks="8086" mem="71564" />
+<result name="FillCharDoubleThread" time="20210520 21:29:18.480" mticks="3367" mem="58700" />
+<result name="SortIntegerArrayBenchmark" time="20210520 21:29:22.318" mticks="3996" mem="55180" />
+<result name="SortExtendedArrayBenchmark" time="20210520 21:29:26.484" mticks="4489" mem="62348" />
+<result name="QuickSortExtendedArrayBenchmark" time="20210520 21:29:29.815" mticks="3267" mem="62348" />
+<result name="Linked-list container benchmark" time="20210520 21:29:38.425" mticks="10803" mem="788876" />
+<result name="Multi-threaded (2) allocate, use and free" time="20210520 21:29:55.257" mticks="22552" mem="56204" />
+<result name="Multi-threaded (4) allocate, use and free" time="20210520 21:30:17.524" mticks="30309" mem="62604" />
+<result name="Multi-threaded (8) allocate, use and free" time="20210520 21:30:43.001" mticks="34889" mem="82060" />
+<result name="Multi-threaded (12) allocate, use and free" time="20210520 21:31:08.845" mticks="35428" mem="97676" />
+<result name="Multi-threaded (16) allocate, use and free" time="20210520 21:31:35.123" mticks="36051" mem="112012" />
+<result name="Multi-threaded (31) allocate, use and free" time="20210520 21:32:02.083" mticks="37022" mem="171916" />
+<result name="Multi-threaded (64) allocate, use and free" time="20210520 21:32:30.117" mticks="38527" mem="282508" />
+<result name="Multi-threaded (2) reallocate and use" time="20210520 21:32:45.832" mticks="20943" mem="60300" />
+<result name="Multi-threaded (4) reallocate and use" time="20210520 21:33:02.199" mticks="21888" mem="73868" />
+<result name="Multi-threaded (8) reallocate and use" time="20210520 21:33:20.249" mticks="24282" mem="113292" />
+<result name="Multi-threaded (12) reallocate and use" time="20210520 21:33:39.298" mticks="25725" mem="148108" />
+<result name="Multi-threaded (16) reallocate and use" time="20210520 21:33:58.978" mticks="26622" mem="173004" />
+<result name="Multi-threaded (31) reallocate and use" time="20210520 21:34:19.966" mticks="28499" mem="259724" />
+<result name="Multi-threaded (64) reallocate and use" time="20210520 21:34:41.802" mticks="29701" mem="459212" />
+<result name="QuickSortIntegerArrayBenchmark" time="20210520 21:34:49.681" mticks="9762" mem="55180" />
+<result name="QuickSortExtendedArrayBenchmark" time="20210520 21:34:53.029" mticks="3301" mem="62348" />
+<result name="NexusDB with 1 thread(s)" time="20210520 21:35:34.654" mticks="57970" mem="67724" />
+<result name="NexusDB with 2 thread(s)" time="20210520 21:36:08.302" mticks="46582" mem="85644" />
+<result name="NexusDB with 4 thread(s)" time="20210520 21:36:34.182" mticks="35473" mem="120972" />
+<result name="NexusDB with 8 thread(s)" time="20210520 21:36:54.595" mticks="27678" mem="192908" />
+<result name="NexusDB with 12 thread(s)" time="20210520 21:37:21.389" mticks="36786" mem="263564" />
+<result name="NexusDB with 16 thread(s)" time="20210520 21:37:41.194" mticks="26811" mem="335500" />
+<result name="NexusDB with 31 thread(s)" time="20210520 21:38:00.423" mticks="25978" mem="604300" />
+<result name="NexusDB with 63 thread(s)" time="20210520 21:38:26.406" mticks="35634" mem="1064588" />
+<result name="NexusDB with 128 thread(s)" time="20210520 21:38:45.722" mticks="26079" mem="1989772" />
+<result name="NexusDB with 256 thread(s)" time="20210520 21:39:19.254" mticks="46439" mem="4097676" />
+<result name="NexusDB with 512 thread(s)" time="20210520 21:39:55.641" mticks="50467" mem="7764876" />
+<result name="Transient threaded objects (196 threads)" time="20210520 21:41:13.271" mticks="109410" mem="259212" />
+<result name="Raw Performance 2 threads" time="20210520 21:41:36.192" mticks="31258" mem="70540" />
+<result name="Raw Performance 4 threads" time="20210520 21:41:58.602" mticks="30532" mem="89996" />
+<result name="Raw Performance 8 threads" time="20210520 21:42:18.359" mticks="26727" mem="128460" />
+<result name="Raw Performance 12 threads" time="20210520 21:42:38.289" mticks="26992" mem="166540" />
+<result name="Raw Performance 16 threads" time="20210520 21:42:58.228" mticks="26971" mem="202892" />
+<result name="Raw Performance 31 threads" time="20210520 21:43:19.551" mticks="28985" mem="343052" />
+<result name="Raw Performance 63 threads" time="20210520 21:43:45.972" mticks="36255" mem="637708" />
+<result name="Raw Performance 128 threads" time="20210520 21:44:24.944" mticks="54169" mem="1228108" />
+<result name="Raw Performance 256 threads" time="20210520 21:45:50.506" mticks="120711" mem="2379148" />
+<result name="ManyShortLivedThreads" time="20210520 21:45:52.023" mticks="678" mem="59276" />
+<result name="String2ThreadTest" time="20210520 21:46:12.463" mticks="27708" mem="60556" />
+<result name="String4ThreadTest" time="20210520 21:46:29.666" mticks="23072" mem="60556" />
+<result name="String8ThreadTest" time="20210520 21:46:51.484" mticks="29668" mem="56204" />
+<result name="String12ThreadTest" time="20210520 21:47:13.237" mticks="29582" mem="56204" />
+<result name="String16ThreadTest" time="20210520 21:47:35.324" mticks="30071" mem="57484" />
+<result name="String31ThreadTest" time="20210520 21:47:57.576" mticks="30293" mem="57484" />
+<result name="String63ThreadTest" time="20210520 21:48:20.044" mticks="30602" mem="57484" />
+<result name="Single-threaded AllocMem" time="20210520 21:48:30.405" mticks="13283" mem="400524" />
+</benchmark>
+</benchmarks>
+</mmbench>
+</mmchallenge>

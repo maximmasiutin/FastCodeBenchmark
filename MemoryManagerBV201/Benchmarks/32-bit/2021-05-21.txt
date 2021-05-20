@@ -1,0 +1,73 @@
+***Running All Checked Benchmarks***
+19:57:03 Fragmentation Test                             MTicks =   5091    Mem =   75300
+19:57:26 ReallocMem Small (1-555b) benchmark            MTicks =  30579    Mem =   34960
+19:57:40 ReallocMem Medium (1-4039b) benchmark          MTicks =  18697    Mem =   87440
+19:57:47 ReallocMem Large (1-952224b) benchmark         MTicks =   9453    Mem =  444560
+19:57:55 Block downsize                                 MTicks =   9011    Mem =  115856
+19:57:58 Small upsize benchmark                         MTicks =   3290    Mem =   42064
+19:58:06 Tiny downsize benchmark                        MTicks =   9102    Mem =   58384
+19:58:23 VerySmall downsize benchmark                   MTicks =  22840    Mem =   58384
+19:58:34 Block size spread benchmark                    MTicks =  14751    Mem =  374416
+19:58:48 Raw Performance 1 thread                       MTicks =  18563    Mem =  108432
+19:58:50 Address space creep benchmark                  MTicks =   1921    Mem =  106064
+19:58:59 Large block spread benchmark                   MTicks =  10439    Mem =  306320
+19:59:00 Array Upsize 1 thread                          MTicks =    380    Mem =  173840
+19:59:03 Address space creep (larger blocks)            MTicks =   2300    Mem =  768400
+19:59:07 Single-threaded reallocate and use             MTicks =   4907    Mem =  360720
+20:00:04 Single-threaded tiny reallocate and use        MTicks =  80430    Mem =   40080
+20:00:15 Single-threaded allocate, use and free         MTicks =  13598    Mem =  589072
+20:00:25 Single Variables Access 6 arrays at a time     MTicks =  12333    Mem =   43792
+20:00:35 Single Variables Access 3 arrays at a time     MTicks =  13526    Mem =   43984
+20:00:47 Double Variables Access 3 arrays at a time     MTicks =  15752    Mem =   42512
+20:00:59 Double Variables Access 6 arrays at a time     MTicks =  14983    Mem =   42512
+20:01:10 Double Variables Access 18 arrays at a time    MTicks =  15001    Mem =   42512
+20:01:15 Move Benchmark1 2 arrays at a time             MTicks =   5171    Mem =   57872
+20:01:20 Move Benchmark2 4 arrays at a time             MTicks =   5416    Mem =   57872
+20:01:24 FillCharDoubleThread                           MTicks =   4110    Mem =   48144
+20:01:27 SortIntegerArrayBenchmark                      MTicks =   2816    Mem =   41232
+20:01:34 SortExtendedArrayBenchmark                     MTicks =   9159    Mem =   50192
+20:01:49 QuickSortExtendedArrayBenchmark                MTicks =  19611    Mem =   50192
+20:02:12 Linked-list container benchmark                MTicks =  30905    Mem =  370192
+20:02:33 Multi-threaded (2) allocate, use and free      MTicks =  28761    Mem =   47632
+20:02:59 Multi-threaded (4) allocate, use and free      MTicks =  35982    Mem =   57872
+20:03:22 Multi-threaded (8) allocate, use and free      MTicks =  31207    Mem =   77072
+20:03:45 Multi-threaded (12) allocate, use and free     MTicks =  32107    Mem =   92432
+20:04:10 Multi-threaded (16) allocate, use and free     MTicks =  33851    Mem =  107792
+20:04:38 Multi-threaded (31) allocate, use and free     MTicks =  38382    Mem =  170256
+20:05:04 Multi-threaded (64) allocate, use and free     MTicks =  35929    Mem =  284176
+20:05:29 Multi-threaded (2) reallocate and use          MTicks =  33625    Mem =   53776
+20:05:55 Multi-threaded (4) reallocate and use          MTicks =  36508    Mem =   66576
+20:06:19 Multi-threaded (8) reallocate and use          MTicks =  31857    Mem =   99216
+20:06:43 Multi-threaded (12) reallocate and use         MTicks =  33269    Mem =  128656
+20:07:08 Multi-threaded (16) reallocate and use         MTicks =  34241    Mem =  146896
+20:07:32 Multi-threaded (31) reallocate and use         MTicks =  32951    Mem =  243536
+20:07:56 Multi-threaded (64) reallocate and use         MTicks =  31947    Mem =  451216
+20:08:21 QuickSortIntegerArrayBenchmark                 MTicks =  34930    Mem =   42256
+20:08:35 QuickSortExtendedArrayBenchmark                MTicks =  17849    Mem =   51216
+20:08:58 NexusDB with 1 thread(s)                       MTicks =  32054    Mem =   60176
+20:09:16 NexusDB with 2 thread(s)                       MTicks =  24697    Mem =   79376
+20:09:32 NexusDB with 4 thread(s)                       MTicks =  20987    Mem =  116496
+20:09:47 NexusDB with 8 thread(s)                       MTicks =  19454    Mem =  189456
+20:10:05 NexusDB with 12 thread(s)                      MTicks =  25113    Mem =  262416
+20:10:20 NexusDB with 16 thread(s)                      MTicks =  19047    Mem =  334096
+20:10:33 NexusDB with 31 thread(s)                      MTicks =  18168    Mem =  472336
+20:10:40 Transient threaded objects (31 threads)        MTicks =   8048    Mem =   81936
+20:11:02 Raw Performance 2 threads                      MTicks =  29235    Mem =   63504
+20:11:23 Raw Performance 4 threads                      MTicks =  29281    Mem =   83620
+20:11:43 Raw Performance 8 threads                      MTicks =  26285    Mem =  123408
+20:12:02 Raw Performance 12 threads                     MTicks =  26548    Mem =  160784
+20:12:22 Raw Performance 16 threads                     MTicks =  26296    Mem =  199440
+20:12:43 Raw Performance 31 threads                     MTicks =  28385    Mem =  342160
+20:13:09 Raw Performance 63 threads                     MTicks =  35889    Mem =  643728
+20:13:45 Raw Performance 128 threads                    MTicks =  50042    Mem = 1075472
+20:14:21 Raw Performance 256 threads                    MTicks =  50366    Mem = 1775888
+20:14:28 ManyShortLivedThreads                          MTicks =   7871    Mem =   51472
+20:14:55 String2ThreadTest                              MTicks =  37490    Mem =   49424
+20:15:17 String4ThreadTest                              MTicks =  29977    Mem =   49424
+20:15:41 String8ThreadTest                              MTicks =  32600    Mem =   49424
+20:16:06 String12ThreadTest                             MTicks =  34616    Mem =   51984
+20:16:38 String16ThreadTest                             MTicks =  43823    Mem =   51984
+20:17:09 String31ThreadTest                             MTicks =  42417    Mem =   49424
+20:17:34 String63ThreadTest                             MTicks =  34295    Mem =   49424
+20:17:42 Single-threaded AllocMem                       MTicks =  10251    Mem =  395344
+***All Checked Benchmarks Done***

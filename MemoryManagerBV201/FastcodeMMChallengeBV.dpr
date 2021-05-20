@@ -18,6 +18,9 @@ See the file ReleaseNotes.txt for more details
 {$I FASTCODE_MM.INC}
 
 uses
+{$IFDEF MM_FASTMM5}
+  FastMM5 // Pierre le Riche's Fastcode challenge entry v5.xx
+{$ENDIF}
 {$IFDEF MM_FASTMM4}
   FastMM4 // Pierre le Riche's Fastcode challenge entry v4.xx
 {$ENDIF}

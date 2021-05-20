@@ -1,75 +1,75 @@
 Benchmark	Memory Manager	Time Ran	Ticks (M)	Peak Addr Space (K)	CurrentSession
-Fragmentation Test	FastMM4	20210519 01:57:10.930	10749	121312	T
-ReallocMem Small (1-555b) benchmark	FastMM4	20210519 01:57:12.892	1291	41676	T
-ReallocMem Medium (1-4039b) benchmark	FastMM4	20210519 01:57:16.453	3628	95436	T
-ReallocMem Large (1-952224b) benchmark	FastMM4	20210519 01:57:25.829	11921	1231436	T
-Block downsize	FastMM4	20210519 01:57:35.037	11558	158604	T
-Small upsize benchmark	FastMM4	20210519 01:57:38.765	3761	49996	T
-Tiny downsize benchmark	FastMM4	20210519 01:57:44.703	6999	124172	T
-VerySmall downsize benchmark	FastMM4	20210519 01:57:54.807	12925	124172	T
-Block size spread benchmark	FastMM4	20210519 01:58:08.366	17860	438156	T
-Raw Performance 1 thread	FastMM4	20210519 01:58:23.652	20349	111820	T
-Address space creep benchmark	FastMM4	20210519 01:58:33.847	13072	509836	T
-Large block spread benchmark	FastMM4	20210519 01:58:45.492	15126	308428	T
-Array Upsize 1 thread	FastMM4	20210519 01:58:56.712	14523	2680588	T
-Address space creep (larger blocks)	FastMM4	20210519 01:59:07.298	13643	3514380	T
-Single-threaded reallocate and use	FastMM4	20210519 01:59:11.741	4839	422284	T
-Single-threaded tiny reallocate and use	FastMM4	20210519 01:59:20.041	10365	46028	T
-Single-threaded allocate, use and free	FastMM4	20210519 01:59:31.676	15115	597388	T
-Single Variables Access 6 arrays at a time	FastMM4	20210519 02:00:04.053	44681	51852	T
-Single Variables Access 3 arrays at a time	FastMM4	20210519 02:00:38.803	48152	55756	T
-Double Variables Access 3 arrays at a time	FastMM4	20210519 02:00:47.400	10767	53900	T
-Double Variables Access 6 arrays at a time	FastMM4	20210519 02:00:56.645	11691	53900	T
-Double Variables Access 18 arrays at a time	FastMM4	20210519 02:01:07.052	13383	53900	T
-Move Benchmark1 2 arrays at a time	FastMM4	20210519 02:01:13.941	8319	70284	T
-Move Benchmark2 4 arrays at a time	FastMM4	20210519 02:01:20.730	8202	70284	T
-FillCharDoubleThread	FastMM4	20210519 02:01:23.930	3079	60556	T
-SortIntegerArrayBenchmark	FastMM4	20210519 02:01:29.163	5972	53900	T
-SortExtendedArrayBenchmark	FastMM4	20210519 02:01:34.161	5631	61068	T
-QuickSortExtendedArrayBenchmark	FastMM4	20210519 02:01:38.991	5420	61068	T
-Linked-list container benchmark	FastMM4	20210519 02:01:47.431	10510	788876	T
-Multi-threaded (2) allocate, use and free	FastMM4	20210519 02:02:11.073	32265	57484	T
-Multi-threaded (4) allocate, use and free	FastMM4	20210519 02:02:38.938	38300	62604	T
-Multi-threaded (8) allocate, use and free	FastMM4	20210519 02:03:04.375	34820	83340	T
-Multi-threaded (12) allocate, use and free	FastMM4	20210519 02:03:39.910	49242	98700	T
-Multi-threaded (16) allocate, use and free	FastMM4	20210519 02:04:05.894	35607	110476	T
-Multi-threaded (31) allocate, use and free	FastMM4	20210519 02:04:45.812	55510	161932	T
-Multi-threaded (64) allocate, use and free	FastMM4	20210519 02:05:12.716	36930	263308	T
-Multi-threaded (2) reallocate and use	FastMM4	20210519 02:05:32.305	26477	63372	T
-Multi-threaded (4) reallocate and use	FastMM4	20210519 02:05:51.329	25679	76940	T
-Multi-threaded (8) reallocate and use	FastMM4	20210519 02:06:10.148	25371	114956	T
-Multi-threaded (12) reallocate and use	FastMM4	20210519 02:06:29.884	26691	145612	T
-Multi-threaded (16) reallocate and use	FastMM4	20210519 02:06:50.250	27583	174284	T
-Multi-threaded (31) reallocate and use	FastMM4	20210519 02:07:11.398	28686	277964	T
-Multi-threaded (64) reallocate and use	FastMM4	20210519 02:07:33.289	29754	504140	T
-QuickSortIntegerArrayBenchmark	FastMM4	20210519 02:07:42.373	11480	54924	T
-QuickSortExtendedArrayBenchmark	FastMM4	20210519 02:07:46.269	4028	61068	T
-NexusDB with 1 thread(s)	FastMM4	20210519 02:08:31.292	62746	67724	T
-NexusDB with 2 thread(s)	FastMM4	20210519 02:09:00.970	40870	86668	T
-NexusDB with 4 thread(s)	FastMM4	20210519 02:09:26.903	35550	121996	T
-NexusDB with 8 thread(s)	FastMM4	20210519 02:09:49.705	31046	193932	T
-NexusDB with 12 thread(s)	FastMM4	20210519 02:10:20.745	42817	265868	T
-NexusDB with 16 thread(s)	FastMM4	20210519 02:10:43.255	30411	339852	T
-NexusDB with 63 thread(s)	FastMM4	20210519 02:11:44.688	55120	698908	T
-NexusDB with 128 thread(s)	FastMM4	20210519 02:12:17.871	45878	1180188	T
-NexusDB with 256 thread(s)	FastMM4	20210519 02:16:11.963	332801	1122844	T
-NexusDB with 512 thread(s)	FastMM4	20210519 02:16:53.449	57701	7359116	T
-Transient threaded objects (196 threads)	FastMM4	20210519 02:18:53.709	170228	254860	T
-Raw Performance 2 threads	FastMM4	20210519 02:19:24.747	42832	74636	T
-Raw Performance 4 threads	FastMM4	20210519 02:19:53.924	40184	94092	T
-Raw Performance 8 threads	FastMM4	20210519 02:20:13.731	26754	127628	T
-Raw Performance 12 threads	FastMM4	20210519 02:20:33.594	26845	166540	T
-Raw Performance 16 threads	FastMM4	20210519 02:20:53.417	26824	202892	T
-Raw Performance 31 threads	FastMM4	20210519 02:21:14.448	28537	342796	T
-Raw Performance 63 threads	FastMM4	20210519 02:21:40.246	35328	637132	T
-Raw Performance 128 threads	FastMM4	20210519 02:22:18.474	53069	1233484	T
-Raw Performance 256 threads	FastMM4	20210519 02:23:39.167	113748	2345612	T
-ManyShortLivedThreads	FastMM4	20210519 02:23:40.880	937	54156	T
-String2ThreadTest	FastMM4	20210519 02:24:14.411	46365	55436	T
-String4ThreadTest	FastMM4	20210519 02:24:37.246	31100	55436	T
-String8ThreadTest	FastMM4	20210519 02:24:58.964	29527	55436	T
-String12ThreadTest	FastMM4	20210519 02:25:21.085	30083	55436	T
-String16ThreadTest	FastMM4	20210519 02:25:43.290	30198	52364	T
-String31ThreadTest	FastMM4	20210519 02:26:05.642	30428	52108	T
-String63ThreadTest	FastMM4	20210519 02:26:27.953	30331	53388	T
-Single-threaded AllocMem	FastMM4	20210519 02:26:45.244	23156	400268	T
+Fragmentation Test	FastMM4-AVX	20210519 01:57:10.930	10749	121312	T
+ReallocMem Small (1-555b) benchmark	FastMM4-AVX	20210519 01:57:12.892	1291	41676	T
+ReallocMem Medium (1-4039b) benchmark	FastMM4-AVX	20210519 01:57:16.453	3628	95436	T
+ReallocMem Large (1-952224b) benchmark	FastMM4-AVX	20210519 01:57:25.829	11921	1231436	T
+Block downsize	FastMM4-AVX	20210519 01:57:35.037	11558	158604	T
+Small upsize benchmark	FastMM4-AVX	20210519 01:57:38.765	3761	49996	T
+Tiny downsize benchmark	FastMM4-AVX	20210519 01:57:44.703	6999	124172	T
+VerySmall downsize benchmark	FastMM4-AVX	20210519 01:57:54.807	12925	124172	T
+Block size spread benchmark	FastMM4-AVX	20210519 01:58:08.366	17860	438156	T
+Raw Performance 1 thread	FastMM4-AVX	20210519 01:58:23.652	20349	111820	T
+Address space creep benchmark	FastMM4-AVX	20210519 01:58:33.847	13072	509836	T
+Large block spread benchmark	FastMM4-AVX	20210519 01:58:45.492	15126	308428	T
+Array Upsize 1 thread	FastMM4-AVX	20210519 01:58:56.712	14523	2680588	T
+Address space creep (larger blocks)	FastMM4-AVX	20210519 01:59:07.298	13643	3514380	T
+Single-threaded reallocate and use	FastMM4-AVX	20210519 01:59:11.741	4839	422284	T
+Single-threaded tiny reallocate and use	FastMM4-AVX	20210519 01:59:20.041	10365	46028	T
+Single-threaded allocate, use and free	FastMM4-AVX	20210519 01:59:31.676	15115	597388	T
+Single Variables Access 6 arrays at a time	FastMM4-AVX	20210519 02:00:04.053	44681	51852	T
+Single Variables Access 3 arrays at a time	FastMM4-AVX	20210519 02:00:38.803	48152	55756	T
+Double Variables Access 3 arrays at a time	FastMM4-AVX	20210519 02:00:47.400	10767	53900	T
+Double Variables Access 6 arrays at a time	FastMM4-AVX	20210519 02:00:56.645	11691	53900	T
+Double Variables Access 18 arrays at a time	FastMM4-AVX	20210519 02:01:07.052	13383	53900	T
+Move Benchmark1 2 arrays at a time	FastMM4-AVX	20210519 02:01:13.941	8319	70284	T
+Move Benchmark2 4 arrays at a time	FastMM4-AVX	20210519 02:01:20.730	8202	70284	T
+FillCharDoubleThread	FastMM4-AVX	20210519 02:01:23.930	3079	60556	T
+SortIntegerArrayBenchmark	FastMM4-AVX	20210519 02:01:29.163	5972	53900	T
+SortExtendedArrayBenchmark	FastMM4-AVX	20210519 02:01:34.161	5631	61068	T
+QuickSortExtendedArrayBenchmark	FastMM4-AVX	20210519 02:01:38.991	5420	61068	T
+Linked-list container benchmark	FastMM4-AVX	20210519 02:01:47.431	10510	788876	T
+Multi-threaded (2) allocate, use and free	FastMM4-AVX	20210519 02:02:11.073	32265	57484	T
+Multi-threaded (4) allocate, use and free	FastMM4-AVX	20210519 02:02:38.938	38300	62604	T
+Multi-threaded (8) allocate, use and free	FastMM4-AVX	20210519 02:03:04.375	34820	83340	T
+Multi-threaded (12) allocate, use and free	FastMM4-AVX	20210519 02:03:39.910	49242	98700	T
+Multi-threaded (16) allocate, use and free	FastMM4-AVX	20210519 02:04:05.894	35607	110476	T
+Multi-threaded (31) allocate, use and free	FastMM4-AVX	20210519 02:04:45.812	55510	161932	T
+Multi-threaded (64) allocate, use and free	FastMM4-AVX	20210519 02:05:12.716	36930	263308	T
+Multi-threaded (2) reallocate and use	FastMM4-AVX	20210519 02:05:32.305	26477	63372	T
+Multi-threaded (4) reallocate and use	FastMM4-AVX	20210519 02:05:51.329	25679	76940	T
+Multi-threaded (8) reallocate and use	FastMM4-AVX	20210519 02:06:10.148	25371	114956	T
+Multi-threaded (12) reallocate and use	FastMM4-AVX	20210519 02:06:29.884	26691	145612	T
+Multi-threaded (16) reallocate and use	FastMM4-AVX	20210519 02:06:50.250	27583	174284	T
+Multi-threaded (31) reallocate and use	FastMM4-AVX	20210519 02:07:11.398	28686	277964	T
+Multi-threaded (64) reallocate and use	FastMM4-AVX	20210519 02:07:33.289	29754	504140	T
+QuickSortIntegerArrayBenchmark	FastMM4-AVX	20210519 02:07:42.373	11480	54924	T
+QuickSortExtendedArrayBenchmark	FastMM4-AVX	20210519 02:07:46.269	4028	61068	T
+NexusDB with 1 thread(s)	FastMM4-AVX	20210519 02:08:31.292	62746	67724	T
+NexusDB with 2 thread(s)	FastMM4-AVX	20210519 02:09:00.970	40870	86668	T
+NexusDB with 4 thread(s)	FastMM4-AVX	20210519 02:09:26.903	35550	121996	T
+NexusDB with 8 thread(s)	FastMM4-AVX	20210519 02:09:49.705	31046	193932	T
+NexusDB with 12 thread(s)	FastMM4-AVX	20210519 02:10:20.745	42817	265868	T
+NexusDB with 16 thread(s)	FastMM4-AVX	20210519 02:10:43.255	30411	339852	T
+NexusDB with 63 thread(s)	FastMM4-AVX	20210519 02:11:44.688	55120	698908	T
+NexusDB with 128 thread(s)	FastMM4-AVX	20210519 02:12:17.871	45878	1180188	T
+NexusDB with 256 thread(s)	FastMM4-AVX	20210519 02:16:11.963	332801	1122844	T
+NexusDB with 512 thread(s)	FastMM4-AVX	20210519 02:16:53.449	57701	7359116	T
+Transient threaded objects (196 threads)	FastMM4-AVX	20210519 02:18:53.709	170228	254860	T
+Raw Performance 2 threads	FastMM4-AVX	20210519 02:19:24.747	42832	74636	T
+Raw Performance 4 threads	FastMM4-AVX	20210519 02:19:53.924	40184	94092	T
+Raw Performance 8 threads	FastMM4-AVX	20210519 02:20:13.731	26754	127628	T
+Raw Performance 12 threads	FastMM4-AVX	20210519 02:20:33.594	26845	166540	T
+Raw Performance 16 threads	FastMM4-AVX	20210519 02:20:53.417	26824	202892	T
+Raw Performance 31 threads	FastMM4-AVX	20210519 02:21:14.448	28537	342796	T
+Raw Performance 63 threads	FastMM4-AVX	20210519 02:21:40.246	35328	637132	T
+Raw Performance 128 threads	FastMM4-AVX	20210519 02:22:18.474	53069	1233484	T
+Raw Performance 256 threads	FastMM4-AVX	20210519 02:23:39.167	113748	2345612	T
+ManyShortLivedThreads	FastMM4-AVX	20210519 02:23:40.880	937	54156	T
+String2ThreadTest	FastMM4-AVX	20210519 02:24:14.411	46365	55436	T
+String4ThreadTest	FastMM4-AVX	20210519 02:24:37.246	31100	55436	T
+String8ThreadTest	FastMM4-AVX	20210519 02:24:58.964	29527	55436	T
+String12ThreadTest	FastMM4-AVX	20210519 02:25:21.085	30083	55436	T
+String16ThreadTest	FastMM4-AVX	20210519 02:25:43.290	30198	52364	T
+String31ThreadTest	FastMM4-AVX	20210519 02:26:05.642	30428	52108	T
+String63ThreadTest	FastMM4-AVX	20210519 02:26:27.953	30331	53388	T
+Single-threaded AllocMem	FastMM4-AVX	20210519 02:26:45.244	23156	400268	T

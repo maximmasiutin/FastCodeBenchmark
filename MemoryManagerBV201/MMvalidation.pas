@@ -1962,6 +1962,8 @@ begin
        end;
      end;
    end;
+   Finalize(StringArray);
+   Finalize(SomeArray);
  except
   Result := False;
  end;
