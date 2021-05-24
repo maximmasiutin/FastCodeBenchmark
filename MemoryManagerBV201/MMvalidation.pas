@@ -85,7 +85,7 @@ end;
 implementation
 
 uses
-  WinApi.Windows,
+  Windows,
   BenchmarkForm, BenchmarkUtilities, PrimeNumbers;
 
 (*
@@ -150,7 +150,9 @@ begin
   DoValidate({$IFDEF FPC}@{$ENDIF}Validate25, 'Validate25');
   DoValidate({$IFDEF FPC}@{$ENDIF}Validate26, 'Validate26');
   DoValidate({$IFDEF FPC}@{$ENDIF}Validate28, 'Validate28');
+{$IFNDEF FPC} // FPC does not raise the EOutOfMemory
   DoValidate({$IFDEF FPC}@{$ENDIF}Validate32, 'Validate32');
+{$ENDIF}
   DoValidate({$IFDEF FPC}@{$ENDIF}Validate34, 'Validate34');
   DoValidate({$IFDEF FPC}@{$ENDIF}Validate35, 'Validate35');
   DoValidate({$IFDEF FPC}@{$ENDIF}Validate36, 'Validate36');
@@ -183,10 +185,14 @@ var
   p: Pointer;
 begin
   Result := True;
-  for I := 0 to Count-1 do
-  begin
-    GetMem(p, Size);
-    FreeMem(p, Size);
+  try
+    for I := 0 to Count-1 do
+    begin
+      GetMem(p, Size);
+      FreeMem(p, Size);
+    end;
+  except
+    Result := False;
   end;
 end;
 
@@ -199,10 +205,14 @@ var
   p: Pointer;
 begin
   Result := True;
-  for I := 0 to Count-1 do
-  begin
-    GetMem(p, Size);
-    FreeMem(p, Size);
+  try
+    for I := 0 to Count-1 do
+    begin
+      GetMem(p, Size);
+      FreeMem(p, Size);
+    end;
+  except
+    Result := False;
   end;
 end;
 
@@ -215,10 +225,14 @@ var
   p: Pointer;
 begin
   Result := True;
-  for I := 0 to Count-1 do
-  begin
-    GetMem(p, Size);
-    FreeMem(p, Size);
+  try
+    for I := 0 to Count-1 do
+    begin
+      GetMem(p, Size);
+      FreeMem(p, Size);
+    end;
+  except
+    Result := False;
   end;
 end;
 
@@ -231,10 +245,14 @@ var
   p: Pointer;
 begin
   Result := True;
-  for I := 0 to Count-1 do
-  begin
-    GetMem(p, Size);
-    FreeMem(p, Size);
+  try
+    for I := 0 to Count-1 do
+    begin
+      GetMem(p, Size);
+      FreeMem(p, Size);
+    end;
+  except
+    Result := False;
   end;
 end;
 
@@ -242,13 +260,18 @@ end;
 function TMMValidation.ExtraValidate: string;
 begin
   FFailedList := '';
-  DoValidate({$IFDEF FPC}@{$ENDIF}Validate13, 'Validate13');
-  DoValidate({$IFDEF FPC}@{$ENDIF}Validate15, 'Validate15');
-  DoValidate({$IFDEF FPC}@{$ENDIF}Validate16, 'Validate16');
+{$IFNDEF FPC}
+  DoValidate({$IFDEF FPC}@{$ENDIF}Validate13, 'Validate13'); // FPC does not raise EOutOfMemory
+  DoValidate({$IFDEF FPC}@{$ENDIF}Validate15, 'Validate15'); // FPC does not raise EInvalidPointer
+  DoValidate({$IFDEF FPC}@{$ENDIF}Validate16, 'Validate16'); // FPC does not raise EInvalidPointer
+{$ENDIF}
   DoValidate({$IFDEF FPC}@{$ENDIF}Validate18, 'Validate18');
   DoValidate({$IFDEF FPC}@{$ENDIF}Validate20, 'Validate20');
   DoValidate({$IFDEF FPC}@{$ENDIF}Validate24, 'Validate24');
+{$IFDEF VALIDATE_DLL}
   DoValidate({$IFDEF FPC}@{$ENDIF}Validate27, 'Validate27');
+{$ENDIF}
+{$IFNDEF FPC} // FPC does not raise the EOutOfMemory
   DoValidate({$IFDEF FPC}@{$ENDIF}Validate29, 'Validate29');
   DoValidate({$IFDEF FPC}@{$ENDIF}Validate30, 'Validate30');
   DoValidate({$IFDEF FPC}@{$ENDIF}Validate31, 'Validate31');
@@ -256,6 +279,7 @@ begin
   DoValidate({$IFDEF FPC}@{$ENDIF}Validate33, 'Validate33');
 {$IFNDEF WIN64}
   DoValidate({$IFDEF FPC}@{$ENDIF}Validate50, 'Validate50');
+{$ENDIF}
 {$ENDIF}
   Result := FFailedList;
 end;
@@ -571,7 +595,7 @@ const
   CIterations = 200;
 var
  Prime, I1, I2, I3, J1, J2, BytesToAllocate : Cardinal;
- BytesToAllocate_SIZET: WinApi.Windows.SIZE_T;
+ BytesToAllocate_SIZET: SIZE_T;
  pMem : Pointer;
  NI1, NI2: NativeInt;
  A: NativeUint;
@@ -668,7 +692,7 @@ const
   CIterations = 32*1000;
 var
  I, J, K, L, NoOfStrings: Cardinal;
- I_SIZET: WinApi.Windows.SIZE_T;
+ I_SIZET: SIZE_T;
  SomeArray : array of Cardinal;
  StringArray : array[1..523{PrimeNumber}] of Ansistring;
  TempS : AnsiString;
@@ -735,7 +759,7 @@ var
  SomeArray : array of array of Cardinal;
  MemoryStatus : TMemoryStatus;
  I1, I2, I3, I4, I5, IMax : Cardinal;
- I_SIZET: WinApi.Windows.SIZE_T;
+ I_SIZET: SIZE_T;
 begin
  Result := True;
  if ShortRun then
@@ -811,7 +835,7 @@ var
  SomeArray : packed array of packed array of Word;
  MemoryStatus : TMemoryStatus;
  I1, I2, I3, I4, I5, IMax : Cardinal;
- I_SIZET: WinAPI.Windows.SIZE_T;
+ I_SIZET: SIZE_T;
 begin
  Result := True;
  FillChar(MemoryStatus, SizeOf(MemoryStatus), 0);
@@ -1083,7 +1107,7 @@ var
  MemoryStatus : TMemoryStatus;
  BytesToAllocate, I: Cardinal;
  StartAddress : Pointer;
- SizeT: WinApi.Windows.Size_T;
+ SizeT: SIZE_T;
 const
  BYTESTOALLOCATEMIN = 70 * 1024;//70 Kbyte
  BYTESTOALLOCATEMAX = 80 * 1024;//80 Kbyte
@@ -1335,7 +1359,7 @@ var
  BYTESTOALLOCATEMIN: Cardinal;
  PrimeIndex: Integer;
  CFillByte: Byte;
- InitialSizeT: WinAPI.WIndows.Size_T;
+ InitialSizeT: SIZE_T;
 const
  CIterationCount = 12;
  CFillStep = 4093;
@@ -1419,7 +1443,7 @@ var
  MemoryStatus : TMemoryStatus;
  pInt : PPointer;
  RefData : Pointer;
- SizeT: WinApi.WIndows.SIZE_T;
+ SizeT: SIZE_T;
 const
  BYTESTOALLOCATEMAX = 2500;//2.5 Kbyte per pointer max
  RUNNOMAX = CIterations;
@@ -1541,7 +1565,7 @@ var
  SomeArray : array of Byte;
  MemoryStatus : TMemoryStatus;
  C: Cardinal;
- SizeT: WinAPI.Windows.Size_T;
+ SizeT: SIZE_T;
 const
  BYTESTOALLOCATE_LONG = 1024*1024*1024;//1G
  BYTESTOALLOCATE_SHORT = 5*1024*1024;//5M
@@ -1583,7 +1607,7 @@ var
   PrimeIdx: Integer;
   Executed, Skipped: Integer;
   Total: LONG;
-  SizeT: WinAPI.Windows.Size_T;
+  SizeT: SIZE_T;
 const
   CSkipPrimeOnShortRun = 3; // a prime number, skip each N-th run on a short run
   SMALLALLOCSIZEMIN = 1;//1 byte
@@ -1676,7 +1700,7 @@ var
  BytesToAllocate, I2, I3, OldBytesToAllocate : Cardinal;
  StartAddress: Pointer;
  IterationCounter: Int64;
- SizeT: WinAPI.Windows.Size_T;
+ SizeT: SIZE_T;
 const
  BYTESTOALLOCATESTEPSIZE = 2;
  BYTESTOALLOCATEMIN = 5;//5 byte
@@ -1805,7 +1829,7 @@ var
  PointerArray : packed array of Pointer;
  SizeArray : packed array of Cardinal;
  I: Integer;
- FreeMemoryRun1, FreeMemoryLastRun : WinAPI.Windows.Size_T;
+ FreeMemoryRun1, FreeMemoryLastRun : SIZE_T;
  AllocSize, RunNo : Integer;
  AllocSizeFP : Double;
  Total: ULONG;
@@ -1980,12 +2004,6 @@ var
   ExportedMethod: TExportedMethod;
   LFileName: string;
 begin
-  if not FileExists(LFileName) then
-  begin
-    Result := True;
-    Exit;
-  end;
-
   {Get the initial memory usage}
   LInitialUsage := GetAddressSpaceUsed;
   {Default to fail}
@@ -2438,6 +2456,7 @@ var
   i, LTestNo, LIndex, LOldSize, LNewSize: integer;
   LPCheck: PAnsiChar;
 begin
+  for i := Low(LStrings) to High(LStrings) do LStrings[i] := '';
   Inc(NextValue, Validate28Prime);
   {All ok so far}
   ReturnValue := ord(True);
@@ -2524,13 +2543,13 @@ begin
   GetMem(Pointers, SizeOf(TPointers));
   GetMem(Sizes, SizeOf(TSizes));
   GetMem(Pointers^[n], CAllocHigh);
-  Sizes[n] := CAllocHigh;
+  Sizes^[n] := CAllocHigh;
   PAnsiChar(Pointers^[n])[4] := 'A';
   Inc(n);
   repeat
    //Allocate 32 kB pointer
    GetMem(Pointers^[n], cAllocLow);
-   Sizes[n] := cAllocLow;
+   Sizes^[n] := cAllocLow;
    PAnsiChar(Pointers^[n])[4] := 'A';
    Inc(n);
   until n > High(Pointers^);
@@ -2545,7 +2564,7 @@ begin
  while n > 0 do
   begin
    Dec(n);
-   FreeMem(Pointers^[n], Sizes[n]);
+   FreeMem(Pointers^[n], Sizes^[n]);
   end;
   FreeMem(Pointers, SizeOf(TPointers));
   FreeMem(Sizes, SizeOf(TSizes));
@@ -2648,7 +2667,6 @@ begin
   if ShortRun then RUNNOMAX := CIterQuickRun else RUNNOMAX := CIterNormalRun;
 
   {$IFDEF WIN64}
-
   MaxAllocValidate32 := 1*1024*1024*1024; {1GB}
   MaxAllocValidate32 := MaxAllocValidate32 * 2; {2 GB}
   {$ELSE}
@@ -3462,7 +3480,9 @@ begin
   AddSuite({$IFDEF FPC}@{$ENDIF}Validate9);
   AddSuite({$IFDEF FPC}@{$ENDIF}Validate10);
   AddSuite({$IFDEF FPC}@{$ENDIF}Validate11);
+  {$IFDEF FORCE_THREADED_SLOW_TESTS}
   AddSuite({$IFDEF FPC}@{$ENDIF}Validate12);
+  {$ENDIF}
   AddSuite({$IFDEF FPC}@{$ENDIF}Validate14);
   AddSuite({$IFDEF FPC}@{$ENDIF}Validate17);
   AddSuite({$IFDEF FPC}@{$ENDIF}Validate18);
@@ -3470,14 +3490,26 @@ begin
   AddSuite({$IFDEF FPC}@{$ENDIF}Validate20);
   AddSuite({$IFDEF FPC}@{$ENDIF}Validate21);
   AddSuite({$IFDEF FPC}@{$ENDIF}Validate22);
+  {$IFDEF FORCE_THREADED_SLOW_TESTS}
   AddSuite({$IFDEF FPC}@{$ENDIF}Validate26);
+  {$ENDIF}
+
+  {$IFDEF FORCE_THREADED_HUGE_MEMORY_TESTS}
   AddSuite({$IFDEF FPC}@{$ENDIF}Validate32);
   AddSuite({$IFDEF FPC}@{$ENDIF}Validate34);
+  {$ENDIF}
+
+  {$IFDEF FORCE_THREADED_SLOW_TESTS}
   AddSuite({$IFDEF FPC}@{$ENDIF}Validate35);
+  {$ENDIF}
   AddSuite({$IFDEF FPC}@{$ENDIF}Validate36);
+  {$IFDEF FORCE_THREADED_HUGE_MEMORY_TESTS}
   AddSuite({$IFDEF FPC}@{$ENDIF}Validate37);
+  {$ENDIF}
   AddSuite({$IFDEF FPC}@{$ENDIF}Validate38);
+  {$IFDEF FORCE_THREADED_HUGE_MEMORY_TESTS}
   AddSuite({$IFDEF FPC}@{$ENDIF}Validate39);
+  {$ENDIF}
   AddSuite({$IFDEF FPC}@{$ENDIF}Validate40);
   AddSuite({$IFDEF FPC}@{$ENDIF}Validate43);
   AddSuite({$IFDEF FPC}@{$ENDIF}Validate44);
@@ -3606,7 +3638,7 @@ begin
  end;
 end;
 
-{$IFDEF PFC}
+{$IFDEF FPC}
 initialization
 InitializeCriticalSection(InterlockedAdd64CS);
 finalization

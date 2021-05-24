@@ -3,9 +3,9 @@ unit BenchmarkForm;
 interface
 
 uses
-  Windows, Messages, SysUtils, Variants, Classes, Vcl.Graphics, BenchmarkClassUnit, Math, MMValidation,
-  System.ImageList, Vcl.Controls, Vcl.StdCtrls, Vcl.ComCtrls, Vcl.Buttons,
-  Vcl.Menus, Vcl.ImgList, Vcl.ToolWin, Vcl.Forms;
+  Windows, Messages, SysUtils, Variants, Classes, Graphics, BenchmarkClassUnit, Math, MMValidation,
+  ImgList, Controls, StdCtrls, ComCtrls, Buttons,
+  Menus, ToolWin, Forms;
 
   {$I FASTCODE_MM.INC}
 
@@ -250,7 +250,7 @@ uses
   {$IFDEF MM_FASTMM4}
   FastMM4,
   {$ENDIF}
-  Vcl.Clipbrd,
+  Clipbrd,
 	FragmentationTestUnit, NexusDBBenchmarkUnit, ReallocMemBenchmark,
 	DownsizeTestUnit, ReplayBenchmarkUnit, WildThreadsBenchmarkUnit,
 	BlockSizeSpreadBenchmark, SmallDownsizeBenchmark,
@@ -601,7 +601,8 @@ begin
        ValidateButton.Caption := 'Passed Validations';
        if ExtraValidateButton.Font.Color <> clGreen then
        begin
-         PostMessage(Handle, WMU_EXTRAVALIDATION, 0, 0);
+// Commented: it clears current results
+//         PostMessage(Handle, WMU_EXTRAVALIDATION, 0, 0);
        end;
      end;
    end
@@ -817,7 +818,7 @@ begin
       StringList.Add(s);
     end;
 
-		Vcl.Clipbrd.Clipboard.AsText := StringList.Text;
+		Clipbrd.Clipboard.AsText := StringList.Text;
   finally
     StringList.Free;
   end;

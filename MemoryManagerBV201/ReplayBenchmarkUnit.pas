@@ -6,7 +6,7 @@ unit ReplayBenchmarkUnit;
 interface
 
 uses
-  Windows, SysUtils, Classes, Vcl.Dialogs, BenchmarkClassUnit, Math;
+  Windows, SysUtils, Classes, Dialogs, BenchmarkClassUnit, Math;
 
 type
   {A single operation}

@@ -3,8 +3,8 @@ unit RenameMMForm;
 interface
 
 uses
-	Windows, Messages, SysUtils, Variants, Classes, Vcl.StdCtrls, Vcl.Buttons,
-  Vcl.Controls, Vcl.Forms;
+  Windows, Messages, SysUtils, Variants, Classes, StdCtrls, Buttons,
+  Controls, Forms;
 
 type
   TfRenameMM = class(TForm)
