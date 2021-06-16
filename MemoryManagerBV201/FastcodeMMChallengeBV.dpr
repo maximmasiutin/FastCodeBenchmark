@@ -87,7 +87,7 @@ uses
 
   // FastMove,   // uncomment if you want to benchmark with FastMove
   {Other units}
-  Forms,
+  SelfTest in 'SelfTest.pas',
   PrimeNumbers in 'PrimeNumbers.pas' {fBenchmark},
   BenchmarkForm in 'BenchmarkForm.pas' {fBenchmark},
   RenameMMForm in 'RenameMMForm.pas' {fRenameMM},
@@ -127,7 +127,7 @@ uses
   MMvalidation in 'MMvalidation.pas',
   GeneralFunctions in 'GeneralFunctions.pas'
   {$IFDEF FPC}, Interfaces{$ENDIF}
-  ;
+  ,Forms;
 
 {$R *.res}
 

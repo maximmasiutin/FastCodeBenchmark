@@ -851,6 +851,8 @@ procedure FindGoodPrimes;
     if (pc > opc_min) and
        (pc < opc_max) then
     begin
+      if w = 11617 then
+         WriteLn('');
       SetLength(VeryGoodPrimes, Length(VeryGoodPrimes)+1);
       VeryGoodPrimes[Length(VeryGoodPrimes)-1] := w;
     end else

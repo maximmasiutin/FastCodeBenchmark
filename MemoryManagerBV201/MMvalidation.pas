@@ -128,6 +128,7 @@ end;
 function TMMValidation.Validate: string;
 begin
   FFailedList := '';
+{$ifndef Validate_49_only}
   DoValidate({$IFDEF FPC}@{$ENDIF}Validate1, 'Validate1');
   DoValidate({$IFDEF FPC}@{$ENDIF}Validate2, 'Validate2');
   DoValidate({$IFDEF FPC}@{$ENDIF}Validate3, 'Validate3');
@@ -168,6 +169,7 @@ begin
   DoValidate({$IFDEF FPC}@{$ENDIF}Validate46, 'Validate46');
   DoValidate({$IFDEF FPC}@{$ENDIF}Validate47, 'Validate47');
   DoValidate({$IFDEF FPC}@{$ENDIF}Validate48, 'Validate48');
+{$endif}
   DoValidate({$IFDEF FPC}@{$ENDIF}Validate49, 'Validate49');
   SleepAfterMemoryConsumingTest;
   Result := FFailedList;
