@@ -216,10 +216,10 @@ asm
   XOR     RCX, RCX                    {clear ECX register}
   XOR     RDX, RDX                    {clear EDX register}
   DB $0F, $A2                         {CPUID opcode}
-  MOV     TRegisters(EDI).&EAX, EAX   {save EAX register}
-  MOV     TRegisters(EDI).&EBX, EBX   {save EBX register}
-  MOV     TRegisters(EDI).&ECX, ECX   {save ECX register}
-  MOV     TRegisters(EDI).&EDX, EDX   {save EDX register}
+  MOV     TRegisters(RDI).&EAX, EAX   {save EAX register}
+  MOV     TRegisters(RDI).&EBX, EBX   {save EBX register}
+  MOV     TRegisters(RDI).&ECX, ECX   {save ECX register}
+  MOV     TRegisters(RDI).&EDX, EDX   {save EDX register}
   POP     RDI                         {restore registers}
   POP     RBX
 end;

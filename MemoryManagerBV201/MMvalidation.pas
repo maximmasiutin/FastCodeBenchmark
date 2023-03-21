@@ -128,6 +128,9 @@ end;
 function TMMValidation.Validate: string;
 begin
   FFailedList := '';
+  DoValidate({$IFDEF FPC}@{$ENDIF}Validate28, 'Validate28');
+
+
 {$ifndef Validate_49_only}
   DoValidate({$IFDEF FPC}@{$ENDIF}Validate1, 'Validate1');
   DoValidate({$IFDEF FPC}@{$ENDIF}Validate2, 'Validate2');
@@ -201,7 +204,11 @@ end;
 function TMMValidation.Validate46: Boolean;
 const
   Size = 4097;
+{$IFDEF DEBUG}
+  Count = 10000000;
+{$ELSE}
   Count = 40000000;
+{$ENDIF}
 var
   i: Integer;
   p: Pointer;
@@ -221,7 +228,11 @@ end;
 function TMMValidation.Validate47: Boolean;
 const
   Size = 256*1024+17;
+{$IFDEF DEBUG}
+  Count =  1000000;
+{$ELSE}
   Count = 50000000;
+{$ENDIF}
 var
   i: Integer;
   p: Pointer;

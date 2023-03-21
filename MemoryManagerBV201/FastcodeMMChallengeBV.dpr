@@ -87,7 +87,6 @@ uses
 
   // FastMove,   // uncomment if you want to benchmark with FastMove
   {Other units}
-  SelfTest in 'SelfTest.pas',
   PrimeNumbers in 'PrimeNumbers.pas' {fBenchmark},
   BenchmarkForm in 'BenchmarkForm.pas' {fBenchmark},
   RenameMMForm in 'RenameMMForm.pas' {fRenameMM},
@@ -132,6 +131,12 @@ uses
 {$R *.res}
 
 begin
+{$IFDEF MM_FASTMM4_AVX}
+  if (ParamCount >=0) and (ParamStr(1) = 'FastMMDisableWaitPKG') then
+  begin
+    FastMMDisableWaitPKG;
+  end;
+{$ENDIF}
 {$IFDEF FPC}
   Application.Scaled:=True;
 {$ENDIF}
