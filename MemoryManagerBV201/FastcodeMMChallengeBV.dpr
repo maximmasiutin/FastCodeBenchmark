@@ -132,10 +132,12 @@ uses
 
 begin
 {$IFDEF MM_FASTMM4_AVX}
+{$IFDEF EnableWaitPKG}
   if (ParamCount >=0) and (ParamStr(1) = 'FastMMDisableWaitPKG') then
   begin
     FastMMDisableWaitPKG;
   end;
+{$ENDIF}
 {$ENDIF}
 {$IFDEF FPC}
   Application.Scaled:=True;

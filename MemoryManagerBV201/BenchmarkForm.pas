@@ -489,10 +489,17 @@ begin
 end;
 
 procedure TfBenchmark.bRunAllCheckedBenchmarksClick(Sender: TObject);
-var
- i: integer;
- StartTime, RunTime : TDateTime;
 
+  procedure ProcessMessages;
+  begin
+    Enabled := False;
+    Application.ProcessMessages;
+    Enabled := True;
+  end;
+
+var
+  i: integer;
+  StartTime, RunTime : TDateTime;
 begin
   StartTime := Time;
   Screen.Cursor := crHourglass;
@@ -514,9 +521,10 @@ begin
       ListViewBenchmarks.Selected.MakeVisible(False);
       ListViewBenchmarksSelectItem(nil, ListViewBenchmarks.Selected,
                                         ListViewBenchmarks.Selected <> nil);
-      Enabled := False;
-      Application.ProcessMessages;
-      Enabled := True;
+
+      ProcessMessages;
+      Sleep(100); // Sleep 100 milliseconds after processing messages
+
       {Run the benchmark}
       RunBenchmark(BenchMarks[i]);
 
@@ -527,8 +535,11 @@ begin
       {$ENDIF}
       {$ENDIF}
 
-      {Wait one second}
-      Sleep(1000);
+      {Wait one second between the benchmarks}
+      if i < high(BenchMarks) then // do not speep after the last benchmark
+      begin
+        Sleep(1000);
+      end;
     end;
   end;
   mResults.Lines.Add('***All Checked Benchmarks Done***');

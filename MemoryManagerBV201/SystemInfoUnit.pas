@@ -202,8 +202,12 @@ begin
           CPUID($80000008, CIR);
           Result.CorePerPhys := (CIR.ECX and $FF) + 1;
           Result.LogPerCore := LogPerPhys div Result.CorePerPhys;
-          if (Result.LogPerCore > 1) and not CheckHTEnabled(Result) then
+          try
+            if (Result.LogPerCore > 1) and not CheckHTEnabled(Result) then
+              Result.LogPerCore := 1;
+          except
             Result.LogPerCore := 1;
+          end;
         end;
       end;
     end;
@@ -239,8 +243,12 @@ begin
       if Result.LogPerCore < 1 then
         Result.LogPerCore := 1
       else
-        if (Result.LogPerCore > 1) and not CheckHTEnabled(Result) then
+        try
+          if (Result.LogPerCore > 1) and not CheckHTEnabled(Result) then
+            Result.LogPerCore := 1;
+        except
           Result.LogPerCore := 1;
+        end;
     end;
   end;
 end;

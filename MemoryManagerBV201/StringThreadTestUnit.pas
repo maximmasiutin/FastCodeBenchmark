@@ -130,7 +130,7 @@ procedure TStringThreadTestAbstract.RunBenchmark;
 const
   cIterations = 25000;
 var
-  tc, ic, I, PrimeIndex: Integer;
+  LThreadCount, ic, I, PrimeIndex: Integer;
   Threads: TList;
   T: TStringThreadEx;
   Handles: PWOHandleArray;
@@ -141,14 +141,14 @@ begin
    InitTest;
    PrimeIndex := Low(VeryGoodPrimes);
    New(Handles);
-   tc := NumThreads;
+   LThreadCount := NumThreads;
 
    MaxThreadsAllowed := Min(MAXIMUM_WAIT_OBJECTS, 64);
-   Assert(tc <= MaxThreadsAllowed, 'Maximum '+IntToStr(MaxThreadsAllowed)+' simultaneously running threads in TStringThreadTest');
+   Assert(LThreadCount <= MaxThreadsAllowed, 'Maximum '+IntToStr(MaxThreadsAllowed)+' simultaneously running threads in TStringThreadTest');
 
-   ic := (cIterations div tc)+1;
+   ic := (cIterations div LThreadCount)+1;
    Threads := TList.Create;
-   for I := 1 to tc do // Create a loose new thread that does string actions
+   for I := 1 to LThreadCount do // Create a loose new thread that does string actions
    begin
      T := TStringThreadEx.Create(ic, 2000, 4096, False);
      T.FPrime := VeryGoodPrimes[PrimeIndex];
